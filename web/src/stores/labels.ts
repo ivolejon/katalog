@@ -8,9 +8,9 @@ interface LabelsState {
   error: string | null
   /** True once the first fetch has completed (drives skeletons vs empty states). */
   initialized: boolean
+  fetchId: number
+  revision: number
 }
-
-let running = 0
 
 export const useLabelsStore = defineStore('labels', {
   state: (): LabelsState => ({
@@ -18,6 +18,8 @@ export const useLabelsStore = defineStore('labels', {
     loading: false,
     error: null,
     initialized: false,
+    fetchId: 0,
+    revision: 0,
   }),
 
   getters: {
@@ -37,16 +39,19 @@ export const useLabelsStore = defineStore('labels', {
       }
       this.loading = true
       this.error = null
-      const attempt = ++running
+      const fetchId = ++this.fetchId
+      const revision = this.revision
       try {
-        this.labels = await api.listLabels()
+        const labels = await api.listLabels()
+        if (fetchId === this.fetchId && revision === this.revision) {
+          this.labels = labels
+        }
       } catch (err) {
-        // A stale in-flight fetch must not clobber a newer result.
-        if (attempt === running) {
+        if (fetchId === this.fetchId && revision === this.revision) {
           this.error = err instanceof Error ? err.message : 'Failed to load labels'
         }
       } finally {
-        if (attempt === running) {
+        if (fetchId === this.fetchId) {
           this.loading = false
           this.initialized = true
         }
@@ -55,18 +60,22 @@ export const useLabelsStore = defineStore('labels', {
 
     async addLabel(input: CreateLabelInput): Promise<LabelSummary> {
       const created = await api.createLabel(input)
+      this.revision += 1
       this.labels = [created, ...this.labels.filter((l) => l.id !== created.id)]
       return created
     },
 
     async removeLabel(id: string): Promise<void> {
-      const previous = this.labels
+      const previous = this.labels.find((label) => label.id === id)
+      this.revision += 1
       // Optimistic removal; restore on failure.
-      this.labels = previous.filter((l) => l.id !== id)
+      this.labels = this.labels.filter((l) => l.id !== id)
       try {
         await api.deleteLabel(id)
       } catch (err) {
-        this.labels = previous
+        if (previous && !this.labels.some((label) => label.id === id)) {
+          this.labels = [...this.labels, previous]
+        }
         throw err
       }
     },

@@ -36,6 +36,7 @@ const loading = ref(true)
 const notFound = ref(false)
 const error = ref<string | null>(null)
 const removing = ref(false)
+let loadRequest = 0
 
 const sortedReleases = computed(() => {
   if (!detail.value) {
@@ -56,19 +57,29 @@ const isFollowing = computed(() => {
 })
 
 async function load() {
+  const request = ++loadRequest
+  const id = props.id
   loading.value = true
   notFound.value = false
   error.value = null
+  detail.value = null
   try {
-    detail.value = await api.getLabel(props.id)
+    const loaded = await api.getLabel(id)
+    if (request === loadRequest) {
+      detail.value = loaded
+    }
   } catch (err) {
-    if (err instanceof Error && 'status' in err && (err as { status: number }).status === 404) {
-      notFound.value = true
-    } else {
-      error.value = err instanceof Error ? err.message : 'Failed to load label'
+    if (request === loadRequest) {
+      if (err instanceof Error && 'status' in err && (err as { status: number }).status === 404) {
+        notFound.value = true
+      } else {
+        error.value = err instanceof Error ? err.message : 'Failed to load label'
+      }
     }
   } finally {
-    loading.value = false
+    if (request === loadRequest) {
+      loading.value = false
+    }
   }
 }
 
