@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:244c5732306880568ce9d2c73c29488eaad6f4172a1e3a3042ce3e6ef0485d66",
+  "claims": [
+    {
+      "id": "claim_f65bd21616ce428bad74e822a9994a0a",
+      "statement": "Katalog.AppHost orchestrates the checked-in Vue web resource, Katalog.Api, and a PostgreSQL catalog database, with the web resource referencing and waiting for the API.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
+          "version": "repo-lines-v1:sha256:a319ad43b24df151c26dc52c6d90b5f3193a8aea86d5742da760e1659f4a8403:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b6324cf197364906ac54684a2ffa264e",
+      "statement": "Katalog.Api maps the label, artist, and release endpoint groups and exposes a committed OpenAPI document generated at build time.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L37-L54",
+          "version": "repo-lines-v1:sha256:758263801f09a8034fe9e5e202b0485e8411ed19e6ebb1f4ca58cffb5947c4b4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBmNjdiYTc1MTEwNzI0M2E2MzhjMmM0OWE1MjIxZmI4ZmNhMmIyNTY2NjU1OWEyZjNkYjk1MWZiNjRkNTYyYjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1MWRiNjVlODBkZDBmM2Y0NGQ0MmMwZjFmZWQyOGM2MmM3MTgzMTRhOGVjZmZmOTFkMWY5MDVlY2I1YTVjODgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMxZjYyMGVjNjkzY2U2NmI1Yzk2Y2QzMGNhNTgwMGRiY2VlZTY1MTdiYzgzMmQ4MjJiNTM4MGUxMjFlN2E4MzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI3NzliZWYyMTlmZTA4NGU0NzA0OTk4MWEwYzNkNTEwNWY3MTYyN2ZlZmY0ZTI3MjI3YWNmNzg5ZmI5MWY2MWMifQ"
+        },
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json#L1-L15",
+          "version": "repo-lines-v1:sha256:289ceac7bf2c84e02268e7b440d7d57c3a7e6f021d8f5e58381e38ea3099a0b8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MTlkM2FmMmY2YmVhOTFhOTk4MjNjMDM1MTgxMjk2ZjVlOWYyMzMwYmMwYjA5MjYzZWVmMjVjYzFlZmFlMWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyOGM3MjRmYzE5NGJmN2VjNDc0ZTQ4MTBkNGQyYTdhZjY4ZjlmOTE5MTNlZDFmMWI4NzhkYjVkZWMyYzU4MjgifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-22T17:28:24.726Z"
+  }
+}

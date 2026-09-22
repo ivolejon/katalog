@@ -1,10 +1,27 @@
+---
+type: "Reference"
+title: "Katalog - Architecture"
+openwiki_generated: true
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-09-22T17:28:24.726Z
+sources:
+  - id: openwiki-source-40176359058e84debec9e8ac
+    resource: repo://apps/katalog-api/src/Katalog.Api/Program.cs
+  - id: openwiki-source-c4e6278c448892ab6ee9060c
+    resource: repo://contracts/katalog-api/openapi.json
+  - id: openwiki-source-8ce73889fe4fb27ed1786287
+    resource: repo://Katalog.AppHost/Program.cs
+generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+---
+
 # Katalog - Architecture
 
 ## System overview
 
 ```
 ┌──────────────────────┐   relative /api/*   ┌──────────────────────┐
-│ web/ (Vue SPA)       │ ──────────────────> │ Katalog.Api (planned) │
+│ web/ (Vue SPA)       │ ──────────────────> │ Katalog.Api            │
 │ shadcn-vue reka-maia │   dev: Vite proxy   │ .NET 10 minimal API   │
 └──────────────────────┘                     └──────────┬───────────┘
                                                         │ EF Core 10 + Npgsql
@@ -14,10 +31,9 @@
                                                  └─────────────┘
 ```
 
-The backend does not exist on `main` yet - it is under construction on a
-feature branch (see `web/src/api/README.md` for the agreed contract surface).
-Final wiring (Aspire `AddViteApp` + contract-generated types) lands after the
-backend PR.
+The checked-in backend is a .NET 10 minimal API hosted by `Katalog.Api`.
+`Katalog.AppHost` starts it with PostgreSQL and the Vue app through Aspire;
+`contracts/katalog-api/openapi.json` is the committed build-generated contract.
 
 ## Frontend (`web/`)
 
@@ -50,20 +66,21 @@ Dev proxy (`vite.config.ts`): SPA always calls relative `/api/*`; Vite proxies
 to `API_HTTP`/`API_HTTPS` when injected (Aspire resource) with a
 `http://localhost:5192` fallback.
 
-## Planned backend (per architecture report)
+## Backend (`apps/katalog-api/`)
 
-Single `Katalog.Api` .NET 10 minimal API with vertical slices, an in-process
+`Katalog.Api` is a .NET 10 minimal API with vertical slices, an in-process
 release-polling `BackgroundService`, EF Core 10 + Npgsql against one
-`catalog` Postgres database, migrations via `--migrate` in the same binary, a
-committed OpenAPI contract in `contracts/katalog-api/openapi.json`, and
-Aspire orchestration through `Katalog.AppHost`. No user OAuth and no app auth
-in the MVP - all Spotify data comes from a client-credentials app token.
+`catalog` Postgres database, migrations via `--migrate` in the same binary, and
+the committed OpenAPI contract in `contracts/katalog-api/openapi.json`.
+Aspire orchestration is provided by `Katalog.AppHost`. No user OAuth and no app
+auth are used in the MVP - all Spotify data comes from a client-credentials app
+token.
 Source of truth: `data/katalog-arch-ref-q1/report.md` (external to this repo).
 
 ## Frontend/backend coupling decisions
 
 - Relative `/api` calls from the SPA; CORS configured by the backend.
-- TypeScript client generated from the committed OpenAPI contract; until the
-  contract exists the handwritten client mirrors that surface exactly.
-- `Katalog.AppHost` wiring for the SPA (`AddViteApp("web", "../web")`) lands
-  once the backend scaffold exists.
+- TypeScript client generation uses the committed OpenAPI contract; the current
+  handwritten client mirrors that surface.
+- `Katalog.AppHost` wires the SPA with `AddViteApp("web", "../web")`, references
+  the API, and waits for it before starting the web resource.

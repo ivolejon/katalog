@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:43c24d8358f624c1251396973f486862d27315f0fd79197333b9890d1ce768ed",
+  "claims": [
+    {
+      "id": "claim_bf0a0d167199451295237ad76e2ceaef",
+      "statement": "Aspire starts the API only after the PostgreSQL catalog database is ready and exposes the API liveness check at /alive.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L10-L19",
+          "version": "repo-lines-v1:sha256:bac8a69336973cc44c369d5ea94797e60d1081fcde46021b20e4f87c5f00be3e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYTgzODZiZTZmNDUzNTUzZWFkOTg1YzYxZDMxYzVjNGU2NjIyZWUwODhhOGQ4YjFjNTQyNzM1ODc2NzcxMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0MzVmZTJhMTc1ZTFkM2M4OTg4NWYxMWM0MzM5N2YyNTMzNmFhMjllMWUyMWNjYTU4ZGVmZGEzN2NkZGU2ZWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZGMzNDdmM2I5N2QyNzJjN2Y3NGU5OTYzNjkyOTM5YTgxNGFmZDMwMWNlZmNkM2Q5ZWMxNGI2NDc2YjVlNzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9f0bba04479e454f8c41b3d199837fca",
+      "statement": "The repository has no production deployment yet, but its checked-in API, AppHost, PostgreSQL resource, and OpenAPI contract are exercised by CI.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L22-L48",
+          "version": "repo-lines-v1:sha256:09cc571779851370019dfc444d98221a97c9536b5f505a2fa2c44f2a42bfc89c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMmFhZTkzYTQ0ZDhiMGZhMGU3NzY0NjU2NWZiNzM1YTQxZGI0N2I5M2U5MzkxM2Q2NDg0Y2M5M2ViN2UwZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU3ODQ4ZTFiZDA1MzBiMTIyMGYyMmNhZDZiMWViMjBjMWY1MmE2Yjg2NGIzNWFkNWZmNDIxOThhNzczMWI1MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmNmU2MmEwMjkxZmE5NWI2N2VmZWJjNzBhMTYxMDlhZTVkODMzYThiYjQ4MGI5Mzg0NWM3ZmUwMTFkMmZlYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQwYWQyZTBlNTUxMGQxMDU2ZGY4NDUzMTE4NWYyMjM0YTllM2U5NjAwNmQyMmM4YWQ4NTEyMjAzZjQ3MmQ3ZmUifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
+          "version": "repo-lines-v1:sha256:a319ad43b24df151c26dc52c6d90b5f3193a8aea86d5742da760e1659f4a8403:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-22T17:28:24.726Z"
+  }
+}

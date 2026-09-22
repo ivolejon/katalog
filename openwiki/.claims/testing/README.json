@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:8f5aecffd7c4e754776239a88b7c7ea7df64c6a89c4a598d06a3572eef1bef3d",
+  "claims": [
+    {
+      "id": "claim_ac4658ae04d84041a93fa4c2f757d121",
+      "statement": "The backend test project covers unit tests, PostgreSQL and WireMock integration tests, and AppHost smoke tests using xUnit, Testcontainers, WireMock.Net, and Aspire.Hosting.Testing.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/AppHost/AppHostSmokeTests.cs#L1-L20",
+          "version": "repo-lines-v1:sha256:28ace5055a2f47b343860bf91f581d1216dee5de0cbe63546f3e98e9c52aacf5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2MzliZjE4MjJjMWNjYmVlNWZjNWE1ZDU3ZDVlODRkNWUzMzE5MzkzNGRlNWQzNzM3NWNjOTVlODlkYTY0ZWYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEwOTA0OTBkMTY3YWRiOTEyNWM2NzNkOGUwODE2NDFjYWJmN2U4MzVjOGQ1ZTg2NjJhNjVhMDM4NjU4MzEwODMifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L1-L20",
+          "version": "repo-lines-v1:sha256:df22cec41beb33236b4741606de776341600c103422167ea92b81167fd29441d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmYzQzZjA5Yjg1OWRiZTgxOTVkYzk4NDQxYmE0ZDZiNjZkYzNhZjc5NGVlYTViMmIxOGRhNjExYTU4OTE4ODUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Katalog.Api.Tests.csproj#L7-L25",
+          "version": "repo-lines-v1:sha256:cc84cf1f6466f5a5bdeec0eb69a1505af1d936f6f8fb91b15fc5ea4463a6ba1b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjYmViZmI0NmYxMjk5MWFlNDg4ZWVkYjM0MTQwMjlhYjFmOTgwN2NkYzA5ZWYwNmYzZDEwYWM5NmIyODZiZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkZGMxNTliYjU5NzQ5OGY1MjJlNzkzNWM4MTIxN2JlZTI3OTcyODZlMDNkNmRlYWQ2YWUxZDUyNjI1ZTdlNjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxNzY1MjYwY2YzMTA5ZDA4OTEzNjBkZWYxNGE3ZTRhMTRlNDIxOTNjMzgwMGUwOGIxN2U1OTc4MWZjZjA4N2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5NGI0NWE0NDJlZDY0MDllODBiMjQ2YWEyNWExZWJiMTYxZDQ0MDQ1MDUwMzY4MTFmMDdjMjAzOTU4MDgyZTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_71c9f5864a6a47d8ac6a115f7f818466",
+      "statement": "CI builds and tests the full solution and separately regenerates the committed OpenAPI contract to fail on contract drift.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L22-L48",
+          "version": "repo-lines-v1:sha256:09cc571779851370019dfc444d98221a97c9536b5f505a2fa2c44f2a42bfc89c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMmFhZTkzYTQ0ZDhiMGZhMGU3NzY0NjU2NWZiNzM1YTQxZGI0N2I5M2U5MzkxM2Q2NDg0Y2M5M2ViN2UwZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU3ODQ4ZTFiZDA1MzBiMTIyMGYyMmNhZDZiMWViMjBjMWY1MmE2Yjg2NGIzNWFkNWZmNDIxOThhNzczMWI1MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmNmU2MmEwMjkxZmE5NWI2N2VmZWJjNzBhMTYxMDlhZTVkODMzYThiYjQ4MGI5Mzg0NWM3ZmUwMTFkMmZlYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQwYWQyZTBlNTUxMGQxMDU2ZGY4NDUzMTE4NWYyMjM0YTllM2U5NjAwNmQyMmM4YWQ4NTEyMjAzZjQ3MmQ3ZmUifQ"
+        },
+        {
+          "resource": "repo://.github/workflows/ci.yml#L50-L76",
+          "version": "repo-lines-v1:sha256:cf67dd4fce6cdeba2126837cfe8491e3047e9d8c25aa98e913507de26c40a748:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjNzc1ODNjNjI2YTEwODdhNGYwZmE2NDc4ODAwNTU1OWFiMzA5MTc5OWY3YzMxZjZiMzllZWUxZjI0M2I3MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2MzYwYzgwNjE4MWI4YzY2YjRmMzhjY2UxMWZhMDRiY2Q2NjhlOTg3MDBhOGMzYjIzYzEzZTM1ODk1NjkzMjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-22T17:28:24.726Z"
+  }
+}

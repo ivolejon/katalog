@@ -1,7 +1,8 @@
 {
-  "command": "init",
-  "model": "deepseek-v4-flash",
-  "updatedAt": "2026-09-22T15:47:55.000Z",
-  "gitHead": "f683918c691993b2b917f5732d3177f8e71b867e",
-  "snapshotHash": "L2hvbWUvaXZvbGVq"
+  "updatedAt": "2026-09-22T17:31:25.682Z",
+  "command": "update",
+  "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+  "model": "host-agent/opencode",
+  "status": "complete",
+  "language": "en"
 }

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:1949407cd141319aea8f9a27a95b41ef8c31e213455b9e592826ff29e0f12c60",
+  "claims": [
+    {
+      "id": "claim_03e9a4193a4542d9915fecbe01f6f743",
+      "statement": "The API supports label creation, update, deletion, artist linking and unlinking, artist search, and release listing for a label.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ArtistsEndpoints.cs#L11-L20",
+          "version": "repo-lines-v1:sha256:62019fcfe93e8a197a278a4b61d338dc9b2e74c5a16dd5fd3ac50a1efeec9517:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA4NzA3YTg4MzRjYzE2ODFmYzljODRjYTllMmUxYjJlZGYzZGM0YWRjYWU4ZjNkZWJhMGU2MjAyZmI0MTAxZmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1ZmNmNzBmOGI4NGVkMDQ0OGM5OGYzMzFiYjcxNDQ3YzRlNmI5ZmVkY2JkNGU2OTQxMTdmZTUyODQ5MmY3MjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ3MTY5NDU4ZjE3OTM0NjkxNDk1NTg4MzRmODZhOWM4NjU5MTExYTQzZjVjZTFlMzk1N2IxNzhiNWQzNzk3M2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmODFmZTkwZTM3NjgyOTNjMDEyODJiMmFjODdiNTYwZWU2YjljYjhkMmI0YjMzNGVhNzNiMjM0NzgwMTkwODIifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs#L20-L53",
+          "version": "repo-lines-v1:sha256:76086b1ea38a4d122e8d5b28117fe00f3bdccbf4e314bb72bb1dcb71c1985907:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEyN2ZjOTcxOWJiMDg2YzNlN2M4MzhjMGI1ZjRlNjY3YmI3MTdjZTBkYzRiMmQxMDY4OTg5M2M0Mjc0NWM4NzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZiYjBlZjlmY2NjYTcyOTRkM2JlOTNlYjdlZDg2MTVkODIwNzhhZTFkYjY2NGYxOTdmNDRjZDQ5OWY4ZjcyZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMwZjYwMzBhYzkxYWM5ZDNlODEwMTRlNDBlNGI1Y2ZlMGViODEyZDhiNmM0NDU2M2JiYjBmZjlmNmMzNTJjMjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmODFmZTkwZTM3NjgyOTNjMDEyODJiMmFjODdiNTYwZWU2YjljYjhkMmI0YjMzNGVhNzNiMjM0NzgwMTkwODIifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs#L8-L16",
+          "version": "repo-lines-v1:sha256:8e06b65bf8ba5808e10ec0cf964aa517a753a144d540b3c7c03b0c022e3907c9:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODZmNDEzZjdkOWEzOTFkOWQwNzU5Nzc4OTVkZGRhZDFiNzAxNjU2YzFmMzgzOWE5ZTliZWY2ZjkwNGE4NGU3MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmJiMGVmOWZjY2NhNzI5NGQzYmU5M2ViN2VkODYxNWQ4MjA3OGFlMWRiNjY0ZjE5N2Y0NGNkNDk5ZjhmNzJkYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2RlODk1ZDc3MWU5OWMyNGE3MzU4NDQzMDRiMjVhZTAxZGUyNWNjNDVkYmNiMDhjOWYyMDZjNjUyOWQ5NzIxYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGY4MWZlOTBlMzc2ODI5M2MwMTI4MmIyYWM4N2I1NjBlZTZiOWNiOGQyYjRiMzM0ZWE3M2IyMzQ3ODAxOTA4MiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1cae9c5f7a3244c3a678fae46ee553f9",
+      "statement": "The API contract is committed in contracts/katalog-api/openapi.json, while the frontend currently uses a handwritten typed client.",
+      "evidence": [
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json#L1-L15",
+          "version": "repo-lines-v1:sha256:289ceac7bf2c84e02268e7b440d7d57c3a7e6f021d8f5e58381e38ea3099a0b8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MTlkM2FmMmY2YmVhOTFhOTk4MjNjMDM1MTgxMjk2ZjVlOWYyMzMwYmMwYjA5MjYzZWVmMjVjYzFlZmFlMWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyOGM3MjRmYzE5NGJmN2VjNDc0ZTQ4MTBkNGQyYTdhZjY4ZjlmOTE5MTNlZDFmMWI4NzhkYjVkZWMyYzU4MjgifQ"
+        },
+        {
+          "resource": "repo://web/src/api/README.md#L3-L7",
+          "version": "repo-lines-v1:sha256:1a0a4e119de9924e69ac173213cd2f43a274c05912a213c9c8658f5fe0e37ecc:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTVhYmI0NmE2MmM0MDBhMDRhNDYzNWE3OWI1YjM1MTkwNjcxZDE1NTBjZGU3ZTY4Y2RkNTcyODkzMGY3ODU2YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTAyMzY1Y2ZhMTAxYjJiOTJhMDk1ZmQzMzA5MjI1MDZiOWVkMTgyNmI5NjBiNWMyYjVjMDE1YmVjNTMxNmY1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzVmYjY3MzQwMDRiMmNhMzc0ZmJhOTM1ZTEyZjUzMWUwN2RlMGU2NDlkNDMwMTdlNDBhOGNmYmM4YTUwOTQ3NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmViNGMzYTY4OWRhMGM2ZGIwM2VkNWEwMThmMjllNGE0NzliZGM4ZTI2ZDNhNDhiOTEwNGY4NzY0MTJhM2RlNSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-22T17:28:24.726Z"
+  }
+}

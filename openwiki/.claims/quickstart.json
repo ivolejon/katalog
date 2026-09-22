@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a27a9d1283eef3ebd6ce00ea09b391a21dabeb3809d5a1e484f00a262cc552e6",
+  "claims": [
+    {
+      "id": "claim_72442e6dedf24dcabd6e44a84ccb5b86",
+      "statement": "The repository currently contains a Vue frontend, .NET API, Aspire orchestration, PostgreSQL integration, and committed OpenAPI contract.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
+          "version": "repo-lines-v1:sha256:a319ad43b24df151c26dc52c6d90b5f3193a8aea86d5742da760e1659f4a8403:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L17-L56",
+          "version": "repo-lines-v1:sha256:8f0c85f7ffce84116d7c460bd517ebdb61e90e3a4243c20fed074b50b2129ce5:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM2MmYwZDNjZTMyNTJiYWRlODc3ZGNlNTllZWYzNWE2MjZjNjk1MWE4ODVkNmFhODc3YWQ0YmJiMjFiZmQ3MzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzOTdhMDFiOGM5YzdmNGE3MDQ0NzJmMGE5NTQxODgwZmQ1YjAzM2Y5ZDdmYWRhMGFmZDM5MTg0OTkxZmJmYzQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNkMTAwMzJkYmFlYzZjNzY2NDJmMzY4MWVmZGE3OTE5YmFlMjRiOWQyYTUwZjg5MTc5NGEwNWE5MjRlNGNlMTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUzMzc0MzcwMWIxZTY5N2RjOWY4MjJiNDc2ZGI5NTMyZTdmZjcxNWU5OTU2YjFkMTdiZWQwZmUyYmNhOGE2YzgifQ"
+        },
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json#L1-L15",
+          "version": "repo-lines-v1:sha256:289ceac7bf2c84e02268e7b440d7d57c3a7e6f021d8f5e58381e38ea3099a0b8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MTlkM2FmMmY2YmVhOTFhOTk4MjNjMDM1MTgxMjk2ZjVlOWYyMzMwYmMwYjA5MjYzZWVmMjVjYzFlZmFlMWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyOGM3MjRmYzE5NGJmN2VjNDc0ZTQ4MTBkNGQyYTdhZjY4ZjlmOTE5MTNlZDFmMWI4NzhkYjVkZWMyYzU4MjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_688203e49103471f85553a39b404a939",
+      "statement": "The full-stack local workflow restores, builds, tests, and runs the solution through Aspire.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L32-L41",
+          "version": "repo-lines-v1:sha256:7596e127b28755b273e40fad425371feb57c53f63dc20210c4665e80ce6af195:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3YzA2YzU2MWQ1YzMyNzM0MzY4NTI2OGE0NmIzMzkxZjM5OThlZWU4OTBkMmJlNTFmMGQyMWNjNGE1M2FlNmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJkZjgyOTgyYmQxMGRmZjZjMmI2MmMwMzU4ODA3OTVjM2RlZmU0OGE3OWMyNjIyMjc3OGExZTU3YTk5YmFkZjAifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-22T17:28:24.726Z"
+  }
+}
