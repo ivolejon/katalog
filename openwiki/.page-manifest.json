@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "pages": {
+    "/openwiki/architecture/README.md": {
+      "pageVersion": "sha256:244c5732306880568ce9d2c73c29488eaad6f4172a1e3a3042ce3e6ef0485d66",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    },
+    "/openwiki/domain/README.md": {
+      "pageVersion": "sha256:1949407cd141319aea8f9a27a95b41ef8c31e213455b9e592826ff29e0f12c60",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    },
+    "/openwiki/operations/README.md": {
+      "pageVersion": "sha256:43c24d8358f624c1251396973f486862d27315f0fd79197333b9890d1ce768ed",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    },
+    "/openwiki/quickstart.md": {
+      "pageVersion": "sha256:a27a9d1283eef3ebd6ce00ea09b391a21dabeb3809d5a1e484f00a262cc552e6",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    },
+    "/openwiki/testing/README.md": {
+      "pageVersion": "sha256:8f5aecffd7c4e754776239a88b7c7ea7df64c6a89c4a598d06a3572eef1bef3d",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    },
+    "/openwiki/workflows/README.md": {
+      "pageVersion": "sha256:29c29c698f170bc8745925fd3c9d0ab83a60c26d5a6d76943da10a1b96ae3a27",
+      "completedBy": "opencode",
+      "completedRunId": "7c0e3ec7-d556-46c6-bac6-149c510c3921",
+      "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
+      "sourceFingerprint": "sha256:9ca39e2d0f7b6b872b9f3d17b1a651154f291b45abd3afc7cc5fff439f613e15"
+    }
+  }
+}

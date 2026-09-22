@@ -7,7 +7,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 ## Frontend (web/)
 
 - Vue 3 + TypeScript + Vite SPA built with shadcn-vue preset **a1AhVxI** (reka-ui, Hugeicons, Figtree, neutral, Tailwind 4). Setup, dev proxy and commands: `web/README.md`.
-- API client is handwritten until the backend commits `contracts/katalog-api/openapi.json`; then run `npm run generate:client` in `web/` (@hey-api/openapi-ts). Endpoint map + switch procedure: `web/src/api/README.md`.
+- API client is handwritten while the committed `contracts/katalog-api/openapi.json` remains available for generated-client adoption; run `npm run generate:client` in `web/` (@hey-api/openapi-ts) when switching. Endpoint map + switch procedure: `web/src/api/README.md`.
 - shadcn-vue emits `@hugeicons/vue` icon imports that the package does not export; bridge lives in `src/lib/icons.ts` (`web/README.md` "UI kit notes"). Extend it when re-adding components.
 - AppHost integration details: `web/README.md` "AppHost integration".
 
@@ -27,9 +27,33 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 - **Databas:** EF Core 10 + Npgsql, `ConnectionStrings:catalog`. Schema-migrering vid start i dev; `--migrate`/`--rollback` i samma binär. Konventioner (se Infrastructure/Configurations): inga JSON-kolumner, junction-tabeller, enums som int med gaps, `Guid.CreateVersion7()`/`uuidv7()`.
 - **Tester:** `dotnet test Katalog.slnx` - unit + integration (Testcontainers.PostgreSql postgres:18.3 + WireMock) + AppHost-smoke. Kräver Docker. Integration testas mot WireMock, aldrig riktig Spotify.
 
+## OpenWiki
+
+This repository has documentation located in the /openwiki directory.
+
+Start here:
+- [OpenWiki quickstart](openwiki/quickstart.md)
+
+OpenWiki includes repository overview, architecture notes, workflows, domain concepts, operations, integrations, testing guidance, and source maps.
+
+When working in this repository, read the OpenWiki quickstart first, then follow its links to the relevant architecture, workflow, domain, operation, and testing notes.
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.
 Do not repeat what the codebase already shows; point to the authoritative file or command instead.
 Prefer rewriting or pruning existing entries over appending new ones.
 When updating this file, preserve this bar for all agents and keep entries concise.
+
+<!-- OPENWIKI:START -->
+
+## OpenWiki
+
+This repository has a generated `openwiki/` evidence index. It is optional just-in-time context, not required startup reading.
+
+- Treat source code and tests as authoritative. A brief's unknowns and review items are verification gaps, not automatic requirements.
+- Prefer the narrowest quiet validation that proves the changed behavior. Preserve complete failure output.
+
+The scheduled OpenWiki GitHub Actions workflow refreshes the repository wiki. Do not hand-edit generated OpenWiki pages unless explicitly asked; prefer updating source code/docs and letting OpenWiki regenerate.
+
+<!-- OPENWIKI:END -->
