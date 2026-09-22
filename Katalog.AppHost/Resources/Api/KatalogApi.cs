@@ -14,6 +14,7 @@ public static class KatalogApi
             .AddProject<Projects.Katalog_Api>("api")
             .WithReference(catalogDb)
             .WaitFor(catalogDb)
+            .WithHttpEndpoint(name: "http")
             .WithExternalHttpEndpoints()
             .WithHttpHealthCheck("/alive");
     }

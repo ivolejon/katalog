@@ -13,11 +13,11 @@ public static class LabelsEndpoints
     {
         var group = routes.MapGroup("/api/labels");
 
-        group.MapGet("/", ListLabels)
+        group.MapGet("", ListLabels)
             .WithName("ListLabels")
             .Produces<IReadOnlyList<LabelSummaryResponse>>();
 
-        group.MapPost("/", CreateLabel)
+        group.MapPost("", CreateLabel)
             .WithName("CreateLabel")
             .AddEndpointFilter<ValidationFilter<CreateLabelRequest>>()
             .Produces<LabelSummaryResponse>(StatusCodes.Status201Created)

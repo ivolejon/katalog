@@ -41,7 +41,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
     public static string AlbumsJson(string artistId, params string[] albumIds) =>
         $$"""
         {
-          "items": [{{string.Join(",", albumIds.Select((id, i) => AlbumItemJson(artistId, id, $"Album {i + 1}", 2010)))}}}],
+          "items": [{{string.Join(",", albumIds.Select((id, i) => AlbumItemJson(artistId, id, $"Album {i + 1}", 2010)))}}],
           "next": null,
           "total": {{albumIds.Length}}
         }
