@@ -42,8 +42,8 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
 
         // Detail
         var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
-        Assert.Equal(0, detail!.ArtistCount);
-        Assert.Empty(detail!.Artists);
+        Assert.Equal(1, detail!.ArtistCount);
+        Assert.Equal("Fever Ray", Assert.Single(detail!.Artists).Name);
 
         // Update
         var updateResponse = await client.PutAsJsonAsync($"/api/labels/{created.Id}", new { name = "Ninja Tune Records" });
