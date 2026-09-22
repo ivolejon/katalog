@@ -53,9 +53,10 @@ Key structure:
 - `src/composables/useArtistSearch.ts` - debounced Spotify artist search for
   the add-label combobox (empty queries reset without hitting the API).
 - `src/api/` - **handwritten typed client** today (`http.ts`, `types.ts`,
-  `labels.ts`; `API_CLIENT_ORIGIN = 'handwritten'`); switch to the generated
-  `@hey-api/openapi-ts` client when `contracts/katalog-api/openapi.json`
-  lands (`npm run generate:client`). Endpoint map: see `src/api/README.md`.
+  `labels.ts`; `API_CLIENT_ORIGIN = 'handwritten'`); the committed
+  `contracts/katalog-api/openapi.json` is available when switching to the
+  generated `@hey-api/openapi-ts` client (`npm run generate:client`). Endpoint
+  map: see `src/api/README.md`.
 - `src/components/` - feature components (`labels/`, `albums/`, `artists/`,
   `common/`, `layout/`) plus generated shadcn-vue primitives in
   `src/components/ui/`.

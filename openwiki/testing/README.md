@@ -27,16 +27,15 @@ generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
   verified against a mock API in headless Chromium: the app serves, labels
   list/detail and add-label-by-artist-search render, and the release tabs
   show data.
-- **Gate test findings** - the no-mistakes test gate could not run interactive
-  scenarios live (no browser driver, no backend in the frontend branch). Per
-  the recorded decision, the five interactive scenarios are verified in the
-  **integration phase** against the real backend stack:
+- **Planned frontend scenarios** - no browser test files currently record live
+  verification for these scenarios. They are intended for a future integration
+  phase against the real backend stack:
   add label via Spotify artist search; dialog state reset on cancel/reopen;
   debounce (stale search results do not repopulate an emptied query); fast
   navigation between label details; concurrent mutation vs refresh.
 - The store's stale-response guards (`fetchId`/`revision`) and the debounced
   search composable are deliberately structured so those scenarios can be
-  asserted with minimal test infrastructure once the backend exists.
+  asserted with minimal test infrastructure.
 
 ## Backend test strategy
 

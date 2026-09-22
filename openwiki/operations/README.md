@@ -43,7 +43,7 @@ lines, or PR descriptions.
 ## Local dependencies
 
 - .NET SDK 10 (`global.json` pinned), Aspire CLI 13.5.4
-  (`dotnet tool install -g Aspire.Cli`), Docker (for Aspire containers),
+  (`dotnet tool install -g Aspire.Cli --version 13.5.4`), Docker (for Aspire containers),
   Node.js + npm (frontend).
 - Backend dev flow: `aspire run` from the solution root starts Postgres, the API,
   and the frontend resource; the Aspire dashboard shows traces/logs.
@@ -65,5 +65,5 @@ poll frequency). Dev-mode quota is small - do not burn it on user-token flows
 
 ## Health
 
-Planned backend: `/health` + `/alive` endpoints with health checks wired
-through Aspire `WaitFor` so the API starts only after Postgres is ready.
+The backend exposes `/health` and `/alive`; Aspire wires the API resource through
+`WaitFor` so it starts only after Postgres is ready.
