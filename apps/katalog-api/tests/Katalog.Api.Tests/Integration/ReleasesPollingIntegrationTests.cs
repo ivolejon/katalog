@@ -48,7 +48,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody(WireMockSpotify.AlbumsJson(albumId)));
+                .WithBody(WireMockSpotify.AlbumsJson(ArtistId, albumId)));
     }
 
     [Fact]

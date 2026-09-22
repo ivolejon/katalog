@@ -38,16 +38,16 @@ public sealed class WireMockSpotify : IAsyncDisposable
         }
         """;
 
-    public static string AlbumsJson(params string[] albumIds) =>
+    public static string AlbumsJson(string artistId, params string[] albumIds) =>
         $$"""
         {
-          "items": [{{string.Join(",", albumIds.Select((id, i) => AlbumItemJson(id, $"Album {i + 1}", 2010)))}}],
+          "items": [{{string.Join(",", albumIds.Select((id, i) => AlbumItemJson(artistId, id, $"Album {i + 1}", 2010)))}}}],
           "next": null,
           "total": {{albumIds.Length}}
         }
         """;
 
-    public static string AlbumItemJson(string id, string name, int releaseYear) =>
+    public static string AlbumItemJson(string artistId, string id, string name, int releaseYear) =>
         $$"""
         {
           "id": "{{id}}",
@@ -58,7 +58,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
           "images": [{"url": "https://i.scdn.co/image/{{id}}" }],
           "external_urls": {"spotify": "https://open.spotify.com/album/{{id}}"},
           "total_tracks": 10,
-          "artists": [{"id": "artist-1", "name": "Artist One"}]
+          "artists": [{"id": "{{artistId}}", "name": "Artist One"}]
         }
         """;
 
