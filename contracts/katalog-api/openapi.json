@@ -5,6 +5,51 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/labels/search": {
+      "get": {
+        "tags": [
+          "LabelsEndpoints"
+        ],
+        "operationId": "SearchLabels",
+        "parameters": [
+          {
+            "name": "Q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabelSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/labels": {
       "get": {
         "tags": [
@@ -527,18 +572,21 @@
       "CreateLabelRequest": {
         "required": [
           "name",
-          "spotifyId"
+          "spotifyIds"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
-          "spotifyId": {
+          "spotifyIds": {
             "type": [
               "null",
-              "string"
-            ]
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -607,6 +655,82 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AlbumResponse"
+            }
+          }
+        }
+      },
+      "LabelSearchAlbumResult": {
+        "required": [
+          "albumId",
+          "name",
+          "artists",
+          "imageUrl",
+          "releaseDate",
+          "externalUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "albumId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelSearchArtistResult"
+            }
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "releaseDate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "externalUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LabelSearchArtistResult": {
+        "required": [
+          "spotifyId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "spotifyId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "LabelSearchResponse": {
+        "required": [
+          "matchedLabelName",
+          "albums"
+        ],
+        "type": "object",
+        "properties": {
+          "matchedLabelName": {
+            "type": "string"
+          },
+          "albums": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelSearchAlbumResult"
             }
           }
         }

@@ -38,6 +38,27 @@ public sealed record ArtistSearchResult(
     IReadOnlyList<string> Genres,
     int? Popularity);
 
+/// <summary>Album hit from a Spotify label search (label:"..." filter, type=album).</summary>
+public sealed record LabelSearchAlbumResult(
+    string AlbumId,
+    string Name,
+    IReadOnlyList<LabelSearchArtistResult> Artists,
+    string? ImageUrl,
+    string? ReleaseDate,
+    string? ExternalUrl);
+
+/// <summary>Artist on a label-search album hit (simplified: id + name from the album object).</summary>
+public sealed record LabelSearchArtistResult(string SpotifyId, string Name);
+
+/// <summary>
+/// Label search result: the normalized label name that was searched plus the matching albums.
+/// The label name shown to the user is the searched term (simplified album objects carry no
+/// label field), so <see cref="MatchedLabelName"/> echoes the query.
+/// </summary>
+public sealed record LabelSearchResponse(
+    string MatchedLabelName,
+    IReadOnlyList<LabelSearchAlbumResult> Albums);
+
 /// <summary>Album/release row used by the frontend "Releaser" tab.</summary>
 public sealed record AlbumResponse(
     Guid Id,
@@ -52,7 +73,7 @@ public sealed record AlbumResponse(
     int TotalTracks,
     IReadOnlyList<string> ArtistNames);
 
-public sealed record CreateLabelRequest(string Name, string? SpotifyId);
+public sealed record CreateLabelRequest(string Name, IReadOnlyList<string>? SpotifyIds);
 
 public sealed record UpdateLabelRequest(string Name);
 

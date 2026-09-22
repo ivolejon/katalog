@@ -13,6 +13,14 @@ public interface ISpotifyApiClient
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Searches albums whose Spotify label field matches <paramref name="labelName"/> via the
+    /// undocumented-but-working <c>label:"&lt;name&gt;"</c> search filter (verified live 2026-09-22;
+    /// not listed in the official spec's filter list). Returns simplified album objects.
+    /// </summary>
+    Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
+        CancellationToken cancellationToken);
+
+    /// <summary>
     /// Returns the artist discography (albums + singles, as configured by include_groups).
     /// Pages through the full result set; per-artist quota is respected by the caller's poll rhythm.
     /// </summary>
@@ -43,6 +51,19 @@ public sealed class SpotifyApiClient(
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<SpotifySearchArtistsResponse>(cancellationToken)
                ?? throw new SpotifyApiException("Spotify search returned an empty body.");
+    }
+
+    public async Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
+        CancellationToken cancellationToken)
+    {
+        // EscapeDataString encodes the quotes as %22 (q=label%3A%22<name>%22), which Spotify
+        // accepts for the label: filter - verified live 2026-09-22.
+        var queryString = Uri.EscapeDataString($"label:\"{labelName}\"");
+        var response = await httpClient.GetAsync(
+            $"v1/search?q={queryString}&type=album&market={market}&limit={limit}", cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<SpotifySearchAlbumsResponse>(cancellationToken)
+               ?? throw new SpotifyApiException("Spotify album search returned an empty body.");
     }
 
     public async Task<IReadOnlyList<SpotifyAlbumItem>> GetArtistAlbumsAsync(string spotifyArtistId, int limit, string market,

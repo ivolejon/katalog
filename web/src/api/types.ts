@@ -20,8 +20,9 @@ export interface LabelSummary {
 
 /** A label as it can be added (POST /api/labels). */
 export interface CreateLabelInput {
-  spotifyId: string
   name: string
+  /** Spotify artist ids linked to this label (polling anchors). */
+  spotifyIds: string[]
 }
 
 /** Artist search result (GET /api/search?type=artist). */
@@ -31,6 +32,28 @@ export interface ArtistSearchResult {
   imageUrl: string | null
   externalUrl: string
   genres: string[]
+}
+
+/** Artist on a label-search album hit (simplified: id + name from the album object). */
+export interface LabelSearchArtist {
+  spotifyId: string
+  name: string
+}
+
+/** Album hit from a Spotify label search (GET /api/labels/search). */
+export interface LabelSearchAlbum {
+  albumId: string
+  name: string
+  artists: LabelSearchArtist[]
+  imageUrl: string | null
+  releaseDate: string | null
+  externalUrl: string
+}
+
+/** Label search response: the searched label name plus the matching albums. */
+export interface LabelSearchResponse {
+  matchedLabelName: string
+  albums: LabelSearchAlbum[]
 }
 
 export type ReleaseDatePrecision = 'year' | 'month' | 'day'

@@ -47,6 +47,10 @@ public sealed class WireMockSpotify : IAsyncDisposable
         }
         """;
 
+    /// <summary>Spotify search response body (type=album): a page of simplified album items.</summary>
+    public static string AlbumSearchJson(params string[] albumItems) =>
+        "{\"albums\": {\"items\": [" + string.Join(",", albumItems) + "], \"total\": " + albumItems.Length + "}}";
+
     public static string AlbumItemJson(string artistId, string id, string name, int releaseYear) =>
         $$"""
         {

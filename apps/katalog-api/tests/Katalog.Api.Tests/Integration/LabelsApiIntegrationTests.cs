@@ -157,4 +157,121 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var response = await client.GetAsync("/api/search?q=karin+dreijer&type=artist&limit=50");
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
+    [Fact]
+    public async Task SearchLabels_ProxiesSpotifyAlbumSearch_WithLabelFilter()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        // The raw wire query is q=label%3A%22Globuli%22... ; WireMock matches the decoded value,
+        // so asserting "label:\"Globuli\"" proves the quotes survived URI encoding and the
+        // label: filter reaches Spotify unchanged (verified live 2026-09-22).
+        var albums = new[]
+        {
+            WireMockSpotify.AlbumItemJson("labelartist1", "labelalbum1", "Daydream Forever", 2023),
+            WireMockSpotify.AlbumItemJson("labelartist2", "labelalbum2", "Era", 2021),
+        };
+        var searchJson = WireMockSpotify.AlbumSearchJson(albums);
+        spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+            .WithParam("q", "label:\"Globuli\"")
+            .WithParam("type", "album")
+            .WithParam("market", "SE")
+            .WithParam("limit", "10"))
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(searchJson));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/labels/search?q=Globuli");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<LabelSearchResponse>();
+        Assert.NotNull(result);
+        Assert.Equal("Globuli", result!.MatchedLabelName);
+        Assert.Equal(2, result.Albums.Count);
+        var first = result.Albums[0];
+        Assert.Equal("labelalbum1", first.AlbumId);
+        Assert.Equal("Daydream Forever", first.Name);
+        Assert.Equal("2023-01-15", first.ReleaseDate);
+        Assert.Equal("labelartist1", Assert.Single(first.Artists).SpotifyId);
+        Assert.Equal("https://open.spotify.com/album/labelalbum1", first.ExternalUrl);
+    }
+
+    [Fact]
+    public async Task SearchLabels_WithLimitAboveMax_RejectsWith400()
+    {
+        // Spotify caps search limit at 10 (limits PR, verified live 2026-09-22); the Katalog API
+        // rejects a larger limit with 400 before forwarding to Spotify.
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/labels/search?q=Globuli&limit=11");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var zeroLimit = await client.GetAsync("/api/labels/search?q=Globuli&limit=0");
+        Assert.Equal(HttpStatusCode.BadRequest, zeroLimit.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateLabel_WithMultipleSpotifyIds_LinksAllArtists()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/artistone").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("artistone", "Karin Dreijer")));
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/artisttwo").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("artisttwo", "Fever Ray")));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Rabid Records", spotifyIds = new[] { "artistone", "artisttwo" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+        Assert.Equal(2, created!.ArtistCount);
+        Assert.Equal(new[] { "artistone", "artisttwo" }, created.SpotifyIds);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(2, detail!.ArtistCount);
+        Assert.Equal(new[] { "Fever Ray", "Karin Dreijer" },
+            detail.Artists.Select(a => a.Name).OrderBy(n => n).ToArray());
+    }
+
+    [Fact]
+    public async Task CreateLabel_WithUnknownSpotifyId_RollsBackWith404()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/artistone").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("artistone", "Karin Dreijer")));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        // Second id is unknown to Spotify -> whole create rolls back, nothing is persisted.
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Rabid Records", spotifyIds = new[] { "artistone", "doesnotexist123" } });
+        Assert.Equal(HttpStatusCode.NotFound, createResponse.StatusCode);
+
+        var labels = await client.GetFromJsonAsync<LabelSummaryResponse[]>("/api/labels");
+        Assert.Empty(labels!);
+    }
 }

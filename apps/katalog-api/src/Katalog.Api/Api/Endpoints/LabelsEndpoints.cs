@@ -3,6 +3,7 @@ using Katalog.Api.Api.Validators;
 using Katalog.Api.Contracts;
 using Katalog.Api.Features.Artists;
 using Katalog.Api.Features.Labels;
+using Katalog.Api.Setup;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Katalog.Api.Api.Endpoints;
@@ -12,6 +13,14 @@ public static class LabelsEndpoints
     public static RouteGroupBuilder MapLabelsEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/labels");
+
+        // GET /api/labels/search?q=...&limit=... - label search proxying Spotify's
+        // label:"..." album filter (verified live 2026-09-22; not in the spec's filter list).
+        group.MapGet("/search", SearchLabels)
+            .WithName("SearchLabels")
+            .AddEndpointFilter<ValidationFilter<SearchLabelsRequest>>()
+            .Produces<LabelSearchResponse>()
+            .Produces(StatusCodes.Status400BadRequest);
 
         group.MapGet("", ListLabels)
             .WithName("ListLabels")
@@ -58,10 +67,17 @@ public static class LabelsEndpoints
     private static async Task<IResult> ListLabels(GetLabels getLabels, CancellationToken cancellationToken)
         => TypedResults.Ok(await getLabels.ListAsync(cancellationToken));
 
+    private static async Task<IResult> SearchLabels(SearchLabels searchLabels,
+        [AsParameters] SearchLabelsRequest request, CancellationToken cancellationToken)
+    {
+        var limit = request.Limit ?? SpotifyOptions.SearchLimitDefault;
+        return TypedResults.Ok(await searchLabels.SearchAsync(request.Q, limit, cancellationToken));
+    }
+
     private static async Task<IResult> CreateLabel(CreateLabel createLabel, CreateLabelRequest request,
         CancellationToken cancellationToken)
     {
-        var outcome = await createLabel.CreateAsync(request.Name, request.SpotifyId, cancellationToken);
+        var outcome = await createLabel.CreateAsync(request.Name, request.SpotifyIds, cancellationToken);
         if (outcome.Status == CreateLabelStatus.ArtistNotFound)
         {
             return TypedResults.NotFound();
@@ -77,9 +93,10 @@ public static class LabelsEndpoints
         }
 
         var label = outcome.Label!;
-        var spotifyIds = outcome.Artist is null ? [] : new[] { outcome.Artist.SpotifyId };
+        var linkedArtists = outcome.Artists ?? [];
+        var spotifyIds = linkedArtists.Select(a => a.SpotifyId).ToList();
         return TypedResults.Created($"/api/labels/{label.Id}",
-            new LabelSummaryResponse(label.Id, spotifyIds, label.Name, label.Slug, outcome.Artist is null ? 0 : 1,
+            new LabelSummaryResponse(label.Id, spotifyIds, label.Name, label.Slug, spotifyIds.Count,
                 label.CreatedAtUtc, label.UpdatedAtUtc));
     }
 

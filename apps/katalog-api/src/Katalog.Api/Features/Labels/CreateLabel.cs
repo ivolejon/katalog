@@ -14,7 +14,7 @@ public enum CreateLabelStatus
     ArtistNotFound
 }
 
-public sealed record CreateLabelOutcome(CreateLabelStatus Status, Label? Label, ArtistSummaryResponse? Artist);
+public sealed record CreateLabelOutcome(CreateLabelStatus Status, Label? Label, IReadOnlyList<ArtistSummaryResponse>? Artists);
 
 public sealed class CreateLabel(
     KatalogContext context,
@@ -22,8 +22,13 @@ public sealed class CreateLabel(
     TimeProvider timeProvider,
     ILogger<CreateLabel> logger)
 {
-    /// <summary>Returns the created label, or null when the slug already exists (conflict).</summary>
-    public async Task<CreateLabelOutcome> CreateAsync(string name, string? spotifyId, CancellationToken cancellationToken)
+    /// <summary>
+    /// Creates a label and optionally links the Spotify artists behind it (add-label flow: the
+    /// label search returns album hits whose artists are attached, giving polling its anchors).
+    /// Returns an outcome: Created with the linked artists, SlugConflict, or ArtistNotFound
+    /// (any unknown Spotify id rolls the whole transaction back).
+    /// </summary>
+    public async Task<CreateLabelOutcome> CreateAsync(string name, IReadOnlyList<string>? spotifyIds, CancellationToken cancellationToken)
     {
         var normalized = name.Trim();
         var slug = LabelSlug.From(normalized);
@@ -51,21 +56,23 @@ public sealed class CreateLabel(
                 return new CreateLabelOutcome(CreateLabelStatus.SlugConflict, null, null);
             }
 
-            if (!string.IsNullOrWhiteSpace(spotifyId))
+            var linkedArtists = new List<ArtistSummaryResponse>();
+            foreach (var spotifyId in spotifyIds ?? [])
             {
                 var artist = await addArtistToLabel.AddAsync(label.Id, spotifyId, cancellationToken);
                 if (artist is null)
                 {
+                    logger.LogInformation("Create label {Name} rolled back: Spotify artist {SpotifyId} not found.",
+                        normalized, spotifyId);
                     await transaction.RollbackAsync(cancellationToken);
                     return new CreateLabelOutcome(CreateLabelStatus.ArtistNotFound, null, null);
                 }
 
-                await transaction.CommitAsync(cancellationToken);
-                return new CreateLabelOutcome(CreateLabelStatus.Created, label, artist);
+                linkedArtists.Add(artist);
             }
 
             await transaction.CommitAsync(cancellationToken);
-            return new CreateLabelOutcome(CreateLabelStatus.Created, label, null);
+            return new CreateLabelOutcome(CreateLabelStatus.Created, label, linkedArtists);
         });
     }
 

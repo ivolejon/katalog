@@ -22,6 +22,7 @@ public static class FeaturesSetup
         services.AddScoped<AddArtistToLabel>();
         services.AddScoped<RemoveArtistFromLabel>();
         services.AddScoped<SearchArtists>();
+        services.AddScoped<SearchLabels>();
         services.AddScoped<GetLabelReleases>();
 
         services.AddScoped<ReleasePoller>();
