@@ -12,8 +12,9 @@ in the MVP (arch report 3.3).
 - Vue 3.5 + TypeScript 5.9 + Vite 8 (research 4.1)
 - Tailwind CSS 4 via `@tailwindcss/vite`, CSS-first config in `src/assets/index.css`
 - shadcn-vue components in `src/components/ui/` (installed via `npx shadcn-vue add`)
-- `vue-router` (lazy routes) + `pinia` for app state; data fetching in composables
-  (TanStack Query intentionally not added - Pinia + composables covers the MVP surface)
+- `vue-router` (lazy routes) + `pinia` for app state and label data fetching;
+  artist search is handled by a composable (TanStack Query intentionally not
+  added - Pinia + composables covers the MVP surface)
 - `vue-sonner` for toasts
 
 ## Getting started
