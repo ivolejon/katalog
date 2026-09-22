@@ -143,12 +143,16 @@ public sealed class ReleasePoller(
             ? album.Artists
             : [new SpotifyAlbumArtist(followedArtist.SpotifyId, followedArtist.Name)];
 
+        var storedArtistIds = new List<Guid>(albumArtists.Count);
         for (var position = 0; position < albumArtists.Count; position++)
         {
             var albumArtist = albumArtists[position];
             var storedArtistId = await UpsertArtistAsync(albumArtist, cancellationToken);
+            storedArtistIds.Add(storedArtistId);
             await UpsertAlbumArtistAsync(storedAlbumId, storedArtistId, position, cancellationToken);
         }
+
+        await RemoveMissingAlbumArtistsAsync(storedAlbumId, storedArtistIds, cancellationToken);
     }
 
     private async Task<Guid> UpsertArtistAsync(SpotifyAlbumArtist artist, CancellationToken cancellationToken)
@@ -192,6 +196,26 @@ public sealed class ReleasePoller(
         command.Parameters.Add(P("albumId", albumId));
         command.Parameters.Add(P("artistId", artistId));
         command.Parameters.Add(P("position", position));
+
+        await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    private async Task RemoveMissingAlbumArtistsAsync(Guid albumId, IReadOnlyCollection<Guid> artistIds,
+        CancellationToken cancellationToken)
+    {
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM album_artists
+            WHERE album_id = @albumId
+              AND artist_id <> ALL(@artistIds)
+            """;
+
+        command.Parameters.Add(P("albumId", albumId));
+        command.Parameters.Add(P("artistIds", artistIds.ToArray()));
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }

@@ -49,7 +49,8 @@ public sealed class SpotifyApiClient(
         CancellationToken cancellationToken)
     {
         var items = new List<SpotifyAlbumItem>();
-        var next = $"v1/artists/{spotifyArtistId}/albums?include_groups=album,single&market={market}&limit={limit}";
+        Uri? next = new($"v1/artists/{spotifyArtistId}/albums?include_groups=album,single&market={market}&limit={limit}",
+            UriKind.Relative);
 
         while (next is not null)
         {
@@ -60,9 +61,27 @@ public sealed class SpotifyApiClient(
 
             items.AddRange(page.Items);
             logger.LogDebug("Fetched {Count} albums for artist {ArtistId} (next: {HasNext}).", page.Items.Count, spotifyArtistId, page.Next is not null);
-            next = page.Next;
+            next = page.Next is null ? null : ValidateNextPage(page.Next);
         }
 
         return items;
     }
+
+    private Uri ValidateNextPage(string next)
+    {
+        if (string.IsNullOrWhiteSpace(next) || httpClient.BaseAddress is null
+            || !Uri.TryCreate(httpClient.BaseAddress, next, out var resolved)
+            || !IsSameOrigin(httpClient.BaseAddress, resolved)
+            || !string.IsNullOrEmpty(resolved.UserInfo))
+        {
+            throw new SpotifyApiException("Spotify returned an invalid pagination URL.");
+        }
+
+        return resolved;
+    }
+
+    private static bool IsSameOrigin(Uri expected, Uri actual) =>
+        string.Equals(expected.Scheme, actual.Scheme, StringComparison.OrdinalIgnoreCase)
+        && string.Equals(expected.Host, actual.Host, StringComparison.OrdinalIgnoreCase)
+        && expected.Port == actual.Port;
 }
