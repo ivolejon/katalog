@@ -39,6 +39,7 @@ export function useArtistSearch(debounceMs = 350) {
   watch(query, (value) => {
     if (!value.trim()) {
       requestSeq += 1
+      run.cancel()
       results.value = []
       searching.value = false
       error.value = null

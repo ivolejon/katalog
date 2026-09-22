@@ -49,6 +49,10 @@ watch(open, async (isOpen) => {
     if (el instanceof HTMLElement) {
       el.focus()
     }
+  } else {
+    selected.value = null
+    resetSearch()
+    error.value = null
   }
 })
 
