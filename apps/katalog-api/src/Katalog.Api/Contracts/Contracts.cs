@@ -2,21 +2,24 @@ namespace Katalog.Api.Contracts;
 
 public sealed record LabelSummaryResponse(
     Guid Id,
+    string SpotifyId,
     string Name,
     string Slug,
     int ArtistCount,
-    DateTimeOffset CreatedAtUtc,
-    DateTimeOffset UpdatedAtUtc);
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt);
 
 public sealed record LabelDetailResponse(
     Guid Id,
+    string SpotifyId,
     string Name,
     string Slug,
     int ArtistCount,
     int ReleaseCount,
-    DateTimeOffset CreatedAtUtc,
-    DateTimeOffset UpdatedAtUtc,
-    IReadOnlyList<ArtistSummaryResponse> Artists);
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt,
+    IReadOnlyList<ArtistSummaryResponse> Artists,
+    IReadOnlyList<AlbumResponse> Releases);
 
 public sealed record ArtistSummaryResponse(
     Guid Id,
@@ -24,10 +27,11 @@ public sealed record ArtistSummaryResponse(
     string Name,
     string? ImageUrl,
     string? ExternalUrl,
+    string[]? Genres,
     int? Popularity);
 
 public sealed record ArtistSearchResult(
-    string SpotifyId,
+    string Id,
     string Name,
     string? ImageUrl,
     string? ExternalUrl,
@@ -48,7 +52,7 @@ public sealed record AlbumResponse(
     int TotalTracks,
     IReadOnlyList<string> ArtistNames);
 
-public sealed record CreateLabelRequest(string Name);
+public sealed record CreateLabelRequest(string Name, string? SpotifyId);
 
 public sealed record UpdateLabelRequest(string Name);
 

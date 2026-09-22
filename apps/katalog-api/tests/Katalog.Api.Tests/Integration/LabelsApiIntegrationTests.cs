@@ -141,7 +141,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var results = await response.Content.ReadFromJsonAsync<ArtistSearchResult[]>();
         Assert.NotNull(results);
         var result = Assert.Single(results);
-        Assert.Equal("artistsearch1", result.SpotifyId);
+        Assert.Equal("artistsearch1", result.Id);
         Assert.Equal("Karin Dreijer", result.Name);
     }
 }

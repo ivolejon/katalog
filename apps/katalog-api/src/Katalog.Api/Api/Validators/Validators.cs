@@ -16,6 +16,11 @@ public sealed class CreateLabelValidator : AbstractValidator<CreateLabelRequest>
             // empty slug and break the unique slug contract.
             .Must(name => string.IsNullOrEmpty(name) || name.Any(char.IsLetterOrDigit))
             .WithMessage("Name must contain at least one letter or digit.");
+
+        RuleFor(v => v.SpotifyId)
+            .Matches("^[A-Za-z0-9]{6,64}$")
+            .When(v => !string.IsNullOrEmpty(v.SpotifyId))
+            .WithMessage("SpotifyId must be an alphanumeric Spotify id.");
     }
 }
 

@@ -1,10 +1,11 @@
 using Katalog.Api.Contracts;
 using Katalog.Api.Infrastructure;
+using Katalog.Api.Features.Releases;
 using Microsoft.EntityFrameworkCore;
 
 namespace Katalog.Api.Features.Labels;
 
-public sealed class GetLabels(KatalogContext context)
+public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelReleases)
 {
     public async Task<IReadOnlyList<LabelSummaryResponse>> ListAsync(CancellationToken cancellationToken)
     {
@@ -12,6 +13,7 @@ public sealed class GetLabels(KatalogContext context)
             .OrderBy(l => l.Name)
             .Select(l => new LabelSummaryResponse(
                 l.Id,
+                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).FirstOrDefault() ?? string.Empty,
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,
@@ -22,10 +24,11 @@ public sealed class GetLabels(KatalogContext context)
 
     public async Task<LabelDetailResponse?> GetDetailAsync(Guid labelId, CancellationToken cancellationToken)
     {
-        return await context.Labels
+        var detail = await context.Labels
             .Where(l => l.Id == labelId)
             .Select(l => new LabelDetailResponse(
                 l.Id,
+                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).FirstOrDefault() ?? string.Empty,
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,
@@ -37,11 +40,19 @@ public sealed class GetLabels(KatalogContext context)
                     .Select(la => new ArtistSummaryResponse(
                         la.Artist.Id,
                         la.Artist.SpotifyId,
-                        la.Artist.Name,
-                        la.Artist.ImageUrl,
-                        la.Artist.ExternalUrl,
-                        la.Artist.Popularity))
-                    .ToList()))
+                         la.Artist.Name,
+                         la.Artist.ImageUrl,
+                         la.Artist.ExternalUrl,
+                         la.Artist.Genres,
+                         la.Artist.Popularity))
+                 .ToList(),
+                  null!))
             .SingleOrDefaultAsync(cancellationToken);
+
+        if (detail is null)
+            return null;
+
+        var releases = await getLabelReleases.ListAsync(labelId, cancellationToken) ?? [];
+        return detail with { Releases = releases };
     }
 }

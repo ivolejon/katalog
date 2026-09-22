@@ -77,6 +77,7 @@ public sealed class AddArtistToLabel(
         logger.LogDebug("Linked Spotify artist {SpotifyId} ({Name}) to label {LabelId} (manual).",
             artist.SpotifyId, artist.Name, labelId);
 
-        return new ArtistSummaryResponse(artist.Id, artist.SpotifyId, artist.Name, artist.ImageUrl, artist.ExternalUrl, artist.Popularity);
+        return new ArtistSummaryResponse(artist.Id, artist.SpotifyId, artist.Name, artist.ImageUrl, artist.ExternalUrl,
+            artist.Genres, artist.Popularity);
     }
 }

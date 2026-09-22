@@ -53,6 +53,9 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found"
+          },
           "409": {
             "description": "Conflict"
           }
@@ -423,7 +426,7 @@
       },
       "ArtistSearchResult": {
         "required": [
-          "spotifyId",
+          "id",
           "name",
           "imageUrl",
           "externalUrl",
@@ -432,7 +435,7 @@
         ],
         "type": "object",
         "properties": {
-          "spotifyId": {
+          "id": {
             "type": "string"
           },
           "name": {
@@ -474,6 +477,7 @@
           "name",
           "imageUrl",
           "externalUrl",
+          "genres",
           "popularity"
         ],
         "type": "object",
@@ -500,6 +504,15 @@
               "string"
             ]
           },
+          "genres": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
           "popularity": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
@@ -513,31 +526,43 @@
       },
       "CreateLabelRequest": {
         "required": [
-          "name"
+          "name",
+          "spotifyId"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
+          },
+          "spotifyId": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "LabelDetailResponse": {
         "required": [
           "id",
+          "spotifyId",
           "name",
           "slug",
           "artistCount",
           "releaseCount",
-          "createdAtUtc",
-          "updatedAtUtc",
-          "artists"
+          "createdAt",
+          "updatedAt",
+          "artists",
+          "releases"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "spotifyId": {
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -561,11 +586,11 @@
             ],
             "format": "int32"
           },
-          "createdAtUtc": {
+          "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedAtUtc": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time"
           },
@@ -574,23 +599,33 @@
             "items": {
               "$ref": "#/components/schemas/ArtistSummaryResponse"
             }
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumResponse"
+            }
           }
         }
       },
       "LabelSummaryResponse": {
         "required": [
           "id",
+          "spotifyId",
           "name",
           "slug",
           "artistCount",
-          "createdAtUtc",
-          "updatedAtUtc"
+          "createdAt",
+          "updatedAt"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "spotifyId": {
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -606,11 +641,11 @@
             ],
             "format": "int32"
           },
-          "createdAtUtc": {
+          "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedAtUtc": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time"
           }

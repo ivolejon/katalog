@@ -57,7 +57,7 @@ export interface LabelArtist {
   name: string
   imageUrl: string | null
   externalUrl: string
-  genres: string[]
+  genres: string[] | null
   popularity: number | null
 }
 

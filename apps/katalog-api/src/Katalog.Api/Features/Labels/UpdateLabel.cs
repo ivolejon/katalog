@@ -43,7 +43,11 @@ public sealed class UpdateLabel(KatalogContext context, TimeProvider timeProvide
         }
 
         var artistCount = await context.LabelArtists.CountAsync(la => la.LabelId == labelId, cancellationToken);
-        var response = new LabelSummaryResponse(label.Id, label.Name, label.Slug, artistCount, label.CreatedAtUtc, label.UpdatedAtUtc);
+        var spotifyId = await context.LabelArtists
+            .Where(la => la.LabelId == labelId)
+            .Select(la => la.Artist.SpotifyId)
+            .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
+        var response = new LabelSummaryResponse(label.Id, spotifyId, label.Name, label.Slug, artistCount, label.CreatedAtUtc, label.UpdatedAtUtc);
         return new UpdateLabelOutcome(UpdateLabelStatus.Updated, response);
     }
 

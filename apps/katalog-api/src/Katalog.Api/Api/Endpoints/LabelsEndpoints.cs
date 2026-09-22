@@ -21,6 +21,7 @@ public static class LabelsEndpoints
             .WithName("CreateLabel")
             .AddEndpointFilter<ValidationFilter<CreateLabelRequest>>()
             .Produces<LabelSummaryResponse>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status409Conflict);
 
         group.MapGet("/{id:guid}", GetLabelDetail)
@@ -60,8 +61,13 @@ public static class LabelsEndpoints
     private static async Task<IResult> CreateLabel(CreateLabel createLabel, CreateLabelRequest request,
         CancellationToken cancellationToken)
     {
-        var label = await createLabel.CreateAsync(request.Name, cancellationToken);
-        if (label is null)
+        var outcome = await createLabel.CreateAsync(request.Name, request.SpotifyId, cancellationToken);
+        if (outcome.Status == CreateLabelStatus.ArtistNotFound)
+        {
+            return TypedResults.NotFound();
+        }
+
+        if (outcome.Status == CreateLabelStatus.SlugConflict)
         {
             return TypedResults.Conflict(new ProblemDetails
             {
@@ -70,8 +76,11 @@ public static class LabelsEndpoints
             });
         }
 
+        var label = outcome.Label!;
+        var spotifyId = outcome.Artist?.SpotifyId ?? string.Empty;
         return TypedResults.Created($"/api/labels/{label.Id}",
-            new LabelSummaryResponse(label.Id, label.Name, label.Slug, 0, label.CreatedAtUtc, label.UpdatedAtUtc));
+            new LabelSummaryResponse(label.Id, spotifyId, label.Name, label.Slug, outcome.Artist is null ? 0 : 1,
+                label.CreatedAtUtc, label.UpdatedAtUtc));
     }
 
     private static async Task<IResult> GetLabelDetail(Guid id, GetLabels getLabels, CancellationToken cancellationToken)

@@ -40,7 +40,7 @@ function initials(name: string): string {
       <span class="text-foreground truncate text-sm font-medium">
         {{ artist.name }}
       </span>
-      <span v-if="artist.genres.length" class="text-muted-foreground truncate text-xs">
+      <span v-if="artist.genres?.length" class="text-muted-foreground truncate text-xs">
         {{ artist.genres.slice(0, 4).join(', ') }}
       </span>
     </div>
