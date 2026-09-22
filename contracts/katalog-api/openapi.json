@@ -545,7 +545,7 @@
       "LabelDetailResponse": {
         "required": [
           "id",
-          "spotifyId",
+          "spotifyIds",
           "name",
           "slug",
           "artistCount",
@@ -561,8 +561,11 @@
             "type": "string",
             "format": "uuid"
           },
-          "spotifyId": {
-            "type": "string"
+          "spotifyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "name": {
             "type": "string"
@@ -611,7 +614,7 @@
       "LabelSummaryResponse": {
         "required": [
           "id",
-          "spotifyId",
+          "spotifyIds",
           "name",
           "slug",
           "artistCount",
@@ -624,8 +627,11 @@
             "type": "string",
             "format": "uuid"
           },
-          "spotifyId": {
-            "type": "string"
+          "spotifyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "name": {
             "type": "string"

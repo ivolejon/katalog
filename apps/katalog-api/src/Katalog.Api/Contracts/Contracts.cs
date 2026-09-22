@@ -2,7 +2,7 @@ namespace Katalog.Api.Contracts;
 
 public sealed record LabelSummaryResponse(
     Guid Id,
-    string SpotifyId,
+    IReadOnlyList<string> SpotifyIds,
     string Name,
     string Slug,
     int ArtistCount,
@@ -11,7 +11,7 @@ public sealed record LabelSummaryResponse(
 
 public sealed record LabelDetailResponse(
     Guid Id,
-    string SpotifyId,
+    IReadOnlyList<string> SpotifyIds,
     string Name,
     string Slug,
     int ArtistCount,

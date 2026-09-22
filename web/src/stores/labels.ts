@@ -24,9 +24,11 @@ export const useLabelsStore = defineStore('labels', {
 
   getters: {
     isFollowing: (state) => {
-      const byKey = new Map<string, LabelSummary>()
+      const byKey = new Set<string>()
       for (const label of state.labels) {
-        byKey.set(label.spotifyId, label)
+        for (const spotifyId of label.spotifyIds) {
+          byKey.add(spotifyId)
+        }
       }
       return (spotifyId: string) => byKey.has(spotifyId)
     },

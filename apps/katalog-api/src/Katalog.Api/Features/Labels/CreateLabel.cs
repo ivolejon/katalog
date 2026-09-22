@@ -37,6 +37,7 @@ public sealed class CreateLabel(
             UpdatedAtUtc = timeProvider.GetUtcNow()
         };
 
+        await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         context.Labels.Add(label);
         try
         {
@@ -53,14 +54,15 @@ public sealed class CreateLabel(
             var artist = await addArtistToLabel.AddAsync(label.Id, spotifyId, cancellationToken);
             if (artist is null)
             {
-                context.Labels.Remove(label);
-                await context.SaveChangesAsync(cancellationToken);
+                await transaction.RollbackAsync(cancellationToken);
                 return new CreateLabelOutcome(CreateLabelStatus.ArtistNotFound, null, null);
             }
 
+            await transaction.CommitAsync(cancellationToken);
             return new CreateLabelOutcome(CreateLabelStatus.Created, label, artist);
         }
 
+        await transaction.CommitAsync(cancellationToken);
         return new CreateLabelOutcome(CreateLabelStatus.Created, label, null);
     }
 

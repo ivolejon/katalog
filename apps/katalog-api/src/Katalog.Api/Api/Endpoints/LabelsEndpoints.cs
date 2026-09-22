@@ -77,9 +77,9 @@ public static class LabelsEndpoints
         }
 
         var label = outcome.Label!;
-        var spotifyId = outcome.Artist?.SpotifyId ?? string.Empty;
+        var spotifyIds = outcome.Artist is null ? [] : new[] { outcome.Artist.SpotifyId };
         return TypedResults.Created($"/api/labels/{label.Id}",
-            new LabelSummaryResponse(label.Id, spotifyId, label.Name, label.Slug, outcome.Artist is null ? 0 : 1,
+            new LabelSummaryResponse(label.Id, spotifyIds, label.Name, label.Slug, outcome.Artist is null ? 0 : 1,
                 label.CreatedAtUtc, label.UpdatedAtUtc));
     }
 

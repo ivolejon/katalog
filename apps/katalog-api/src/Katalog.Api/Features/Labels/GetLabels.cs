@@ -13,7 +13,7 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
             .OrderBy(l => l.Name)
             .Select(l => new LabelSummaryResponse(
                 l.Id,
-                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).FirstOrDefault() ?? string.Empty,
+                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).ToList(),
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,
@@ -28,7 +28,7 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
             .Where(l => l.Id == labelId)
             .Select(l => new LabelDetailResponse(
                 l.Id,
-                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).FirstOrDefault() ?? string.Empty,
+                l.LabelArtists.OrderBy(la => la.Artist.Name).Select(la => la.Artist.SpotifyId).ToList(),
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,

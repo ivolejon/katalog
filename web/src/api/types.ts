@@ -11,8 +11,8 @@
 /** App-owned followed label, summary form (GET /api/labels). */
 export interface LabelSummary {
   id: string
-  /** Spotify artist/label id the follows entry points at. */
-  spotifyId: string
+  /** Spotify artist ids currently linked to this label. */
+  spotifyIds: string[]
   name: string
   /** Number of artists currently linked to this label. */
   artistCount: number
@@ -64,7 +64,7 @@ export interface LabelArtist {
 /** Full label detail (GET /api/labels/{id}). */
 export interface LabelDetail {
   id: string
-  spotifyId: string
+  spotifyIds: string[]
   name: string
   artistCount: number
   createdAt: string
