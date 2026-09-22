@@ -580,10 +580,7 @@
             "type": "string"
           },
           "spotifyIds": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": "array",
             "items": {
               "type": "string"
             }

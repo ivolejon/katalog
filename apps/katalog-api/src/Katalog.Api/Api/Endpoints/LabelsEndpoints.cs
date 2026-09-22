@@ -71,7 +71,7 @@ public static class LabelsEndpoints
         [AsParameters] SearchLabelsRequest request, CancellationToken cancellationToken)
     {
         var limit = request.Limit ?? SpotifyOptions.SearchLimitDefault;
-        return TypedResults.Ok(await searchLabels.SearchAsync(request.Q, limit, cancellationToken));
+        return TypedResults.Ok(await searchLabels.SearchAsync(request.Q.Trim(), limit, cancellationToken));
     }
 
     private static async Task<IResult> CreateLabel(CreateLabel createLabel, CreateLabelRequest request,

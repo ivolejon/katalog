@@ -24,7 +24,8 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
 
-        var labelResponse = await client.PostAsJsonAsync("/api/labels", new { name = "Test Label" });
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Test Label", spotifyIds = new[] { ArtistId } });
         var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(label);
 

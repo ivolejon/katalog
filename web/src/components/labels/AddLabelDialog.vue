@@ -61,7 +61,6 @@ const {
 type Selection =
   | { kind: 'album'; album: LabelSearchAlbum; labelName: string }
   | { kind: 'artist'; artist: ArtistSearchResult }
-  | { kind: 'bare'; labelName: string }
 const selected = ref<Selection | null>(null)
 const submitting = ref(false)
 const error = ref<string | null>(null)
@@ -73,8 +72,6 @@ const selectionName = computed(() => {
       return selected.value.labelName
     case 'artist':
       return selected.value.artist.name
-    case 'bare':
-      return selected.value.labelName
     default:
       return ''
   }
@@ -83,7 +80,7 @@ const selectionName = computed(() => {
 const selectionSpotifyIds = computed(() => {
   switch (selected.value?.kind) {
     case 'album':
-      return selected.value.album.artists.map((a) => a.spotifyId)
+      return [...new Set(selected.value.album.artists.map((a) => a.spotifyId))]
     case 'artist':
       return [selected.value.artist.id]
     default:
@@ -109,15 +106,6 @@ function pickAlbum(album: LabelSearchAlbum) {
 function pickArtist(artist: ArtistSearchResult) {
   selected.value = { kind: 'artist', artist }
   resetArtistSearch()
-  error.value = null
-}
-
-/** "Bekräfta labeln" path: follow the search term as a label even with no album hits. */
-function confirmBareLabel() {
-  const name = matchedLabelName.value || labelQuery.value.trim()
-  if (!name) return
-  selected.value = { kind: 'bare', labelName: name }
-  resetLabelSearch()
   error.value = null
 }
 
@@ -274,16 +262,6 @@ async function submit() {
                       </div>
                     </button>
 
-                    <!-- "Bekräfta labeln" path without an album hit -->
-                    <div class="px-2 pt-2">
-                      <button
-                        type="button"
-                        class="text-muted-foreground hover:text-foreground cursor-pointer text-xs underline-offset-2 transition-colors hover:underline"
-                        @click="confirmBareLabel"
-                      >
-                        Just follow “{{ matchedLabelName }}” without an album
-                      </button>
-                    </div>
                   </template>
 
                   <!-- Quiet / empty / error states -->
@@ -301,13 +279,6 @@ async function submit() {
                   >
                     <MusicNote02Icon class="size-5" />
                     <span>No albums found for “{{ labelQuery }}”.</span>
-                    <button
-                      type="button"
-                      class="text-foreground underline-offset-2 cursor-pointer text-xs underline transition-colors"
-                      @click="confirmBareLabel"
-                    >
-                      Follow the label anyway
-                    </button>
                   </div>
                   <div
                     v-else
@@ -376,9 +347,6 @@ async function submit() {
                 </template>
                 <template v-else-if="selected.kind === 'artist'">
                   This will be tracked as “{{ selectionName }}” in your labels list.
-                </template>
-                <template v-else>
-                  Tracked as “{{ selectionName }}” with no artists yet.
                 </template>
               </p>
             </div>

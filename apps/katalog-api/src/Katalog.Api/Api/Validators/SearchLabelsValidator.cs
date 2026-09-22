@@ -18,6 +18,8 @@ public sealed class SearchLabelsValidator : AbstractValidator<SearchLabelsReques
         RuleFor(v => v.Q)
             .NotEmpty()
             .WithMessage("Query parameter 'q' is required.")
+            .Must(q => !string.IsNullOrWhiteSpace(q))
+            .WithMessage("Query parameter 'q' must not be blank.")
             .MaximumLength(200)
             .WithMessage("Query parameter 'q' must be at most 200 characters.");
 

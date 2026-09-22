@@ -58,7 +58,9 @@ public sealed class SpotifyApiClient(
     {
         // EscapeDataString encodes the quotes as %22 (q=label%3A%22<name>%22), which Spotify
         // accepts for the label: filter - verified live 2026-09-22.
-        var queryString = Uri.EscapeDataString($"label:\"{labelName}\"");
+        var escapedLabelName = labelName.Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("\"", "\\\"", StringComparison.Ordinal);
+        var queryString = Uri.EscapeDataString($"label:\"{escapedLabelName}\"");
         var response = await httpClient.GetAsync(
             $"v1/search?q={queryString}&type=album&market={market}&limit={limit}", cancellationToken);
         response.EnsureSuccessStatusCode();

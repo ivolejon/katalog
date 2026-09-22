@@ -14,19 +14,24 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     {
         spotify.Reset();
         spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/artistone").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
 
         // Create
-        var createResponse = await client.PostAsJsonAsync("/api/labels", new { name = "Ninja Tune" });
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Ninja Tune", spotifyIds = new[] { "artistone" } });
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
         var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(created);
         Assert.Equal("ninja-tune", created!.Slug);
 
         // Duplicate slug -> 409
-        var duplicateResponse = await client.PostAsJsonAsync("/api/labels", new { name = "Ninja Tune" });
+        var duplicateResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Ninja Tune", spotifyIds = new[] { "artistone" } });
         Assert.Equal(HttpStatusCode.Conflict, duplicateResponse.StatusCode);
 
         // List
@@ -67,6 +72,24 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_RequiresUniqueArtistIds()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var emptyResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "No Artists", spotifyIds = Array.Empty<string>() });
+        var duplicateResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Duplicate Artists", spotifyIds = new[] { "artistone", "artistone" } });
+
+        Assert.Equal(HttpStatusCode.BadRequest, emptyResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, duplicateResponse.StatusCode);
+    }
+
+    [Fact]
     public async Task AddArtistToLabel_LinksArtist_AndDetailShowsIt()
     {
         spotify.Reset();
@@ -81,7 +104,8 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
 
-        var labelResponse = await client.PostAsJsonAsync("/api/labels", new { name = "Rabid Records" });
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Rabid Records", spotifyIds = new[] { "artistone" } });
         var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(label);
 
@@ -202,6 +226,26 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task SearchLabels_EscapesQuotesInsideLabelFilter()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", "label:\"ACME \\\"Records\\\"\"")
+                .WithParam("type", "album")
+                .WithParam("market", "SE")
+                .WithParam("limit", "10"))
+            .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.AlbumSearchJson()));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var response = await factory.CreateClient().GetAsync("/api/labels/search?q=ACME%20%22Records%22");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
     public async Task SearchLabels_WithLimitAboveMax_RejectsWith400()
     {
         // Spotify caps search limit at 10 (limits PR, verified live 2026-09-22); the Katalog API
@@ -215,6 +259,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
 
         var zeroLimit = await client.GetAsync("/api/labels/search?q=Globuli&limit=0");
         Assert.Equal(HttpStatusCode.BadRequest, zeroLimit.StatusCode);
+
+        var blankQuery = await client.GetAsync("/api/labels/search?q=%20%20");
+        Assert.Equal(HttpStatusCode.BadRequest, blankQuery.StatusCode);
     }
 
     [Fact]

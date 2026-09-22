@@ -23,7 +23,7 @@ public sealed class CreateLabel(
     ILogger<CreateLabel> logger)
 {
     /// <summary>
-    /// Creates a label and optionally links the Spotify artists behind it (add-label flow: the
+    /// Creates a label and links the Spotify artists behind it (add-label flow: the
     /// label search returns album hits whose artists are attached, giving polling its anchors).
     /// Returns an outcome: Created with the linked artists, SlugConflict, or ArtistNotFound
     /// (any unknown Spotify id rolls the whole transaction back).

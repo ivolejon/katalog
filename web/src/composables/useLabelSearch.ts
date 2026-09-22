@@ -48,6 +48,7 @@ export function useLabelSearch(debounceMs = 350) {
       error.value = null
       return
     }
+    requestSeq += 1
     run(value.trim())
   })
 

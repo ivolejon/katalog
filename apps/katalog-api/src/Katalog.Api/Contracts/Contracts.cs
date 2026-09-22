@@ -73,7 +73,7 @@ public sealed record AlbumResponse(
     int TotalTracks,
     IReadOnlyList<string> ArtistNames);
 
-public sealed record CreateLabelRequest(string Name, IReadOnlyList<string>? SpotifyIds);
+public sealed record CreateLabelRequest(string Name, IReadOnlyList<string> SpotifyIds);
 
 public sealed record UpdateLabelRequest(string Name);
 
