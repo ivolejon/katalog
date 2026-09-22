@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- NU1901-1904: vulnerable package advisories stay warnings so deps can be managed;
+         this was the reference repo's policy and is needed for e.g. WireMock's Scriban dep.
+         NU1608: Aspire.Hosting.Testing 13.5.4 pulls Humanizer.Core 3.0.10 while Testcontainers'
+         satellite packages demand the base package at exactly 2.14.1 - the mismatch is a known
+         build-time warning; the base keeps 3.0.10 and satellites are only used for non-en locales.
+         CS0612/CS0618: usage of [Obsolete] members (deprecated Spotify schema fields) stays a
+         warning, not an error. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904;NU1608;CS0612;CS0618</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <!-- Generate OpenAPI documents only for local builds, unless CI explicitly opts in. -->
+  <PropertyGroup>
+    <OpenApiGenerateDocuments Condition="'$(OpenApiGenerateDocuments)' == '' and '$(CI)' != 'true' and '$(ASPNETCORE_ENVIRONMENT)' != 'Staging' and '$(ASPNETCORE_ENVIRONMENT)' != 'Production' and '$(DOTNET_ENVIRONMENT)' != 'Staging' and '$(DOTNET_ENVIRONMENT)' != 'Production'">true</OpenApiGenerateDocuments>
+    <OpenApiGenerateDocuments Condition="'$(OpenApiGenerateDocuments)' == ''">false</OpenApiGenerateDocuments>
+  </PropertyGroup>
+</Project>

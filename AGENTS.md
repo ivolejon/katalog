@@ -15,6 +15,17 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 - Layout and conventions follow the arch report `data/katalog-arch-ref-q1/report.md` (single API project, contracts/ committed OpenAPI, no user auth in MVP).
 
+## Katalog (label-följning via Spotify)
+
+- **Designkälla:** `data/katalog-research-q1/report.md` (research) och `data/katalog-arch-ref-q1/report.md` (arkitekturgranskning) ligger i firstmates datakatalog; README.md sammanfattar besluten.
+- **Frontend `web/` ägs av en separat task** - backend-workers bygger/ändrar inte `web/`.
+- **Bygge kräver Aspire CLI** (annars ASPIRE009): `dotnet tool install -g Aspire.Cli --version 13.5.4`. Dev-run: `aspire run` (startar Postgres-container + API via Katalog.AppHost).
+- **OpenAPI-kontrakt:** `contracts/katalog-api/openapi.json` genereras vid varje `dotnet build` (Directory.Build.props-styrt, av i CI) och commit:as; grinden är contract-drift i `.github/workflows/ci.yml`. Alla endpoints har `operationId`.
+- **OpenAPI-genereringsläget** (`GetDocument.Insider`) får aldrig kräva levande Postgres/Spotify: `appsettings.OpenApiGeneration.json` har placeholder-förbindelser och setups guardas med `OpenApiDocumentGeneration.IsActive` (inkl. ValidateOnStart-options och hosted services).
+- **Spotify-credentials:** aldrig i appsettings; user secrets under `Spotify:ClientId`/`Spotify:ClientSecret` (UserSecretsId finns i Katalog.Api.csproj). Options valideras vid start, skippas i OpenAPI-läget.
+- **Databas:** EF Core 10 + Npgsql, `ConnectionStrings:catalog`. Schema-migrering vid start i dev; `--migrate`/`--rollback` i samma binär. Konventioner (se Infrastructure/Configurations): inga JSON-kolumner, junction-tabeller, enums som int med gaps, `Guid.CreateVersion7()`/`uuidv7()`.
+- **Tester:** `dotnet test Katalog.slnx` - unit + integration (Testcontainers.PostgreSql postgres:18.3 + WireMock) + AppHost-smoke. Kräver Docker. Integration testas mot WireMock, aldrig riktig Spotify.
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.
