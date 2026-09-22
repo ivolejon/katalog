@@ -43,7 +43,7 @@ export interface AlbumSummary {
   spotifyId: string
   name: string
   albumType: AlbumType
-  releaseDate: string
+  releaseDate: string | null
   releaseDatePrecision: ReleaseDatePrecision
   imageUrl: string | null
   externalUrl: string

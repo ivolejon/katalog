@@ -38,9 +38,11 @@ const MONTHS_SHORT = [
 ]
 
 export function formatReleaseDate(
-  releaseDate: string,
+  releaseDate: string | null,
   precision: ReleaseDatePrecision,
 ): string {
+  if (!releaseDate) return 'Unknown date'
+
   const [year, month, day] = releaseDate.split('-').map(Number)
 
   switch (precision) {
@@ -64,9 +66,11 @@ export function formatReleaseDate(
 
 /** ISO sort key where lower precision normalizes to the earliest day. */
 export function releaseSortKey(
-  releaseDate: string,
+  releaseDate: string | null,
   precision: ReleaseDatePrecision,
 ): string {
+  if (!releaseDate) return '0000-01-01'
+
   const [year = '0000', month = '01', day = '01'] = releaseDate.split('-')
   if (precision === 'year') return `${year}-01-01`
   if (precision === 'month') return `${year}-${month || '01'}-01`
