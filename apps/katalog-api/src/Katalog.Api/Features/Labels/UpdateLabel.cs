@@ -1,6 +1,7 @@
 using Katalog.Api.Contracts;
 using Katalog.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Katalog.Api.Features.Labels;
 
@@ -35,7 +36,7 @@ public sealed class UpdateLabel(KatalogContext context, TimeProvider timeProvide
         {
             await context.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (IsSlugUniqueViolation(ex))
         {
             logger.LogInformation("Label slug conflict rejected on update for {Slug}.", slug);
             return new UpdateLabelOutcome(UpdateLabelStatus.SlugConflict, null);
@@ -45,4 +46,11 @@ public sealed class UpdateLabel(KatalogContext context, TimeProvider timeProvide
         var response = new LabelSummaryResponse(label.Id, label.Name, label.Slug, artistCount, label.CreatedAtUtc, label.UpdatedAtUtc);
         return new UpdateLabelOutcome(UpdateLabelStatus.Updated, response);
     }
+
+    private static bool IsSlugUniqueViolation(DbUpdateException exception) =>
+        exception.InnerException is PostgresException
+        {
+            SqlState: PostgresErrorCodes.UniqueViolation,
+            ConstraintName: "ix_labels_slug"
+        };
 }

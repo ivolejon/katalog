@@ -48,7 +48,7 @@ public sealed class ReleasePoller(
                 var albums = await FetchArtistAlbumsAsync(artist.SpotifyId, cancellationToken);
                 foreach (var album in albums)
                 {
-                    await UpsertAlbumAsync(artist.Id, album, cancellationToken);
+                    await UpsertAlbumAsync(artist, album, cancellationToken);
                 }
 
                 logger.LogDebug("Polled {AlbumCount} albums for artist {ArtistName} ({SpotifyId}).",
@@ -89,7 +89,7 @@ public sealed class ReleasePoller(
     /// Idempotent album upsert: INSERT ... ON CONFLICT (spotify_id) DO UPDATE, returning the
     /// album id so the album_artists junction row can be written (research §2.5, arch §3.4).
     /// </summary>
-    private async Task UpsertAlbumAsync(Guid artistId, SpotifyAlbumItem album, CancellationToken cancellationToken)
+    private async Task UpsertAlbumAsync(Artist followedArtist, SpotifyAlbumItem album, CancellationToken cancellationToken)
     {
         var albumType = ParseAlbumType(album.AlbumType);
         var (releaseDate, precision) = ParseReleaseDate(album.ReleaseDate, album.ReleaseDatePrecision);
@@ -139,10 +139,44 @@ public sealed class ReleasePoller(
         var idResult = await command.ExecuteScalarAsync(cancellationToken);
         var storedAlbumId = idResult is Guid stored ? stored : albumId;
 
-        await UpsertAlbumArtistAsync(storedAlbumId, artistId, cancellationToken);
+        var albumArtists = album.Artists is { Count: > 0 }
+            ? album.Artists
+            : [new SpotifyAlbumArtist(followedArtist.SpotifyId, followedArtist.Name)];
+
+        for (var position = 0; position < albumArtists.Count; position++)
+        {
+            var albumArtist = albumArtists[position];
+            var storedArtistId = await UpsertArtistAsync(albumArtist, cancellationToken);
+            await UpsertAlbumArtistAsync(storedAlbumId, storedArtistId, position, cancellationToken);
+        }
     }
 
-    private async Task UpsertAlbumArtistAsync(Guid albumId, Guid artistId, CancellationToken cancellationToken)
+    private async Task<Guid> UpsertArtistAsync(SpotifyAlbumArtist artist, CancellationToken cancellationToken)
+    {
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            INSERT INTO artists (id, spotify_id, name, created_at_utc, updated_at_utc)
+            VALUES (@id, @spotifyId, @name, now(), now())
+            ON CONFLICT (spotify_id) DO UPDATE SET
+                name = EXCLUDED.name,
+                updated_at_utc = now()
+            RETURNING id
+            """;
+
+        var artistId = Guid.CreateVersion7();
+        command.Parameters.Add(P("id", artistId));
+        command.Parameters.Add(P("spotifyId", artist.Id));
+        command.Parameters.Add(P("name", artist.Name));
+
+        var idResult = await command.ExecuteScalarAsync(cancellationToken);
+        return idResult is Guid stored ? stored : artistId;
+    }
+
+    private async Task UpsertAlbumArtistAsync(Guid albumId, Guid artistId, int position, CancellationToken cancellationToken)
     {
         var connection = context.Database.GetDbConnection();
         if (connection.State != System.Data.ConnectionState.Open)
@@ -157,7 +191,7 @@ public sealed class ReleasePoller(
 
         command.Parameters.Add(P("albumId", albumId));
         command.Parameters.Add(P("artistId", artistId));
-        command.Parameters.Add(P("position", 0));
+        command.Parameters.Add(P("position", position));
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }

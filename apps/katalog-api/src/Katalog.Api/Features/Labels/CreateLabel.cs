@@ -2,6 +2,7 @@ using Katalog.Api.Contracts;
 using Katalog.Api.Domain;
 using Katalog.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Katalog.Api.Features.Labels;
 
@@ -27,13 +28,19 @@ public sealed class CreateLabel(KatalogContext context, TimeProvider timeProvide
         {
             await context.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (IsSlugUniqueViolation(ex))
         {
-            // Unique index on slug - a concurrent create lost the race.
             logger.LogInformation("Label slug conflict rejected for {Slug}.", slug);
             return null;
         }
 
         return label;
     }
+
+    private static bool IsSlugUniqueViolation(DbUpdateException exception) =>
+        exception.InnerException is PostgresException
+        {
+            SqlState: PostgresErrorCodes.UniqueViolation,
+            ConstraintName: "ix_labels_slug"
+        };
 }
