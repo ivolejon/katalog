@@ -1,18 +1,17 @@
 /**
  * Handwritten API DTO types.
  *
- * These mirror the agreed contract surface (arch report 3.6): labels CRUD,
- * artist search, label detail with artists + releases. They are a stand-in
- * until `contracts/katalog-api/openapi.json` lands; then
- * `npm run generate:client` (hey-api) emits `src/api/generated/*` and these
- * types are replaced by the generated ones.
+ * These mirror the committed contract surface (arch report 3.6): labels CRUD,
+ * artist search, label detail with artists + releases. They remain a stand-in
+ * until `npm run generate:client` (hey-api) emits `src/api/generated/*` and the
+ * generated types replace these ones.
  */
 
 /** App-owned followed label, summary form (GET /api/labels). */
 export interface LabelSummary {
   id: string
-  /** Spotify artist/label id the follows entry points at. */
-  spotifyId: string
+  /** Spotify artist ids currently linked to this label. */
+  spotifyIds: string[]
   name: string
   /** Number of artists currently linked to this label. */
   artistCount: number
@@ -43,7 +42,7 @@ export interface AlbumSummary {
   spotifyId: string
   name: string
   albumType: AlbumType
-  releaseDate: string
+  releaseDate: string | null
   releaseDatePrecision: ReleaseDatePrecision
   imageUrl: string | null
   externalUrl: string
@@ -57,14 +56,14 @@ export interface LabelArtist {
   name: string
   imageUrl: string | null
   externalUrl: string
-  genres: string[]
+  genres: string[] | null
   popularity: number | null
 }
 
 /** Full label detail (GET /api/labels/{id}). */
 export interface LabelDetail {
   id: string
-  spotifyId: string
+  spotifyIds: string[]
   name: string
   artistCount: number
   createdAt: string

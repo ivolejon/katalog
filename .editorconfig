@@ -1,0 +1,32 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+
+# Test method naming convention
+[**/tests/**/*.cs]
+dotnet_naming_rule.test_methods_should_follow_convention.severity = warning
+dotnet_naming_rule.test_methods_should_follow_convention.symbols = test_methods
+dotnet_naming_rule.test_methods_should_follow_convention.style = test_method_style
+
+dotnet_naming_symbols.test_methods.applicable_kinds = method
+dotnet_naming_symbols.test_methods.applicable_accessibilities = public
+dotnet_naming_symbols.test_methods.required_modifiers =
+
+dotnet_naming_style.test_method_style.required_prefix =
+dotnet_naming_style.test_method_style.capitalization = pascal_case
+dotnet_naming_style.test_method_style.word_separator = _
+
+# xUnit1051 asks tests to pass TestContext.Current.CancellationToken to cancellable calls.
+# Integration/AppHost tests deliberately use fixed tokens (deterministic infra waits), so the
+# rule is demoted to suggestion for test code.
+[**/tests/**/*.cs]
+dotnet_diagnostic.xUnit1051.severity = suggestion

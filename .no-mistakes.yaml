@@ -20,3 +20,15 @@ agent: opencode
 ocr:
   enabled: true
   delegate: true
+
+# Kommandon som gate-stegen kör (prepare/test/lint/format) och som
+# .github/workflows/ci.yml speglar som GitHub checks. Krävs av
+# `no-mistakes ci-workflow`. Dessa fält läses från default-branchen när
+# grinden kör; de landar här på main via denna PR.
+commands:
+  prepare: dotnet restore Katalog.slnx
+  # Build med TreatWarningsAsErrors (Directory.Build.props) - lintsteget = bygget.
+  lint: dotnet build Katalog.slnx --no-restore -c Release
+  # Test = hela lösningen: unit + integration (Testcontainers) + AppHost-smoke.
+  test: dotnet test Katalog.slnx --no-restore -c Release
+  format: dotnet format Katalog.slnx --no-restore --verify-no-changes

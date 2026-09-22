@@ -1,0 +1,24 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+artifacts/
+
+# Node / frontend
+node_modules/
+dist/
+*.local
+
+# Aspire
+.apphost/
+.aspire/
+**/Properties/launchSettings.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# User secrets
+secrets.json

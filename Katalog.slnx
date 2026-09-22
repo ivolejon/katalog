@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Katalog.AppHost/Katalog.AppHost.csproj" />
+  <Project Path="apps/shared/Katalog.ServiceDefaults/Katalog.ServiceDefaults.csproj" />
+  <Project Path="apps/katalog-api/src/Katalog.Api/Katalog.Api.csproj" />
+  <Project Path="apps/katalog-api/tests/Katalog.Api.Tests/Katalog.Api.Tests.csproj" />
+</Solution>
