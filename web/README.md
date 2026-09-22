@@ -38,12 +38,12 @@ The app always calls relative `/api/*` paths. In dev, `vite.config.ts` proxies
 Start the backend with `aspire run` or point the fallback at whatever port the
 API runs on.
 
-## API client - handwritten, awaiting the OpenAPI contract
+## API client - handwritten, contract available
 
-The backend generates and commits `contracts/katalog-api/openapi.json`. Until
-that file lands, `src/api/` ships a handwritten typed client matching the
-agreed surface (`src/api/README.md` documents the endpoint map and how to
-switch to the generated client):
+The backend generates and commits `contracts/katalog-api/openapi.json`. `src/api/`
+currently ships a handwritten typed client matching that contract
+(`src/api/README.md` documents the endpoint map and how to switch to the
+generated client):
 
 ```sh
 npm run generate:client   # @hey-api/openapi-ts -> src/api/generated
@@ -54,10 +54,9 @@ is handwritten vs generated.
 
 ## AppHost integration
 
-`AddViteApp` wiring in `Katalog.AppHost` is owned by the backend worker and was
-not present at the start of this branch, so it will land in a later commit
-(after `Katalog.AppHost/Program.cs` exists, add `AddViteApp("web", "../web")`
-per research 4.2).
+`Katalog.AppHost` registers the frontend with `AddViteApp("web", "../web")`,
+passes the API endpoint through `API_HTTP`, and waits for the API before
+starting the frontend.
 
 ## UI kit notes
 

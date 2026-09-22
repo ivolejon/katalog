@@ -1,7 +1,7 @@
 # Katalog
 
-Följ skivbolag (labels) via Spotify. Backend i .NET 10 + Aspire, PostgreSQL. Frontend (Vue +
-shadcn-vue) ägs av en separat frontend-task och är inte en del av detta repo-skede.
+Följ skivbolag (labels) via Spotify. Backend i .NET 10 + Aspire, PostgreSQL. Frontend i Vue +
+TypeScript med shadcn-vue orkestreras tillsammans med API:t via Aspire.
 
 Arkitekturdesign: `data/katalog-research-q1/report.md` (research) och `data/katalog-arch-ref-q1/
 report.md` (arkitekturgranskning) finns i firstmate-datan; de punkterna implementeras här.

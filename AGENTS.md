@@ -18,7 +18,8 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 ## Katalog (label-följning via Spotify)
 
 - **Designkälla:** `data/katalog-research-q1/report.md` (research) och `data/katalog-arch-ref-q1/report.md` (arkitekturgranskning) ligger i firstmates datakatalog; README.md sammanfattar besluten.
-- **Frontend `web/` ägs av en separat task** - backend-workers bygger/ändrar inte `web/`.
+- Frontend `web/` orkestreras av `Katalog.AppHost` via `AddViteApp`; frontend-specifik setup
+  och konventioner finns i `web/README.md`.
 - **Bygge kräver Aspire CLI** (annars ASPIRE009): `dotnet tool install -g Aspire.Cli --version 13.5.4`. Dev-run: `aspire run` (startar Postgres-container + API via Katalog.AppHost).
 - **OpenAPI-kontrakt:** `contracts/katalog-api/openapi.json` genereras vid varje `dotnet build` (Directory.Build.props-styrt, av i CI) och commit:as; grinden är contract-drift i `.github/workflows/ci.yml`. Alla endpoints har `operationId`.
 - **OpenAPI-genereringsläget** (`GetDocument.Insider`) får aldrig kräva levande Postgres/Spotify: `appsettings.OpenApiGeneration.json` har placeholder-förbindelser och setups guardas med `OpenApiDocumentGeneration.IsActive` (inkl. ValidateOnStart-options och hosted services).

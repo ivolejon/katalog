@@ -1,11 +1,10 @@
 /**
  * Handwritten API DTO types.
  *
- * These mirror the agreed contract surface (arch report 3.6): labels CRUD,
- * artist search, label detail with artists + releases. They are a stand-in
- * until `contracts/katalog-api/openapi.json` lands; then
- * `npm run generate:client` (hey-api) emits `src/api/generated/*` and these
- * types are replaced by the generated ones.
+ * These mirror the committed contract surface (arch report 3.6): labels CRUD,
+ * artist search, label detail with artists + releases. They remain a stand-in
+ * until `npm run generate:client` (hey-api) emits `src/api/generated/*` and the
+ * generated types replace these ones.
  */
 
 /** App-owned followed label, summary form (GET /api/labels). */
