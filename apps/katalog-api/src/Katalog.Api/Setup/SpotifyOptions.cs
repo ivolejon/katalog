@@ -17,8 +17,8 @@ public sealed class SpotifyOptions
     /// <summary>ISO 3166-1 alpha-2 market used for catalog calls (research §2.1: market is effectively required).</summary>
     public string Market { get; init; } = "SE";
 
-    /// <summary>Artists returned per search request. Max 50 per Spotify.</summary>
+    /// <summary>Artists returned per search request. Spotify caps search limit at 10 (spec, verified 2026-09-22).</summary>
     public const int SearchLimitDefault = 10;
-    public const int SearchLimitMax = 50;
-    public const int AlbumsLimitMax = 50;
+    public const int SearchLimitMax = 10;
+    public const int AlbumsLimitMax = 10;
 }

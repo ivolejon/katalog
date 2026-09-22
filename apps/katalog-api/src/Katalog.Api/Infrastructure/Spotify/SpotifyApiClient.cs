@@ -48,6 +48,10 @@ public sealed class SpotifyApiClient(
     public async Task<IReadOnlyList<SpotifyAlbumItem>> GetArtistAlbumsAsync(string spotifyArtistId, int limit, string market,
         CancellationToken cancellationToken)
     {
+        // Spotify caps get-an-artists-albums limit at 10 (spec, verified 2026-09-22); higher returns HTTP 400 "Invalid limit".
+        // Pagination runs on the next-cursor, so clamping the initial page size is safe and never loses data.
+        limit = Math.Min(limit, 10);
+
         var items = new List<SpotifyAlbumItem>();
         Uri? next = new($"v1/artists/{spotifyArtistId}/albums?include_groups=album,single&market={market}&limit={limit}",
             UriKind.Relative);
