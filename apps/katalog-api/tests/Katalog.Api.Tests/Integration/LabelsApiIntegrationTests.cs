@@ -144,4 +144,17 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         Assert.Equal("artistsearch1", result.Id);
         Assert.Equal("Karin Dreijer", result.Name);
     }
+
+    [Fact]
+    public async Task SearchArtists_WithLimitAboveMax_RejectsWith400()
+    {
+        // Spotify caps search limit at 10 (spec, verified 2026-09-22); the Katalog API rejects
+        // a larger limit with 400 before forwarding to Spotify.
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/search?q=karin+dreijer&type=artist&limit=50");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

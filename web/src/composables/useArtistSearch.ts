@@ -20,7 +20,7 @@ export function useArtistSearch(debounceMs = 350) {
     searching.value = true
     error.value = null
     try {
-      const data = await api.searchArtists({ q, limit: 12 })
+      const data = await api.searchArtists({ q, limit: 10 })
       if (seq === requestSeq) {
         results.value = data
       }
