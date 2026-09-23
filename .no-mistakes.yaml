@@ -6,9 +6,9 @@
 # betrodda default-branchen (main). Ändringar här måste landa på main för
 # att träda i kraft - en pushed branch kan inte försvaga grinden.
 
-# Pipeline-agent: opencode - den inloggade LLM-providern på denna maskin
-# (OpenCode Go API). Används också som LLM för ocr-gaten i delegationsläge.
-agent: opencode
+# Pipeline-agent: pi - Pi-harnessens inloggade LLM-provider på denna maskin.
+# Används också som LLM för ocr-gaten i delegationsläge.
+agent: pi
 
 # OpenCodeReview-gaten direkt efter review. Kräver att den externa `ocr`
 #-CLI:n är installerad på daemon-värden:
@@ -16,7 +16,7 @@ agent: opencode
 #
 # Delegation (ocr.delegate: true): det deterministiska arbetet (filval +
 # regelgrupper) görs av ocr, men själva LLM-granskningen görs av
-# pipeline-agenten (opencode) - ingen OCR-egen LLM-konfiguration behövs.
+# pipeline-agenten (pi) - ingen OCR-egen LLM-konfiguration behövs.
 ocr:
   enabled: true
   delegate: true
