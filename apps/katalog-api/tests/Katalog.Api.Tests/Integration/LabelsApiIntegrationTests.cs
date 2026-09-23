@@ -140,9 +140,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artisttwo", "Olof Dreijer")));
-        var secondLink = await client.PostAsJsonAsync($"/api/labels/{label.Id}/artists",
+        var secondAnchor = await client.PostAsJsonAsync($"/api/labels/{label.Id}/artists",
             new { spotifyArtistId = "artisttwo" });
-        Assert.Equal(HttpStatusCode.OK, secondLink.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, secondAnchor.StatusCode);
 
         var removeResponse = await client.DeleteAsync($"/api/labels/{label.Id}/artists/{linked.Id}");
         Assert.Equal(HttpStatusCode.NoContent, removeResponse.StatusCode);
