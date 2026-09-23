@@ -15,6 +15,13 @@ public sealed record SpotifyTokenResponse(
 public sealed record SpotifySearchArtistsResponse(
     [property: JsonPropertyName("artists")] SpotifyArtistPage Artists);
 
+public sealed record SpotifySearchAlbumsResponse(
+    [property: JsonPropertyName("albums")] SpotifyAlbumPage Albums);
+
+public sealed record SpotifyAlbumPage(
+    [property: JsonPropertyName("items")] IReadOnlyList<SpotifyAlbumItem> Items,
+    [property: JsonPropertyName("total")] int Total);
+
 public sealed record SpotifyArtistPage(
     [property: JsonPropertyName("items")] IReadOnlyList<SpotifyArtist> Items,
     [property: JsonPropertyName("total")] int Total);

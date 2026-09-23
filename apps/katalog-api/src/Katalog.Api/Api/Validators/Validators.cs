@@ -17,10 +17,16 @@ public sealed class CreateLabelValidator : AbstractValidator<CreateLabelRequest>
             .Must(name => string.IsNullOrEmpty(name) || name.Any(char.IsLetterOrDigit))
             .WithMessage("Name must contain at least one letter or digit.");
 
-        RuleFor(v => v.SpotifyId)
-            .Matches("^[A-Za-z0-9]{6,64}$")
-            .When(v => !string.IsNullOrEmpty(v.SpotifyId))
-            .WithMessage("SpotifyId must be an alphanumeric Spotify id.");
+        RuleFor(v => v.SpotifyIds)
+            .NotNull()
+            .WithMessage("At least one Spotify artist id is required.")
+            .NotEmpty()
+            .WithMessage("At least one Spotify artist id is required.")
+            .Must(ids => ids is null || ids.Distinct(StringComparer.Ordinal).Count() == ids.Count)
+            .WithMessage("SpotifyIds must not contain duplicates.")
+            .ForEach(id =>
+                id.Matches("^[A-Za-z0-9]{6,64}$")
+                    .WithMessage("SpotifyIds must contain only alphanumeric Spotify ids."));
     }
 }
 

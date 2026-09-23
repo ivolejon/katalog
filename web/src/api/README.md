@@ -12,7 +12,7 @@ matching the contract's endpoint surface (arch report 3.6):
 | `POST /api/labels` | `api.createLabel(input)` |
 | `DELETE /api/labels/{id}` | `api.deleteLabel(id)` |
 | `GET /api/labels/{id}` | `api.getLabel(id)` |
-| `GET /api/search?type=artist` | `api.searchArtists({ q })` |
+| `GET /api/labels/search` | `api.searchLabels({ q })` |
 
 ## Switching to the generated client
 

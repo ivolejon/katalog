@@ -2,7 +2,7 @@
  * Handwritten API DTO types.
  *
  * These mirror the committed contract surface (arch report 3.6): labels CRUD,
- * artist search, label detail with artists + releases. They remain a stand-in
+ * label search, label detail with artists + releases. They remain a stand-in
  * until `npm run generate:client` (hey-api) emits `src/api/generated/*` and the
  * generated types replace these ones.
  */
@@ -20,17 +20,31 @@ export interface LabelSummary {
 
 /** A label as it can be added (POST /api/labels). */
 export interface CreateLabelInput {
+  name: string
+  /** Spotify artist ids linked to this label (polling anchors). */
+  spotifyIds: string[]
+}
+
+/** Artist on a label-search album hit (simplified: id + name from the album object). */
+export interface LabelSearchArtist {
   spotifyId: string
   name: string
 }
 
-/** Artist search result (GET /api/search?type=artist). */
-export interface ArtistSearchResult {
-  id: string
+/** Album hit from a Spotify label search (GET /api/labels/search). */
+export interface LabelSearchAlbum {
+  albumId: string
   name: string
+  artists: LabelSearchArtist[]
   imageUrl: string | null
+  releaseDate: string | null
   externalUrl: string
-  genres: string[]
+}
+
+/** Label search response: the searched label name plus the matching albums. */
+export interface LabelSearchResponse {
+  matchedLabelName: string
+  albums: LabelSearchAlbum[]
 }
 
 export type ReleaseDatePrecision = 'year' | 'month' | 'day'
