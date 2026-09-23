@@ -134,11 +134,28 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
             new { spotifyArtistId = "doesnotexist123" });
         Assert.Equal(HttpStatusCode.NotFound, missing.StatusCode);
 
-        // Remove artist from label
+        // A second anchor allows removing one artist while the label keeps a follow
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/artisttwo").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("artisttwo", "Olof Dreijer")));
+        var secondLink = await client.PostAsJsonAsync($"/api/labels/{label.Id}/artists",
+            new { spotifyArtistId = "artisttwo" });
+        Assert.Equal(HttpStatusCode.OK, secondLink.StatusCode);
+
         var removeResponse = await client.DeleteAsync($"/api/labels/{label.Id}/artists/{linked.Id}");
         Assert.Equal(HttpStatusCode.NoContent, removeResponse.StatusCode);
         var detailAfterRemove = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
-        Assert.Equal(0, detailAfterRemove!.ArtistCount);
+        Assert.Equal(1, detailAfterRemove!.ArtistCount);
+
+        // Removing the last artist is refused: a followed label keeps at least one anchor
+        var remaining = Assert.Single(detailAfterRemove.Artists);
+        var lastRemove = await client.DeleteAsync($"/api/labels/{label.Id}/artists/{remaining.Id}");
+        Assert.Equal(HttpStatusCode.Conflict, lastRemove.StatusCode);
+        var detailAfterRefused = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.Equal(1, detailAfterRefused!.ArtistCount);
+        Assert.Equal("Olof Dreijer", Assert.Single(detailAfterRefused.Artists).Name);
     }
 
     [Fact]

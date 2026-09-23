@@ -59,7 +59,8 @@ public static class LabelsEndpoints
         group.MapDelete("/{labelId:guid}/artists/{artistId:guid}", RemoveArtistFromLabel)
             .WithName("RemoveArtistFromLabel")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict);
 
         return group;
     }
@@ -136,7 +137,17 @@ public static class LabelsEndpoints
 
     private static async Task<IResult> RemoveArtistFromLabel(Guid labelId, Guid artistId,
         RemoveArtistFromLabel removeArtistFromLabel, CancellationToken cancellationToken)
-        => await removeArtistFromLabel.RemoveAsync(labelId, artistId, cancellationToken)
-            ? TypedResults.NoContent()
-            : TypedResults.NotFound();
+    {
+        var status = await removeArtistFromLabel.RemoveAsync(labelId, artistId, cancellationToken);
+        return status switch
+        {
+            RemoveArtistFromLabelStatus.LastArtistRefused => TypedResults.Conflict(new ProblemDetails
+            {
+                Title = "A label must keep at least one artist; delete the label to end the follow.",
+                Status = StatusCodes.Status409Conflict
+            }),
+            RemoveArtistFromLabelStatus.Removed => TypedResults.NoContent(),
+            _ => TypedResults.NotFound()
+        };
+    }
 }
