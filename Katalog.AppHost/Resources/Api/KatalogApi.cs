@@ -14,7 +14,9 @@ public static class KatalogApi
             .AddProject<Projects.Katalog_Api>("api")
             .WithReference(catalogDb)
             .WaitFor(catalogDb)
-            .WithHttpEndpoint(name: "http")
+            // Fixed host port (5192) so the backend answers on the same port every run; the
+            // web proxy fallback in web/vite.config.ts references this exact port.
+            .WithHttpEndpoint(name: "http", port: 5192)
             .WithExternalHttpEndpoints()
             .WithHttpHealthCheck("/alive");
     }
