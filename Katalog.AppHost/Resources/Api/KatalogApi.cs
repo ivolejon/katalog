@@ -13,6 +13,12 @@ public static class KatalogApi
         return builder
             .AddProject<Projects.Katalog_Api>("api")
             .WithReference(catalogDb)
+            // The API is a dev process under `aspire run`; forcing Development makes user
+            // secrets (Spotify credentials) load and keeps startup migrations enabled,
+            // otherwise the default Production environment skips both and options
+            // validation fails the host (arch report §2.7).
+            .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+            .WithEnvironment("DOTNET_ENVIRONMENT", "Development")
             .WaitFor(catalogDb)
             .WithHttpEndpoint(name: "http")
             .WithExternalHttpEndpoints()

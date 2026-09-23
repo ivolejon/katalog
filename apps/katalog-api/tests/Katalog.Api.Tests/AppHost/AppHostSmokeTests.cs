@@ -1,12 +1,13 @@
 using System.Net;
+using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 
 namespace Katalog.Api.Tests.AppHost;
 
 /// <summary>
-/// Small AppHost smoke test: the distributed application model contains the expected resources
-/// and the API serves its liveness endpoint once the stack starts (reference pattern, scaled
-/// down - arch report §3.8).
+/// Small AppHost smoke test: the distributed application model contains the expected resources,
+/// the catalog database exposes the "Reset Database" dashboard action, and the API serves its
+/// liveness endpoint once the stack starts (reference pattern, scaled down - arch report §3.8).
 /// </summary>
 public sealed class AppHostSmokeTests
 {
@@ -26,6 +27,13 @@ public sealed class AppHostSmokeTests
         Assert.Contains("postgres", resourceNames);
         Assert.Contains("catalog", resourceNames);
         Assert.Contains("api", resourceNames);
+
+        var catalogResource = Assert.Single(app.Resources, r => r.Name == "catalog");
+        var resetCommand = catalogResource.Annotations
+            .OfType<ResourceCommandAnnotation>()
+            .SingleOrDefault(c => c.Name == "reset-db");
+        Assert.NotNull(resetCommand);
+        Assert.Equal("Reset Database", resetCommand.DisplayName);
 
         var distributedApplication = await app.BuildAsync();
         await distributedApplication.StartAsync();

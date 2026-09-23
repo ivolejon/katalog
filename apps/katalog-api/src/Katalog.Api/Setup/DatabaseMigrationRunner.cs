@@ -105,6 +105,11 @@ public static class DatabaseMigrationRunner
     /// <summary>
     /// Applies pending migrations at startup for local development and testing. Skipped in
     /// deployment environments and during build-time OpenAPI generation (arch report §2.7).
+    /// Postgres is WaitFor'd healthy before the API starts, but the very first connections still
+    /// pass through the Aspire DCP endpoint proxy, which can briefly reject connections right
+    /// after the container reports healthy (cold start). A bounded retry loop turns that window
+    /// into a short startup delay instead of an unhandled crash; persistent failures still
+    /// surface with the full exception once the attempts are exhausted.
     /// </summary>
     public static async Task ApplyMigrationsForNonDeploymentEnvironmentOnStartupAsync(this IHost host)
     {
@@ -116,12 +121,29 @@ public static class DatabaseMigrationRunner
         var context = scope.ServiceProvider.GetRequiredService<KatalogContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<KatalogContext>>();
 
-        var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToList();
-        if (pendingMigrations.Count == 0)
-            return;
+        const int maxAttempts = 5;
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToList();
+                if (pendingMigrations.Count == 0)
+                    return;
 
-        logger.LogInformation("Applying {PendingCount} pending migration(s) at startup: {Migrations}",
-            pendingMigrations.Count, string.Join(", ", pendingMigrations));
-        await context.Database.MigrateAsync();
+                logger.LogInformation("Applying {PendingCount} pending migration(s) at startup: {Migrations}",
+                    pendingMigrations.Count, string.Join(", ", pendingMigrations));
+                await context.Database.MigrateAsync();
+                return;
+            }
+            catch (Exception ex) when (attempt < maxAttempts && ex is not OperationCanceledException)
+            {
+                // Bounded backoff: 1s, 2s, 3s, 4s. Cancellation (app shutdown) is never retried.
+                var delay = TimeSpan.FromSeconds(attempt);
+                logger.LogWarning(ex,
+                    "Startup migration attempt {Attempt} of {MaxAttempts} failed; retrying in {DelaySeconds}s.",
+                    attempt, maxAttempts, (int)delay.TotalSeconds);
+                await Task.Delay(delay);
+            }
+        }
     }
 }
