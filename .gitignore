@@ -14,6 +14,9 @@ dist/
 .apphost/
 .aspire/
 **/Properties/launchSettings.json
+# The AppHost launch profile is committed on purpose: its applicationUrl pins the
+# dashboard port (https://localhost:15000) for every `aspire run` (see Program.cs).
+!Katalog.AppHost/Properties/launchSettings.json
 
 # IDE
 .idea/

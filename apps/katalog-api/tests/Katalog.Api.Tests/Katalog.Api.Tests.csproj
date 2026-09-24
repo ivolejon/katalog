@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\..\Katalog.AppHost\Properties\launchSettings.json" Link="launchSettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Katalog.Api\Katalog.Api.csproj" />
     <ProjectReference Include="..\..\..\..\Katalog.AppHost\Katalog.AppHost.csproj" />
   </ItemGroup>
