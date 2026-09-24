@@ -4,7 +4,7 @@ title: "Katalog - Testing"
 openwiki_generated: true
 verified:
   - by: openwiki/0.5.2
-    at: 2026-09-22T17:28:24.726Z
+    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -14,7 +14,7 @@ sources:
     resource: repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs
   - id: openwiki-source-7796feddb7c97ca8d4140109
     resource: repo://apps/katalog-api/tests/Katalog.Api.Tests/Katalog.Api.Tests.csproj
-generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
 ---
 
 # Katalog - Testing
@@ -46,7 +46,8 @@ generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
     `Testcontainers.PostgreSql` (EF migrations/upsert), Spotify mocked with
     **WireMock** including 429/`Retry-After` scenarios;
   - AppHost smoke: `DistributedApplicationTestingBuilder` asserting resources
-    exist and `/health` responds.
+    exist, the catalog database exposes the "Reset Database" dashboard action,
+    and `/health` responds.
 - Naming convention `Method_Condition_Expected` with display names.
 - Interactive/e2e smoke against the full stack (Aspire + Postgres + WireMock or
   real Spotify) complements these automated tests and the frontend scenarios.

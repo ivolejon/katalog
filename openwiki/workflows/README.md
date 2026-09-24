@@ -4,7 +4,7 @@ title: "Katalog - Workflows"
 openwiki_generated: true
 verified:
   - by: openwiki/0.5.2
-    at: 2026-09-22T17:28:24.726Z
+    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -16,7 +16,7 @@ sources:
     resource: repo://README.md
   - id: openwiki-source-14e56945b7c632a3b335dcec
     resource: repo://web/package.json
-generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
 ---
 
 # Katalog - Workflows
@@ -48,7 +48,7 @@ drift. `.github/workflows/web.yml` separately builds and typechecks the web app.
 ## The no-mistakes gate
 
 `.no-mistakes.yaml` configures the no-mistakes validation gate (agent:
-`opencode`, OCR review delegation enabled). Change requests push through the
+`pi`, OCR review delegation enabled). Change requests push through the
 gate rather than straight to `origin`:
 
 ```sh

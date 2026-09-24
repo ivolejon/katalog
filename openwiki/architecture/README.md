@@ -4,7 +4,7 @@ title: "Katalog - Architecture"
 openwiki_generated: true
 verified:
   - by: openwiki/0.5.2
-    at: 2026-09-22T17:28:24.726Z
+    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-40176359058e84debec9e8ac
     resource: repo://apps/katalog-api/src/Katalog.Api/Program.cs
@@ -12,7 +12,7 @@ sources:
     resource: repo://contracts/katalog-api/openapi.json
   - id: openwiki-source-8ce73889fe4fb27ed1786287
     resource: repo://Katalog.AppHost/Program.cs
-generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
 ---
 
 # Katalog - Architecture
@@ -34,6 +34,11 @@ generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
 The checked-in backend is a .NET 10 minimal API hosted by `Katalog.Api`.
 `Katalog.AppHost` starts it with PostgreSQL and the Vue app through Aspire;
 `contracts/katalog-api/openapi.json` is the committed build-generated contract.
+`Katalog.AppHost` forces the api resource to the **Development** environment
+(`ASPNETCORE_ENVIRONMENT`/`DOTNET_ENVIRONMENT`) so Spotify user-secrets load and
+the startup migration runner runs, and the catalog database resource exposes a
+"Reset Database" dashboard action (`reset-db`) that drops and recreates the
+database for a fresh start.
 
 ## Frontend (`web/`)
 

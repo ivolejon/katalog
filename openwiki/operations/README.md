@@ -4,7 +4,7 @@ title: "Katalog - Operations"
 openwiki_generated: true
 verified:
   - by: openwiki/0.5.2
-    at: 2026-09-22T17:28:24.726Z
+    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -12,7 +12,7 @@ sources:
     resource: repo://Katalog.AppHost/Program.cs
   - id: openwiki-source-4fd82268b1f7ce8f04d0e00c
     resource: repo://Katalog.AppHost/Resources/Api/KatalogApi.cs
-generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
 ---
 
 # Katalog - Operations
@@ -46,7 +46,14 @@ lines, or PR descriptions.
   (`dotnet tool install -g Aspire.Cli --version 13.5.4`), Docker (for Aspire containers),
   Node.js + npm (frontend).
 - Backend dev flow: `aspire run` from the solution root starts Postgres, the API,
-  and the frontend resource; the Aspire dashboard shows traces/logs.
+  and the frontend resource; the Aspire dashboard shows traces/logs. The API runs
+  in the **Development** environment under the host (`Katalog.AppHost` forces
+  `ASPNETCORE_ENVIRONMENT`/`DOTNET_ENVIRONMENT` on the api resource), which is
+  what loads the Spotify user-secrets and enables startup migrations.
+- The `catalog` Postgres resource exposes a **Reset Database** dashboard action
+  (command name `reset-db`, enabled while the resource is healthy) that drops and
+  recreates the database via an admin connection, with a confirmation prompt; also
+  callable from the CLI with `aspire resource catalog reset-db`. All data is lost on reset.
 
 ## Environment variables
 
@@ -67,3 +74,8 @@ poll frequency). Dev-mode quota is small - do not burn it on user-token flows
 
 The backend exposes `/health` and `/alive`; Aspire wires the API resource through
 `WaitFor` so it starts only after Postgres is ready.
+
+The startup migration runner runs in Development and retries transient database
+failures with bounded backoff (up to 5 attempts), so `Failed executing DbCommand
+... SELECT migration_id ...` lines right after Postgres reports healthy are retry
+noise, not a crash.
