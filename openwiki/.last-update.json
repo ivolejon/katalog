@@ -1,8 +1,7 @@
 {
-  "updatedAt": "2026-09-22T17:31:25.682Z",
   "command": "update",
-  "gitHead": "d429afe8a08fe9a68090f00dda5656dd1cc02728",
-  "model": "host-agent/opencode",
-  "status": "complete",
-  "language": "en"
+  "model": "pi",
+  "updatedAt": "2026-09-24T00:37:19.801Z",
+  "gitHead": "25d388502da7024dd0addfaf28e2335ef77cdf79",
+  "snapshotHash": "b3Blbndpa2kvYXJj"
 }

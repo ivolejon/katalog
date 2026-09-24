@@ -4,7 +4,7 @@ title: "Katalog - Quickstart"
 openwiki_generated: true
 verified:
   - by: openwiki/0.5.2
-    at: 2026-09-22T17:28:24.726Z
+    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-40176359058e84debec9e8ac
     resource: repo://apps/katalog-api/src/Katalog.Api/Program.cs
@@ -14,7 +14,7 @@ sources:
     resource: repo://Katalog.AppHost/Program.cs
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "opencode", at: "2026-09-22T17:28:24.726Z" }
+generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
 ---
 
 # Katalog - Quickstart
@@ -55,6 +55,12 @@ dotnet build Katalog.slnx
 dotnet test Katalog.slnx
 aspire run
 ```
+
+`aspire run` starts PostgreSQL, the API, and web. The API runs in the
+Development environment, so the Spotify user-secrets (set once with `dotnet
+user-secrets set` on the API project) load and startup migrations run. For a
+fresh database, use the catalog resource's **Reset Database** dashboard action
+(`aspire resource catalog reset-db`).
 
 ## Run the frontend
 

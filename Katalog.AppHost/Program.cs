@@ -7,7 +7,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // Infrastructure: a single Postgres server with one application database.
 var postgres = builder.SetupPostgres();
-var catalogDb = postgres.AddDatabase("catalog");
+var catalogDb = postgres.AddDatabase("catalog").WithResetCommand();
 
 var api = builder.SetupKatalogApi(catalogDb);
 
