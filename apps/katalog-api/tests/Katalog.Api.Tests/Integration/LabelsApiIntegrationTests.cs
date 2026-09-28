@@ -1,6 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using Katalog.Api.Contracts;
+using Katalog.Api.Features.Releases.Polling;
+using Katalog.Api.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
@@ -17,6 +20,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         spotify.Server.Given(Request.Create().WithPath("/v1/artists/artistone").UsingGet())
             .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
+        spotify.StubArtistAlbums("artistone", "Fever Ray", "albumone");
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
@@ -28,6 +32,11 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(created);
         Assert.Equal("ninja-tune", created!.Slug);
+
+        // Releases are discovered immediately; the user does not see an empty "No releases yet" state.
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("albumone", Assert.Single(detail.Releases).SpotifyId);
 
         // Duplicate slug -> 409
         var duplicateResponse = await client.PostAsJsonAsync("/api/labels",
@@ -41,7 +50,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         Assert.Equal("Ninja Tune", label.Name);
 
         // Detail
-        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
         Assert.Equal(1, detail!.ArtistCount);
         Assert.Equal("Fever Ray", Assert.Single(detail!.Artists).Name);
 
@@ -99,6 +108,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
+        spotify.StubArtistAlbums("artistone", "Fever Ray", "albumone");
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -296,6 +306,8 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artisttwo", "Fever Ray")));
+        spotify.StubArtistAlbums("artistone", "Karin Dreijer", "albumone");
+        spotify.StubArtistAlbums("artisttwo", "Fever Ray", "albumtwo");
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -313,6 +325,40 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         Assert.Equal(2, detail!.ArtistCount);
         Assert.Equal(new[] { "Fever Ray", "Karin Dreijer" },
             detail.Artists.Select(a => a.Name).OrderBy(n => n).ToArray());
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/immediate1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("immediate1", "Immediate Artist")));
+        spotify.StubArtistAlbums("immediate1", "Immediate Artist", "immediatealbum1", "immediatealbum2");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Immediate Label", spotifyIds = new[] { "immediate1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        // Releases are discovered synchronously during create, before any scheduled poll runs.
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(2, detail!.ReleaseCount);
+        Assert.Equal(new[] { "immediatealbum1", "immediatealbum2" },
+            detail.Releases.Select(r => r.SpotifyId).OrderBy(id => id).ToArray());
+
+        // Polling cursor is unchanged: the immediate poll does not advance the scheduled job cursor.
+        var cursor = await factory.Services.CreateScope().ServiceProvider
+            .GetRequiredService<KatalogContext>().PollCursors.FindAsync([ReleasePoller.JobName]);
+        Assert.Null(cursor);
     }
 
     [Fact]

@@ -41,6 +41,36 @@ public sealed class ReleasePoller(
         var cursor = await GetOrCreateCursorAsync(cancellationToken);
         var startedAt = timeProvider.GetUtcNow();
 
+        await PollArtistsAsync(artists, cancellationToken);
+
+        cursor.CursorValue = startedAt;
+        cursor.LastRunAt = timeProvider.GetUtcNow();
+        cursor.Status = "completed";
+        await context.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Release poll completed for {ArtistCount} artist(s).", artists.Count);
+    }
+
+    /// <summary>
+    /// Polls the artists linked to a single label immediately, upserting albums idempotently.
+    /// Used when a new label is followed so releases appear right away instead of waiting for
+    /// the next scheduled poll cycle.
+    /// </summary>
+    public async Task PollLabelAsync(Guid labelId, CancellationToken cancellationToken)
+    {
+        var artists = await context.Artists
+            .Where(a => a.LabelArtists.Any(la => la.LabelId == labelId))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        await PollArtistsAsync(artists, cancellationToken);
+
+        logger.LogInformation("Immediate release poll completed for label {LabelId} with {ArtistCount} artist(s).",
+            labelId, artists.Count);
+    }
+
+    private async Task PollArtistsAsync(IReadOnlyList<Artist> artists, CancellationToken cancellationToken)
+    {
         foreach (var artist in artists)
         {
             try
@@ -65,13 +95,6 @@ public sealed class ReleasePoller(
                     artist.Name, artist.SpotifyId);
             }
         }
-
-        cursor.CursorValue = startedAt;
-        cursor.LastRunAt = timeProvider.GetUtcNow();
-        cursor.Status = "completed";
-        await context.SaveChangesAsync(cancellationToken);
-
-        logger.LogInformation("Release poll completed for {ArtistCount} artist(s).", artists.Count);
     }
 
     private async Task<PollCursor> GetOrCreateCursorAsync(CancellationToken cancellationToken)

@@ -17,6 +17,19 @@ public sealed class WireMockSpotify : IAsyncDisposable
     /// <summary>Clears all mappings, scenarios and logs so each test starts clean.</summary>
     public void Reset() => Server.Reset();
 
+    public void StubArtistAlbums(string artistId, string artistName = "Artist One", params string[] albumIds)
+    {
+        var items = string.Join(",", albumIds.Select((id, i) => AlbumItemJson(artistId, id, $"Album {i + 1}", 2010, artistName)));
+        var body = $$"""
+            {"items": [{{items}}], "next": null, "total": {{albumIds.Length}}}
+            """;
+        Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}/albums").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(body));
+    }
+
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
     {
         Server.Given(Request.Create().WithPath("/api/token").UsingPost())
@@ -51,7 +64,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
     public static string AlbumSearchJson(params string[] albumItems) =>
         "{\"albums\": {\"items\": [" + string.Join(",", albumItems) + "], \"total\": " + albumItems.Length + "}}";
 
-    public static string AlbumItemJson(string artistId, string id, string name, int releaseYear) =>
+    public static string AlbumItemJson(string artistId, string id, string name, int releaseYear, string artistName = "Artist One") =>
         $$"""
         {
           "id": "{{id}}",
@@ -62,7 +75,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
           "images": [{"url": "https://i.scdn.co/image/{{id}}" }],
           "external_urls": {"spotify": "https://open.spotify.com/album/{{id}}"},
           "total_tracks": 10,
-          "artists": [{"id": "{{artistId}}", "name": "Artist One"}]
+          "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}]
         }
         """;
 
