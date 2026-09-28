@@ -362,6 +362,36 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/pollfail1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("pollfail1", "Poll Fail Artist")));
+        // Intentionally do not stub /v1/artists/pollfail1/albums so the immediate poll throws.
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/pollfail1/albums").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(500));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Poll Fail Label", spotifyIds = new[] { "pollfail1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        // The label exists even though the immediate release poll failed.
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal("Poll Fail Label", detail!.Name);
+        Assert.Equal(0, detail.ReleaseCount);
+    }
+
+    [Fact]
     public async Task CreateLabel_WithUnknownSpotifyId_RollsBackWith404()
     {
         spotify.Reset();

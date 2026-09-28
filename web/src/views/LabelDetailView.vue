@@ -207,8 +207,8 @@ async function unfollow() {
           <EmptyState
             v-else
             :icon="MusicNote01Icon"
-            title="No releases yet"
-            description="Releases from this label's artists will show up here once the backend discovers them."
+            title="No releases found"
+            description="We couldn't find any albums or singles from this label's artists on Spotify."
           />
         </TabsContent>
 
