@@ -16,7 +16,7 @@ public sealed class SearchLabels(ISpotifyApiClient spotifyApiClient, IOptions<Sp
     public async Task<LabelSearchResponse> SearchAsync(string query, int limit, CancellationToken cancellationToken)
     {
         var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
-            query, limit, spotifyOptions.Value.Market, cancellationToken);
+            query, limit, spotifyOptions.Value.Market, offset: 0, cancellationToken);
 
         var albums = response.Albums.Items
             .Select(a => new LabelSearchAlbumResult(

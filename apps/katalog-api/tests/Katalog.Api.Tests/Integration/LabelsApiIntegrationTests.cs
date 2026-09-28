@@ -265,7 +265,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithParam("market", "SE")
                 .WithParam("limit", "10"))
             .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
-                .WithBody(WireMockSpotify.AlbumSearchJson()));
+                .WithBody(WireMockSpotify.AlbumSearchJson([])));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();

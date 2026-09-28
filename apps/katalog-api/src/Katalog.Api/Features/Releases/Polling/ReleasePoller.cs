@@ -25,9 +25,28 @@ public sealed class ReleasePoller(
     public async Task<IReadOnlyList<SpotifyAlbumItem>> FetchLabelAlbumsAsync(string labelName,
         CancellationToken cancellationToken)
     {
-        var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
-            labelName, SpotifyOptions.SearchLimitMax, spotifyOptions.Value.Market, cancellationToken);
-        return response.Albums.Items;
+        var limit = SpotifyOptions.SearchLimitMax;
+        var market = spotifyOptions.Value.Market;
+        var items = new List<SpotifyAlbumItem>();
+        var offset = 0;
+
+        while (true)
+        {
+            var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
+                labelName, limit, market, offset, cancellationToken);
+            var page = response.Albums;
+            items.AddRange(page.Items);
+
+            logger.LogDebug("Fetched {Count} albums for label {LabelName} at offset {Offset} (next: {HasNext}).",
+                page.Items.Count, labelName, offset, page.Next is not null);
+
+            if (page.Next is null || page.Items.Count < limit)
+                break;
+
+            offset += limit;
+        }
+
+        return items;
     }
 
     public async Task PollOnceAsync(CancellationToken cancellationToken)

@@ -15,10 +15,11 @@ public interface ISpotifyApiClient
     /// <summary>
     /// Searches albums whose Spotify label field matches <paramref name="labelName"/> via the
     /// undocumented-but-working <c>label:"&lt;name&gt;"</c> search filter (verified live 2026-09-22;
-    /// not listed in the official spec's filter list). Returns simplified album objects.
+    /// not listed in the official spec's filter list). Returns one page of simplified album objects;
+    /// callers that need the full result set must paginate using <paramref name="offset"/>.
     /// </summary>
     Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken);
+        int offset, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns the artist discography (albums + singles, as configured by include_groups).
@@ -54,7 +55,7 @@ public sealed class SpotifyApiClient(
     }
 
     public async Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken)
+        int offset, CancellationToken cancellationToken)
     {
         // EscapeDataString encodes the quotes as %22 (q=label%3A%22<name>%22), which Spotify
         // accepts for the label: filter - verified live 2026-09-22.
@@ -62,7 +63,7 @@ public sealed class SpotifyApiClient(
             .Replace("\"", "\\\"", StringComparison.Ordinal);
         var queryString = Uri.EscapeDataString($"label:\"{escapedLabelName}\"");
         var response = await httpClient.GetAsync(
-            $"v1/search?q={queryString}&type=album&market={market}&limit={limit}", cancellationToken);
+            $"v1/search?q={queryString}&type=album&market={market}&limit={limit}&offset={offset}", cancellationToken);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<SpotifySearchAlbumsResponse>(cancellationToken)
                ?? throw new SpotifyApiException("Spotify album search returned an empty body.");

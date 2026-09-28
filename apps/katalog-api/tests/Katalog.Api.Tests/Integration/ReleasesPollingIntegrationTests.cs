@@ -176,6 +176,44 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         Assert.Equal(AlbumId, album.SpotifyId);
     }
 
+    [Fact]
+    public async Task PollOnce_PaginatesLabelSearchUntilExhausted()
+    {
+        // Regression: discovery must follow pagination so labels with more than 10 releases
+        // are not silently capped.
+        const string page2AlbumId = "albumpoll2xyz";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
+
+        // Page 1 has a full 10 items and a next pointer; page 2 has one item and no next.
+        var page1Items = Enumerable.Range(0, 10)
+            .Select(i => WireMockSpotify.AlbumItemJson(ArtistId, $"album{i}", $"Album {i}", 2010 + i, "Artist One"))
+            .ToArray();
+        spotify.StubLabelSearchPage(LabelName, offset: 0, next: $"{spotify.BaseUrl}/v1/search?next=page2", page1Items);
+        spotify.StubLabelSearchPage(LabelName, offset: 10, next: null,
+            WireMockSpotify.AlbumItemJson(ArtistId, page2AlbumId, "Album 10", 2020, "Artist One"));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(releases);
+        Assert.Equal(11, releases.Length);
+        Assert.Contains(releases, r => r.SpotifyId == page2AlbumId);
+    }
+
     private static async Task RunPollerAsync(KatalogApiFactory factory)
     {
         await using var scope = factory.Services.CreateAsyncScope();
