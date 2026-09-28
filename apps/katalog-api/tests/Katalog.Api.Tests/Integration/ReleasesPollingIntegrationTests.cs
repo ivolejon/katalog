@@ -28,10 +28,6 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
             new { name = "Test Label", spotifyIds = new[] { ArtistId } });
         var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(label);
-
-        var linkResponse = await client.PostAsJsonAsync($"/api/labels/{label.Id}/artists",
-            new { spotifyArtistId = ArtistId });
-        Assert.Equal(HttpStatusCode.OK, linkResponse.StatusCode);
         return label.Id;
     }
 

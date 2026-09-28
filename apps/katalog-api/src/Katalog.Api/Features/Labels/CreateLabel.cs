@@ -2,7 +2,9 @@ using Katalog.Api.Contracts;
 using Katalog.Api.Domain;
 using Katalog.Api.Infrastructure;
 using Katalog.Api.Features.Artists;
+using Katalog.Api.Features.Releases.Polling;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
 namespace Katalog.Api.Features.Labels;
@@ -19,6 +21,7 @@ public sealed record CreateLabelOutcome(CreateLabelStatus Status, Label? Label, 
 public sealed class CreateLabel(
     KatalogContext context,
     AddArtistToLabel addArtistToLabel,
+    IServiceScopeFactory scopeFactory,
     TimeProvider timeProvider,
     ILogger<CreateLabel> logger)
 {
@@ -33,7 +36,7 @@ public sealed class CreateLabel(
         var normalized = name.Trim();
         var slug = LabelSlug.From(normalized);
 
-        return await context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        var outcome = await context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
         {
             var label = new Label
             {
@@ -72,8 +75,21 @@ public sealed class CreateLabel(
             }
 
             await transaction.CommitAsync(cancellationToken);
+
             return new CreateLabelOutcome(CreateLabelStatus.Created, label, linkedArtists);
         });
+
+        if (outcome.Status == CreateLabelStatus.Created)
+        {
+            // Discover releases for the new label's artists immediately so the user does not
+            // have to wait for the next scheduled poll cycle. Runs in its own scope with a
+            // fresh DbContext so a polling failure cannot corrupt the request's context.
+            await using var pollScope = scopeFactory.CreateAsyncScope();
+            var releasePoller = pollScope.ServiceProvider.GetRequiredService<ReleasePoller>();
+            await releasePoller.PollLabelAsync(outcome.Label!.Id, cancellationToken);
+        }
+
+        return outcome;
     }
 
     private static bool IsSlugUniqueViolation(DbUpdateException exception) =>
