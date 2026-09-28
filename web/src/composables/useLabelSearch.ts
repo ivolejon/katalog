@@ -14,10 +14,6 @@ export function useLabelSearch(debounceMs = 350) {
   const error = ref<string | null>(null)
 
   const labels = computed(() => response.value?.labels ?? [])
-  const matchedLabelName = computed(() => {
-    const first = response.value?.labels[0]
-    return first?.name ?? ''
-  })
 
   let requestSeq = 0
 
@@ -55,7 +51,7 @@ export function useLabelSearch(debounceMs = 350) {
     run(value.trim())
   })
 
-  return { query, labels, matchedLabelName, searching, error, reset: () => (query.value = '') }
+  return { query, labels, searching, error, reset: () => (query.value = '') }
 }
 
 /** Collect unique Spotify artist ids from every album under a label search result. */

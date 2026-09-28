@@ -158,7 +158,8 @@ async function submit() {
                       v-for="label in labels"
                       :key="label.name"
                       type="button"
-                      class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring"
+                      :disabled="collectArtistIds(label).length === 0"
+                      class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       @click="pickLabel(label)"
                     >
                       <div
@@ -261,7 +262,7 @@ async function submit() {
           <Button variant="ghost">Cancel</Button>
         </DialogClose>
         <Button
-          :disabled="!selected || submitting"
+          :disabled="!selected || selectionSpotifyIds.length === 0 || submitting"
           class="min-w-28"
           @click="submit"
         >
