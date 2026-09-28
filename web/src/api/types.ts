@@ -41,10 +41,16 @@ export interface LabelSearchAlbum {
   externalUrl: string
 }
 
-/** Label search response: the searched label name plus the matching albums. */
-export interface LabelSearchResponse {
-  matchedLabelName: string
+/** A label hit from a Spotify label search. */
+export interface LabelSearchResult {
+  name: string
   albums: LabelSearchAlbum[]
+}
+
+/** Label search response: the query plus the matching label hits. */
+export interface LabelSearchResponse {
+  query: string
+  labels: LabelSearchResult[]
 }
 
 export type ReleaseDatePrecision = 'year' | 'month' | 'day'

@@ -51,13 +51,21 @@ public sealed record LabelSearchAlbumResult(
 public sealed record LabelSearchArtistResult(string SpotifyId, string Name);
 
 /// <summary>
-/// Label search result: the normalized label name that was searched plus the matching albums.
-/// The label name shown to the user is the searched term (simplified album objects carry no
-/// label field), so <see cref="MatchedLabelName"/> echoes the query.
+/// A label hit from a Spotify label search. The name is the searched term (simplified album
+/// objects carry no label field), and the albums are the hits used to build artist anchors.
+/// </summary>
+public sealed record LabelSearchResult(
+    string Name,
+    IReadOnlyList<LabelSearchAlbumResult> Albums);
+
+/// <summary>
+/// Label search result: the normalized query plus the matching label hits. Because Spotify has
+/// no searchable label resource, the API searches albums via <c>label:"&lt;name&gt;"</c> and
+/// returns the searched label as a single hit.
 /// </summary>
 public sealed record LabelSearchResponse(
-    string MatchedLabelName,
-    IReadOnlyList<LabelSearchAlbumResult> Albums);
+    string Query,
+    IReadOnlyList<LabelSearchResult> Labels);
 
 /// <summary>Album/release row used by the frontend "Releaser" tab.</summary>
 public sealed record AlbumResponse(

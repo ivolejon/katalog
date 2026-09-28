@@ -37,7 +37,7 @@ export const api = {
     return http.get<LabelDetail>(`/labels/${id}`)
   },
 
-  /** Spotify label search (primary add-label flow): albums matching the label name. */
+  /** Spotify label search (primary add-label flow): label hits matching the query. */
   searchLabels(params: SearchLabelsParams): Promise<LabelSearchResponse> {
     const query = new URLSearchParams({ q: params.q })
     if (params.limit !== undefined) {
