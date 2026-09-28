@@ -1,11 +1,11 @@
 import { computed, ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { api } from '@/api'
-import type { LabelSearchResponse } from '@/api'
+import type { LabelSearchResponse, LabelSearchResult } from '@/api'
 
 /**
  * Debounced Spotify label search (GET /api/labels/search), backing the add-label
- * combobox. Empty queries reset without hitting the API.
+ * dialog. Empty queries reset without hitting the API.
  */
 export function useLabelSearch(debounceMs = 350) {
   const query = ref('')
@@ -13,8 +13,7 @@ export function useLabelSearch(debounceMs = 350) {
   const searching = ref(false)
   const error = ref<string | null>(null)
 
-  const albums = computed(() => response.value?.albums ?? [])
-  const matchedLabelName = computed(() => response.value?.matchedLabelName ?? '')
+  const labels = computed(() => response.value?.labels ?? [])
 
   let requestSeq = 0
 
@@ -52,5 +51,16 @@ export function useLabelSearch(debounceMs = 350) {
     run(value.trim())
   })
 
-  return { query, albums, matchedLabelName, searching, error, reset: () => (query.value = '') }
+  return { query, labels, searching, error, reset: () => (query.value = '') }
+}
+
+/** Collect unique Spotify artist ids from every album under a label search result. */
+export function collectArtistIds(label: LabelSearchResult): string[] {
+  const ids = new Set<string>()
+  for (const album of label.albums) {
+    for (const artist of album.artists) {
+      ids.add(artist.spotifyId)
+    }
+  }
+  return [...ids]
 }

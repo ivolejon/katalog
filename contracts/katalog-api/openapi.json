@@ -719,12 +719,30 @@
       },
       "LabelSearchResponse": {
         "required": [
-          "matchedLabelName",
+          "query",
+          "labels"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelSearchResult"
+            }
+          }
+        }
+      },
+      "LabelSearchResult": {
+        "required": [
+          "name",
           "albums"
         ],
         "type": "object",
         "properties": {
-          "matchedLabelName": {
+          "name": {
             "type": "string"
           },
           "albums": {

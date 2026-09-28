@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { toast } from 'vue-sonner'
-import type { LabelSearchAlbum } from '@/api'
+import type { LabelSearchResult } from '@/api'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -17,13 +17,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useLabelSearch } from '@/composables/useLabelSearch'
+import { useLabelSearch, collectArtistIds } from '@/composables/useLabelSearch'
 import { useLabelsStore } from '@/stores/labels'
 import {
   Add01Icon,
+  Album01Icon,
   Cancel01Icon,
-  Calendar01Icon,
-  Disc01Icon,
   Loading03Icon,
   MusicNote02Icon,
   SearchIcon,
@@ -38,28 +37,27 @@ const store = useLabelsStore()
 
 const {
   query: labelQuery,
-  albums,
-  matchedLabelName,
+  labels,
   searching: labelSearching,
   error: labelError,
   reset: resetLabelSearch,
 } = useLabelSearch()
-type Selection = { album: LabelSearchAlbum; labelName: string }
+type Selection = { label: LabelSearchResult }
 const selected = ref<Selection | null>(null)
 const submitting = ref(false)
 const error = ref<string | null>(null)
 const inputEl = ref<ComponentPublicInstance | null>(null)
 
 const selectionName = computed(() => {
-  return selected.value?.labelName ?? ''
+  return selected.value?.label.name ?? ''
 })
 
 const selectionSpotifyIds = computed(() => {
-  return selected.value ? [...new Set(selected.value.album.artists.map((a) => a.spotifyId))] : []
+  return selected.value ? collectArtistIds(selected.value.label) : []
 })
 
-function pickAlbum(album: LabelSearchAlbum) {
-  selected.value = { album, labelName: matchedLabelName.value || labelQuery.value.trim() }
+function pickLabel(label: LabelSearchResult) {
+  selected.value = { label }
   resetLabelSearch()
   error.value = null
 }
@@ -154,40 +152,30 @@ async function submit() {
                     </div>
                   </div>
 
-                  <!-- Album hits -->
-                  <template v-else-if="albums.length">
+                  <!-- Label hits -->
+                  <template v-else-if="labels.length">
                     <button
-                      v-for="album in albums"
-                      :key="album.albumId"
+                      v-for="label in labels"
+                      :key="label.name"
                       type="button"
-                      class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring"
-                      @click="pickAlbum(album)"
+                      :disabled="collectArtistIds(label).length === 0"
+                      class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      @click="pickLabel(label)"
                     >
-                      <img
-                        v-if="album.imageUrl"
-                        :src="album.imageUrl"
-                        :alt="album.name"
-                        class="bg-muted size-12 shrink-0 rounded-lg object-cover"
-                      />
                       <div
-                        v-else
                         class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-lg"
                       >
-                        <Disc01Icon class="size-5" />
+                        <Album01Icon class="size-5" />
                       </div>
                       <div class="flex min-w-0 flex-col gap-0.5">
                         <span class="text-foreground truncate text-sm font-medium">
-                          {{ album.name }}
+                          {{ label.name }}
                         </span>
                         <span class="text-muted-foreground truncate text-xs">
-                          {{ album.artists.map((a) => a.name).join(', ') }}
-                        </span>
-                        <span
-                          v-if="album.releaseDate"
-                          class="text-muted-foreground/70 flex items-center gap-1 text-xs"
-                        >
-                          <Calendar01Icon class="size-3" />
-                          {{ album.releaseDate }}
+                          {{ label.albums.length }} {{ label.albums.length === 1 ? 'album' : 'albums' }}
+                          ·
+                          {{ collectArtistIds(label).length }}
+                          {{ collectArtistIds(label).length === 1 ? 'artist' : 'artists' }}
                         </span>
                       </div>
                     </button>
@@ -208,7 +196,7 @@ async function submit() {
                     class="text-muted-foreground flex flex-col items-center gap-2 p-8 text-center text-sm"
                   >
                     <MusicNote02Icon class="size-5" />
-                    <span>No albums found for “{{ labelQuery }}”.</span>
+                    <span>No labels found for “{{ labelQuery }}”.</span>
                   </div>
                   <div
                     v-else
@@ -222,31 +210,28 @@ async function submit() {
               </ScrollArea>
             </div>
 
-            <!-- Selected label/album summary -->
+            <!-- Selected label summary -->
             <div v-else class="flex flex-col gap-2">
               <Label>Label</Label>
               <div
                 class="border-border/60 bg-secondary/50 flex items-center justify-between gap-3 rounded-2xl border p-3"
               >
                 <div class="flex min-w-0 items-center gap-3">
-                  <img
-                    v-if="selected.album.imageUrl"
-                    :src="selected.album.imageUrl"
-                    :alt="selected.album.name"
-                    class="bg-muted size-12 shrink-0 rounded-lg object-cover"
-                  />
                   <div
-                    v-else
                     class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-lg"
                   >
-                    <Disc01Icon class="size-5" />
+                    <Album01Icon class="size-5" />
                   </div>
                   <div class="flex min-w-0 flex-col">
                     <span class="text-foreground truncate text-sm font-medium">
                       {{ selectionName }}
                     </span>
                     <span class="text-muted-foreground truncate text-xs">
-                      {{ selected.album.name }} · {{ selected.album.artists.map((a) => a.name).join(', ') }}
+                      {{ selected.label.albums.length }}
+                      {{ selected.label.albums.length === 1 ? 'album' : 'albums' }}
+                      ·
+                      {{ selectionSpotifyIds.length }}
+                      {{ selectionSpotifyIds.length === 1 ? 'artist' : 'artists' }}
                     </span>
                   </div>
                 </div>
@@ -262,9 +247,8 @@ async function submit() {
               </div>
               <p class="text-muted-foreground text-xs">
                 Tracked as “{{ selectionName }}” with
-                {{ selected.album.artists.length }}
-                {{ selected.album.artists.length === 1 ? 'artist' : 'artists' }} from the
-                album “{{ selected.album.name }}”.
+                {{ selectionSpotifyIds.length }}
+                {{ selectionSpotifyIds.length === 1 ? 'artist' : 'artists' }} from Spotify search.
               </p>
             </div>
       </div>
@@ -278,7 +262,7 @@ async function submit() {
           <Button variant="ghost">Cancel</Button>
         </DialogClose>
         <Button
-          :disabled="!selected || submitting"
+          :disabled="!selected || selectionSpotifyIds.length === 0 || submitting"
           class="min-w-28"
           @click="submit"
         >

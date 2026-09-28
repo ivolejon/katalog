@@ -232,9 +232,11 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
 
         var result = await response.Content.ReadFromJsonAsync<LabelSearchResponse>();
         Assert.NotNull(result);
-        Assert.Equal("Globuli", result!.MatchedLabelName);
-        Assert.Equal(2, result.Albums.Count);
-        var first = result.Albums[0];
+        Assert.Equal("Globuli", result!.Query);
+        var label = Assert.Single(result.Labels);
+        Assert.Equal("Globuli", label.Name);
+        Assert.Equal(2, label.Albums.Count);
+        var first = label.Albums[0];
         Assert.Equal("labelalbum1", first.AlbumId);
         Assert.Equal("Daydream Forever", first.Name);
         Assert.Equal("2023-01-15", first.ReleaseDate);

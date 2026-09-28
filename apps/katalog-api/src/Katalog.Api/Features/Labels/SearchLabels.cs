@@ -28,6 +28,10 @@ public sealed class SearchLabels(ISpotifyApiClient spotifyApiClient, IOptions<Sp
                 a.ExternalUrl))
             .ToList();
 
-        return new LabelSearchResponse(query, albums);
+        // Spotify has no label resource, so the searched term is the label name. Return it as a
+        // single label hit with the matching albums so the frontend can list labels and still
+        // build artist anchors from the albums.
+        var label = new LabelSearchResult(query, albums);
+        return new LabelSearchResponse(query, [label]);
     }
 }

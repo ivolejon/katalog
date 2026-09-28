@@ -16,6 +16,8 @@ public static class LabelsEndpoints
 
         // GET /api/labels/search?q=...&limit=... - label search proxying Spotify's
         // label:"..." album filter (verified live 2026-09-22; not in the spec's filter list).
+        // Spotify has no label resource, so the response is a list of label hits built from the
+        // searched term and the matching albums.
         group.MapGet("/search", SearchLabels)
             .WithName("SearchLabels")
             .AddEndpointFilter<ValidationFilter<SearchLabelsRequest>>()
