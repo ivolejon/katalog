@@ -18,7 +18,7 @@ public sealed class GetLabelReleases(KatalogContext context)
             return null;
 
         var rows = await context.Albums
-            .Where(a => a.AlbumArtists.Any(aa => aa.Artist.LabelArtists.Any(la => la.LabelId == labelId)))
+            .Where(a => a.LabelId == labelId)
             .OrderByDescending(a => a.ReleaseDate ?? DateOnly.MinValue)
             .Select(a => new
             {

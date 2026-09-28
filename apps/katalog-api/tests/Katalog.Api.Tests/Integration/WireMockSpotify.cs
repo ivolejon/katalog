@@ -30,6 +30,21 @@ public sealed class WireMockSpotify : IAsyncDisposable
                 .WithBody(body));
     }
 
+    /// <summary>Stubs the label-filtered album search used by release discovery.</summary>
+    public void StubLabelSearch(string labelName, params string[] albumItems)
+    {
+        var searchJson = AlbumSearchJson(albumItems);
+        Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", $"label:\"{labelName}\"")
+                .WithParam("type", "album")
+                .WithParam("market", "SE")
+                .WithParam("limit", "10"))
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(searchJson));
+    }
+
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
     {
         Server.Given(Request.Create().WithPath("/api/token").UsingPost())

@@ -8,8 +8,8 @@ using Microsoft.Extensions.Options;
 namespace Katalog.Api.Features.Releases.Polling;
 
 /// <summary>
-/// Polls the Spotify artist discography for every artist linked to at least one label and
-/// upserts albums idempotently (ON CONFLICT (spotify_id), arch report §3.4/§3.7). The result is
+/// Polls Spotify for albums matching each followed label via the <c>label:"&lt;name&gt;"</c>
+/// search filter and upserts them idempotently (ON CONFLICT (spotify_id)). The result is
 /// crash-safe because a poll cursor row records the last successful run and re-running the same
 /// data is a no-op update.
 /// </summary>
@@ -22,67 +22,35 @@ public sealed class ReleasePoller(
 {
     public const string JobName = "artist_new_releases";
 
-    public async Task<IReadOnlyList<SpotifyAlbumItem>> FetchArtistAlbumsAsync(string spotifyArtistId,
+    public async Task<IReadOnlyList<SpotifyAlbumItem>> FetchLabelAlbumsAsync(string labelName,
         CancellationToken cancellationToken)
     {
-        return await spotifyApiClient.GetArtistAlbumsAsync(
-            spotifyArtistId, SpotifyOptions.AlbumsLimitMax, spotifyOptions.Value.Market, cancellationToken);
+        var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
+            labelName, SpotifyOptions.SearchLimitMax, spotifyOptions.Value.Market, cancellationToken);
+        return response.Albums.Items;
     }
 
     public async Task PollOnceAsync(CancellationToken cancellationToken)
     {
-        // Only artists that are followed under at least one label are polled; this keeps the
-        // dev-mode quota small (research §2.7/§2.8).
-        var artists = await context.Artists
-            .Where(a => a.LabelArtists.Any())
+        var labels = await context.Labels
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         var cursor = await GetOrCreateCursorAsync(cancellationToken);
         var startedAt = timeProvider.GetUtcNow();
 
-        await PollArtistsAsync(artists, cancellationToken);
-
-        cursor.CursorValue = startedAt;
-        cursor.LastRunAt = timeProvider.GetUtcNow();
-        cursor.Status = "completed";
-        await context.SaveChangesAsync(cancellationToken);
-
-        logger.LogInformation("Release poll completed for {ArtistCount} artist(s).", artists.Count);
-    }
-
-    /// <summary>
-    /// Polls the artists linked to a single label immediately, upserting albums idempotently.
-    /// Used when a new label is followed so releases appear right away instead of waiting for
-    /// the next scheduled poll cycle.
-    /// </summary>
-    public async Task PollLabelAsync(Guid labelId, CancellationToken cancellationToken)
-    {
-        var artists = await context.Artists
-            .Where(a => a.LabelArtists.Any(la => la.LabelId == labelId))
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-
-        await PollArtistsAsync(artists, cancellationToken);
-
-        logger.LogInformation("Immediate release poll completed for label {LabelId} with {ArtistCount} artist(s).",
-            labelId, artists.Count);
-    }
-
-    private async Task PollArtistsAsync(IReadOnlyList<Artist> artists, CancellationToken cancellationToken)
-    {
-        foreach (var artist in artists)
+        foreach (var label in labels)
         {
             try
             {
-                var albums = await FetchArtistAlbumsAsync(artist.SpotifyId, cancellationToken);
+                var albums = await FetchLabelAlbumsAsync(label.Name, cancellationToken);
                 foreach (var album in albums)
                 {
-                    await UpsertAlbumAsync(artist, album, cancellationToken);
+                    await UpsertAlbumAsync(label, album, cancellationToken);
                 }
 
-                logger.LogDebug("Polled {AlbumCount} albums for artist {ArtistName} ({SpotifyId}).",
-                    albums.Count, artist.Name, artist.SpotifyId);
+                logger.LogDebug("Polled {AlbumCount} albums for label {LabelName} ({LabelId}).",
+                    albums.Count, label.Name, label.Id);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -90,10 +58,58 @@ public sealed class ReleasePoller(
             }
             catch (Exception ex)
             {
-                // A single artist must not kill the whole poll cycle; the next interval retries.
-                logger.LogError(ex, "Release polling failed for artist {ArtistName} ({SpotifyId}).",
-                    artist.Name, artist.SpotifyId);
+                // A single label must not kill the whole poll cycle; the next interval retries.
+                logger.LogError(ex, "Release polling failed for label {LabelName} ({LabelId}).",
+                    label.Name, label.Id);
             }
+        }
+
+        cursor.CursorValue = startedAt;
+        cursor.LastRunAt = timeProvider.GetUtcNow();
+        cursor.Status = "completed";
+        await context.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Release poll completed for {LabelCount} label(s).", labels.Count);
+    }
+
+    /// <summary>
+    /// Polls albums matching a single label immediately, upserting them idempotently.
+    /// Used when a new label is followed so releases appear right away instead of waiting for
+    /// the next scheduled poll cycle.
+    /// </summary>
+    public async Task PollLabelAsync(Guid labelId, CancellationToken cancellationToken)
+    {
+        var label = await context.Labels
+            .AsNoTracking()
+            .SingleOrDefaultAsync(l => l.Id == labelId, cancellationToken);
+
+        if (label is null)
+        {
+            logger.LogWarning("Immediate release poll requested for unknown label {LabelId}.", labelId);
+            return;
+        }
+
+        try
+        {
+            var albums = await FetchLabelAlbumsAsync(label.Name, cancellationToken);
+            foreach (var album in albums)
+            {
+                await UpsertAlbumAsync(label, album, cancellationToken);
+            }
+
+            logger.LogInformation("Immediate release poll completed for label {LabelId} with {AlbumCount} album(s).",
+                labelId, albums.Count);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // A polling failure during label creation must not roll the label back; the next
+            // scheduled poll cycle will retry.
+            logger.LogError(ex, "Immediate release polling failed for label {LabelName} ({LabelId}).",
+                label.Name, labelId);
         }
     }
 
@@ -111,8 +127,10 @@ public sealed class ReleasePoller(
     /// <summary>
     /// Idempotent album upsert: INSERT ... ON CONFLICT (spotify_id) DO UPDATE, returning the
     /// album id so the album_artists junction row can be written (research §2.5, arch §3.4).
+    /// The label is set to the followed label that produced the search hit, so the release feed
+    /// only shows albums Spotify returned for <c>label:"&lt;name&gt;"</c>.
     /// </summary>
-    private async Task UpsertAlbumAsync(Artist followedArtist, SpotifyAlbumItem album, CancellationToken cancellationToken)
+    private async Task UpsertAlbumAsync(Label label, SpotifyAlbumItem album, CancellationToken cancellationToken)
     {
         var albumType = ParseAlbumType(album.AlbumType);
         var (releaseDate, precision) = ParseReleaseDate(album.ReleaseDate, album.ReleaseDatePrecision);
@@ -130,14 +148,15 @@ public sealed class ReleasePoller(
                     created_at_utc, updated_at_utc)
                 VALUES (
                     @id, @spotifyId, @name, @albumType, @releaseDate, @releasePrecision,
-                    @labelSpotify, NULL, @imageUrl, @externalUrl, @totalTracks,
+                    @labelSpotify, @labelId, @imageUrl, @externalUrl, @totalTracks,
                     now(), now())
                 ON CONFLICT (spotify_id) DO UPDATE SET
                     name = EXCLUDED.name,
                     album_type = EXCLUDED.album_type,
                     release_date = EXCLUDED.release_date,
                     release_date_precision = EXCLUDED.release_date_precision,
-                    label_spotify = COALESCE(EXCLUDED.label_spotify, albums.label_spotify),
+                    label_spotify = EXCLUDED.label_spotify,
+                    label_id = EXCLUDED.label_id,
                     image_url = EXCLUDED.image_url,
                     external_url = EXCLUDED.external_url,
                     total_tracks = EXCLUDED.total_tracks,
@@ -154,7 +173,8 @@ public sealed class ReleasePoller(
         command.Parameters.Add(P("albumType", (int)albumType));
         command.Parameters.Add(P("releaseDate", releaseDate));
         command.Parameters.Add(P("releasePrecision", (int)precision));
-        command.Parameters.Add(P("labelSpotify", null));
+        command.Parameters.Add(P("labelSpotify", label.Name));
+        command.Parameters.Add(P("labelId", label.Id));
         command.Parameters.Add(P("imageUrl", album.ImageUrl));
         command.Parameters.Add(P("externalUrl", album.ExternalUrl));
         command.Parameters.Add(P("totalTracks", album.TotalTracks));
@@ -162,14 +182,18 @@ public sealed class ReleasePoller(
         var idResult = await command.ExecuteScalarAsync(cancellationToken);
         var storedAlbumId = idResult is Guid stored ? stored : albumId;
 
-        var albumArtists = album.Artists is { Count: > 0 }
-            ? album.Artists
-            : [new SpotifyAlbumArtist(followedArtist.SpotifyId, followedArtist.Name)];
-
-        var storedArtistIds = new List<Guid>(albumArtists.Count);
-        for (var position = 0; position < albumArtists.Count; position++)
+        if (album.Artists is not { Count: > 0 })
         {
-            var albumArtist = albumArtists[position];
+            logger.LogWarning("Spotify returned album {AlbumId} ({AlbumName}) without artists; skipping artist linking.",
+                album.Id, album.Name);
+            await RemoveMissingAlbumArtistsAsync(storedAlbumId, [], cancellationToken);
+            return;
+        }
+
+        var storedArtistIds = new List<Guid>(album.Artists.Count);
+        for (var position = 0; position < album.Artists.Count; position++)
+        {
+            var albumArtist = album.Artists[position];
             var storedArtistId = await UpsertArtistAsync(albumArtist, cancellationToken);
             storedArtistIds.Add(storedArtistId);
             await UpsertAlbumArtistAsync(storedAlbumId, storedArtistId, position, cancellationToken);

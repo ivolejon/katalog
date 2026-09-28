@@ -20,7 +20,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         spotify.Server.Given(Request.Create().WithPath("/v1/artists/artistone").UsingGet())
             .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
-        spotify.StubArtistAlbums("artistone", "Fever Ray", "albumone");
+        spotify.StubLabelSearch("Ninja Tune", WireMockSpotify.AlbumItemJson("artistone", "albumone", "Album One", 2010, "Fever Ray"));
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
@@ -108,7 +108,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
-        spotify.StubArtistAlbums("artistone", "Fever Ray", "albumone");
+        spotify.StubLabelSearch("Rabid Records", WireMockSpotify.AlbumItemJson("artistone", "albumone", "Album One", 2010, "Fever Ray"));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -308,8 +308,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artisttwo", "Fever Ray")));
-        spotify.StubArtistAlbums("artistone", "Karin Dreijer", "albumone");
-        spotify.StubArtistAlbums("artisttwo", "Fever Ray", "albumtwo");
+        spotify.StubLabelSearch("Rabid Records",
+            WireMockSpotify.AlbumItemJson("artistone", "albumone", "Album One", 2010, "Karin Dreijer"),
+            WireMockSpotify.AlbumItemJson("artisttwo", "albumtwo", "Album Two", 2011, "Fever Ray"));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -339,7 +340,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("immediate1", "Immediate Artist")));
-        spotify.StubArtistAlbums("immediate1", "Immediate Artist", "immediatealbum1", "immediatealbum2");
+        spotify.StubLabelSearch("Immediate Label",
+            WireMockSpotify.AlbumItemJson("immediate1", "immediatealbum1", "Immediate Album 1", 2010, "Immediate Artist"),
+            WireMockSpotify.AlbumItemJson("immediate1", "immediatealbum2", "Immediate Album 2", 2011, "Immediate Artist"));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -373,8 +376,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("pollfail1", "Poll Fail Artist")));
-        // Intentionally do not stub /v1/artists/pollfail1/albums so the immediate poll throws.
-        spotify.Server.Given(Request.Create().WithPath("/v1/artists/pollfail1/albums").UsingGet())
+        // Stub the label search with a 500 so the immediate poll fails but the label is still created.
+        spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", "label:\"Poll Fail Label\""))
             .RespondWith(Response.Create().WithStatusCode(500));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
@@ -415,5 +419,41 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
 
         var labels = await client.GetFromJsonAsync<LabelSummaryResponse[]>("/api/labels");
         Assert.Empty(labels!);
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversOnlyLabelMatchingReleases()
+    {
+        // Regression: the artist's discography contains two albums, but only one is returned by
+        // the label-filtered search. The release feed must exclude the non-matching album.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/globartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("globartist1", "Globuli Artist")));
+
+        // The old buggy path would have pulled both albums from the artist discography.
+        spotify.StubArtistAlbums("globartist1", "Globuli Artist", "globuli-correct", "globuli-wrong");
+
+        // The label search is the source of truth: only the album that actually belongs to the label.
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("globartist1", "globuli-correct", "Correct Album", 2020, "Globuli Artist"));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "globartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        var release = Assert.Single(detail.Releases);
+        Assert.Equal("globuli-correct", release.SpotifyId);
     }
 }
