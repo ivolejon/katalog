@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:9f30ae6f26799b084e8f59667a5d279fe7ea55e0870ae870f82be25dec0ccf25",
+  "claims": [
+    {
+      "id": "claim_94411be3a91f435f95fd7940cf90e834",
+      "statement": "Program.cs runs in three modes: migration CLI (--migrate/--rollback), build-time OpenAPI generation (GetDocument.Insider), and normal web mode; the normal-mode registration order is AddOpenApiDocumentGenerationSettings → AddKatalogServiceDefaults → AddProblemDetails → AddKatalogOptions → AddDatabase → AddSpotify → AddFeatures → AddOpenApi.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs",
+          "version": "repo-file-v1:sha256:ee2c4b1838b5f801e702710461c95ed1326e3fa5920e32b87b695dda1581feac"
+        }
+      ]
+    },
+    {
+      "id": "claim_2a51d5f4e2314e97835831166756d700",
+      "statement": "The API maps four route groups with stable operationIds: Labels (/api/labels, 8 endpoints), Artists (/api/search, 1 endpoint), Releases (/api/labels/{id}/releases, 1 endpoint), and Spotify Connect (/api/spotify, 8 endpoints).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ArtistsEndpoints.cs",
+          "version": "repo-file-v1:sha256:bb42bd830480e658af38972c78012796d13c69965474d49064d669cbebaad50e"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs",
+          "version": "repo-file-v1:sha256:081209a00289afef7c892ce8d60ea42cb34eb33e615c2ce849d43fd61b5a67d2"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs",
+          "version": "repo-file-v1:sha256:25fb66998b281474bb7046ed1933be8bbd77951b94751e31d73c3720b5906c97"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/SpotifyEndpoints.cs",
+          "version": "repo-file-v1:sha256:ccdf98b6286d6cd228aec6f84d0bafa5633fbfdbacefc7663b27ceada08906af"
+        }
+      ]
+    },
+    {
+      "id": "claim_1481b699982f47a982200de13dd96983",
+      "statement": "Each feature is a scoped class registered in FeaturesSetup.AddFeatures; endpoint methods are thin adapters that translate HTTP shapes into feature calls and map returned outcome/status enums to TypedResults.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs",
+          "version": "repo-file-v1:sha256:081209a00289afef7c892ce8d60ea42cb34eb33e615c2ce849d43fd61b5a67d2"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/FeaturesSetup.cs",
+          "version": "repo-file-v1:sha256:bd036e8bc4aa23319f45ad5099151cb71ce3fc9968617b035d5b9979dce92045"
+        }
+      ]
+    },
+    {
+      "id": "claim_f1dd9f57bfbe44df8e5d8ee75c361998",
+      "statement": "CreateLabel creates a Label row and links each Spotify artist inside the same transaction; any unknown Spotify id rolls the whole transaction back (ArtistNotFound), a duplicate slug returns SlugConflict, and on success it immediately polls releases for the new label in its own scope.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/CreateLabel.cs",
+          "version": "repo-file-v1:sha256:f0a2f19cd6a6dc96d842b9212679b4aa16a5e78df12bff0af7f8f667e3ebaa57"
+        }
+      ]
+    },
+    {
+      "id": "claim_7f33821a4a7d48b38a324216d523ce14",
+      "statement": "UpdateLabel renames a label and, when the name changes, calls ReleasePoller.AuditLabelLinksAsync inside the same transaction; if Spotify cannot verify any link the whole rename rolls back and returns RenameVerificationFailed (mapped to 503 by the endpoint).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs",
+          "version": "repo-file-v1:sha256:081209a00289afef7c892ce8d60ea42cb34eb33e615c2ce849d43fd61b5a67d2"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/UpdateLabel.cs",
+          "version": "repo-file-v1:sha256:baa8df5f19684272e8e6fc4df62059d97c8fbd4fe228dc57362431cffcd7287e"
+        }
+      ]
+    },
+    {
+      "id": "claim_f991f2e53d3341d79f2333105825c50b",
+      "statement": "RemoveArtistFromLabel refuses to remove a label's last artist (LastArtistRefused → 409) because polling and the release feed are artist-driven; deleting the label is the only way to end a follow.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs",
+          "version": "repo-file-v1:sha256:081209a00289afef7c892ce8d60ea42cb34eb33e615c2ce849d43fd61b5a67d2"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Artists/RemoveArtistFromLabel.cs",
+          "version": "repo-file-v1:sha256:118d323e373353a60c18fa343399b822c00d67a8f7987b709b76a0325b6af2ed"
+        }
+      ]
+    },
+    {
+      "id": "claim_899dcf3ed23348328a3b4371cc499bc8",
+      "statement": "FluentValidation validators are registered assembly-wide by AddValidatorsFromAssembly; a generic ValidationFilter<T> endpoint filter resolves IValidator<T> from DI per request and returns a 400 ValidationProblem on failure.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Filters/ValidationFilter.cs",
+          "version": "repo-file-v1:sha256:55f9cff650c5789b301e57b05cb712ad9fba010341883b42d53bf6bfe3500bcc"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/FeaturesSetup.cs",
+          "version": "repo-file-v1:sha256:bd036e8bc4aa23319f45ad5099151cb71ce3fc9968617b035d5b9979dce92045"
+        }
+      ]
+    },
+    {
+      "id": "claim_f391c5b6ad89426ba956f9f1c9cbabbb",
+      "statement": "The app token path uses client credentials flow: SpotifyTokenProvider caches the token in memory with a semaphore-serialized refresh, and SpotifyTokenHandler injects the Bearer token into every catalog call with exactly one forced refresh + retry on 401 (GET only).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyTokenHandler.cs",
+          "version": "repo-file-v1:sha256:320d3132a4a80bd7cb11216cbe63d0e2fc42458f28e0bdc8aed529e1d86f54b9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyTokenProvider.cs",
+          "version": "repo-file-v1:sha256:a360d076637252a64f7a1d8a2b1f6022cf608288d892dd899e4dcaedf4f60e63"
+        }
+      ]
+    },
+    {
+      "id": "claim_c59571900ba34ce497d938dad9e48e7d",
+      "statement": "The user OAuth path uses authorization code + PKCE: BrowserSession identifies the browser by an opaque HttpOnly session cookie (katalog_session), the OAuth handshake rides in a second short-lived HttpOnly cookie (katalog_oauth), and tokens are stored server-side in spotify_user_sessions (one row per Spotify account) and never reach the browser.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/SpotifyConnect/CompleteSpotifyLogin.cs",
+          "version": "repo-file-v1:sha256:79af4a1bfce035963def39835aeb54815117c82d583f15b19eb2d516310d8c36"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/BrowserSession.cs",
+          "version": "repo-file-v1:sha256:39ad848306e3af37e04fc1ea11016fdd6d4c18aa7d6b5b55ff6ca22c00c212cf"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/SpotifyUserSessionStore.cs",
+          "version": "repo-file-v1:sha256:78bf940c8f5c31abed2a60223de24afbdb439f5c0d257c37c507e8b6dcd12df0"
+        }
+      ]
+    },
+    {
+      "id": "claim_aed2949b942c47f4834e2daf59779e88",
+      "statement": "Spotify Connect sign-in requests only the user-read-playback-state and user-modify-playback-state scopes (no streaming scope) because the Web API cannot stream audio; Katalog only controls a device the user already plays on.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/SpotifyUserOAuthService.cs",
+          "version": "repo-file-v1:sha256:99f1809cebecb80813b4f9aa447056516d16456d66c980b928f6bf12c818dbe8"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifyOptions.cs",
+          "version": "repo-file-v1:sha256:a4893cac6eb418ba48e8d873d367b56df06774675037d4e16b145f81d788e411"
+        }
+      ]
+    },
+    {
+      "id": "claim_99f86de9a5c14bb8aa063d888d6d9b9c",
+      "statement": "The standard AddStandardResilienceHandler is deliberately not used; the catalog client uses a custom pipeline (TotalTimeout 300s → Retry 3 attempts Retry-After aware → CircuitBreaker → AttemptTimeout 15s) and the Connect client uses a shorter one (TotalTimeout 30s → Retry 2 attempts → AttemptTimeout 10s).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifySetup.cs",
+          "version": "repo-file-v1:sha256:d7d893393c2478802739049e20042b25c158baa27c8654ede4a29fcb32ff5348"
+        }
+      ]
+    },
+    {
+      "id": "claim_23c086af04d747fba03e06374de5d44a",
+      "statement": "ReleasesPollingService polls once at start then on every PeriodicTimer tick (6-24h, default 12h), waits for unapplied migrations before starting, and a failing cycle logs and continues while unexpected exceptions escape and StopHost makes them visible as a restart.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/MigrationAwareBackgroundService.cs",
+          "version": "repo-file-v1:sha256:5c9dc2f8d1db91ef0623a3264fcff59be10a8a9e63af94ece07c5b73df81e571"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasesPollingService.cs",
+          "version": "repo-file-v1:sha256:4d3721517f6c88e8212bc3a4480003eef9e7ed41fba402a3b407b51c62f364a5"
+        },
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs",
+          "version": "repo-file-v1:sha256:b7a7a240ac3ba9102311ce819ad815e64306e2bbbc7a9e87823d52d1e2e80718"
+        }
+      ]
+    },
+    {
+      "id": "claim_d4be93c771cb4725bed2569b6d23e9ad",
+      "statement": "ReleasePoller discovers releases via Spotify's label:\"...\" album filter with full pagination, then verifies each candidate against the full album object (GET /albums/{id}) because the filter matches fuzzily; only albums whose real label exactly (case-insensitive, trimmed) equals the followed label's name are linked, and a verified mismatch removes an existing link (self-heal).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs",
+          "version": "repo-file-v1:sha256:4a12265018937f0218d97136a51c2079d4c029a2832599e2ea856cc6d17488ea"
+        }
+      ]
+    },
+    {
+      "id": "claim_1ce591d7864a4631a73629dab137c8bc",
+      "statement": "All ReleasePoller writes use raw SQL (INSERT ... ON CONFLICT) on the shared EF connection, bound to the caller's transaction when one is active, so poll writes commit or roll back together with the request's EF changes.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs",
+          "version": "repo-file-v1:sha256:4a12265018937f0218d97136a51c2079d4c029a2832599e2ea856cc6d17488ea"
+        }
+      ]
+    },
+    {
+      "id": "claim_a0708cd99407402ba1feac60fc826094",
+      "statement": "EF Core 10 + Npgsql uses the catalog connection via Aspire's AddNpgsqlDbContext with UseSnakeCaseNamingConvention; migrations are applied at startup in non-deployment environments (with a bounded 5-attempt retry loop) and via the --migrate/--rollback CLI mode; dotnet ef uses KatalogContextFactory.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/KatalogContextFactory.cs",
+          "version": "repo-file-v1:sha256:328853ed68ea6d1a30532ba0591a4658b5550d7bd14af616043953d21794d402"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs",
+          "version": "repo-file-v1:sha256:d0241eb131e28e97b46a383472c61dadb210208587ef14e37d713388e095c189"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseSetup.cs",
+          "version": "repo-file-v1:sha256:08e2d6a6baafbff050ea4bebc832470ae41950c28dc9b76a055ca4c07c4e2a78"
+        }
+      ]
+    },
+    {
+      "id": "claim_9a793343586746dfbfe4c996ad4c8e49",
+      "statement": "The committed contracts/katalog-api/openapi.json is generated at build time by Microsoft.Extensions.ApiDescription.Server (GetDocument.Insider); the build works without a live Postgres or Spotify because appsettings.OpenApiGeneration.json supplies placeholder connections and setups that touch external systems are guarded with OpenApiDocumentGeneration.IsActive.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/OpenApiDocumentGeneration.cs",
+          "version": "repo-file-v1:sha256:41852b033ce3534de1d8024b55f009ff29f898def43867f95029e464737fbcf8"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OpenApiGenerationSetup.cs",
+          "version": "repo-file-v1:sha256:293173b7bbeb9ea56621eaaca9e3b4024f43885fdff88a20e8b4cd48706e9345"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/appsettings.OpenApiGeneration.json",
+          "version": "repo-file-v1:sha256:2223424ef88f575717ec81b87601b32a923f66975819030dd361a3dfe67fd7f0"
+        }
+      ]
+    },
+    {
+      "id": "claim_fdbe2ce5efb3457180b461053558e98c",
+      "statement": "All request/response records live in Contracts/Contracts.cs and Contracts/SpotifyConnectContracts.cs and are the single source for both the OpenAPI document and TypeScript client generation.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Contracts/Contracts.cs",
+          "version": "repo-file-v1:sha256:6f44e3cdb9efaa203f928e5a439c80dcdbe97098acba6e3ea0055a39dc7bcda7"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Contracts/SpotifyConnectContracts.cs",
+          "version": "repo-file-v1:sha256:0a42c0e343de3fd6adee73fbf41cb5b9db1652e54aa880a015d8c427a5c86dc2"
+        }
+      ]
+    },
+    {
+      "id": "claim_92e63b2994d34dc785237ed2a39e5fe3",
+      "statement": "SpotifyConnectErrors.ToProblem maps Spotify Connect failures to problem details the frontend can render: no active device (404), missing Premium (403), expired sign-in (401), restricted device (403); a 401 from Spotify is never surfaced as a raw error because the token has already been renewed and retried once.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/SpotifyConnectErrors.cs",
+          "version": "repo-file-v1:sha256:ae3e1a605c4565d8cc581394983eee82fc12a2c5064c207ca87925dc5f6a1b40"
+        }
+      ]
+    },
+    {
+      "id": "claim_64e20d942c014021b0d431a2c19e8202",
+      "statement": "SearchLabels searches Spotify albums via the undocumented-but-working label:\"<name>\" filter and returns the searched term as a single label hit with the matching albums because Spotify has no searchable label resource.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/SearchLabels.cs",
+          "version": "repo-file-v1:sha256:1d72da6b4a2808e071d907e61cbbc8ded9d0d80b4ebe0aab7b331668b554a57b"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyApiClient.cs",
+          "version": "repo-file-v1:sha256:8b5e58412f0cd0f8b1596887b1d2020e8654af58fe8d2875810eea2ada9c0a33"
+        }
+      ]
+    },
+    {
+      "id": "claim_3e7b250ee1d148078ba5c28d472a310a",
+      "statement": "GetLabelReleases returns releases for a label via the label_albums junction table, newest first (null release dates coalesced to DateOnly.MinValue so they sort last), and maps album type and release-date precision from int enums to strings client-side.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/GetLabelReleases.cs",
+          "version": "repo-file-v1:sha256:8c40281c4debc9a91eb9ce0eb347a3aaffc77b90b8d753cb4dd4ab3194a14bb1"
+        }
+      ]
+    },
+    {
+      "id": "claim_6be4720a15d9478a992edab2e64b3f7a",
+      "statement": "SpotifyUserTokenProvider supplies the user's access token, renewing it with the stored refresh token shortly before expiry; a refresh failure surfaces as SpotifySessionExpiredException so the user is told to sign in again rather than being handed a raw Spotify error.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/SpotifyUserTokenProvider.cs",
+          "version": "repo-file-v1:sha256:73eaec5c9093c7df47315db6d2ace1708c4c7ac3c19d92c1efd92d7be9a9a48b"
+        }
+      ]
+    },
+    {
+      "id": "claim_b3c05ee116f04000b21eaa299b6814ae",
+      "statement": "SpotifyUserTokenHandler injects the user's Bearer token into every Connect call and, on a 401, renews once and retries the same request, buffering the request body so a play request can be replayed.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/SpotifyUserTokenHandler.cs",
+          "version": "repo-file-v1:sha256:f3a02d7809a9bfa1286c0dffbb5c837235bb6a8b2eda6ed7158af90275e18166"
+        }
+      ]
+    },
+    {
+      "id": "claim_f1c52137bfa94f689842b1c00cd05c58",
+      "statement": "SpotifyPlaybackClient makes the Connect player calls (GET devices, GET playback state, PUT play with album context URI, PUT pause) with the user's own token; a 204 from GET /v1/me/player means nothing is playing and is mapped to a stopped state.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/SpotifyConnect/ControlSpotifyPlayback.cs",
+          "version": "repo-file-v1:sha256:6db951c676024baa6f0294550842571bcad82f75d28084e2b93abb564ffa09a8"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/User/SpotifyPlaybackClient.cs",
+          "version": "repo-file-v1:sha256:174495d6fd0c2f7aa80763ba03ef5e6abb6291c530a27b07866f275c037af00a"
+        }
+      ]
+    },
+    {
+      "id": "claim_38772c74fdc646f799c873cb91d90a98",
+      "statement": "LabelSlug.From turns a label name into a URL-safe unique slug by lowercasing, replacing non-alphanumeric runs with single hyphens, and trimming leading/trailing hyphens; the slug has a unique index (ix_labels_slug) in the database.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/LabelSlug.cs",
+          "version": "repo-file-v1:sha256:de2be8ad9db66f010d6c6f51b2a0f9ab7cf603538366684f17f5eb33e6777f73"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Configurations/LabelConfiguration.cs",
+          "version": "repo-file-v1:sha256:4af2cee0d0f543e34e008b81210955e5610e2d2dcf314c885abcea1570f2c5c9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3dd3c58d7a1b4b01a80ab497be7254ed",
+      "statement": "AddArtistToLabel mirrors a Spotify artist (upserted on spotify_id) and creates or refreshes the artist_label junction row with Provenance.Manual; it returns null when the label does not exist or Spotify does not know the artist.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Artists/AddArtistToLabel.cs",
+          "version": "repo-file-v1:sha256:78ffd512c72bda6c6e5f179270cd30fc21e5ac44906b5901e25a95686fd7d22d"
+        }
+      ]
+    },
+    {
+      "id": "claim_a86a62626da2478ca244486dba9b8baa",
+      "statement": "SpotifyApiClient is the typed catalog client for api.spotify.com; it provides GetArtistAsync, GetAlbumAsync (full album object with label field), SearchArtistsAsync, SearchAlbumsByLabelAsync (label:\"...\" filter with pagination), and GetArtistAlbumsAsync (artist discography with pagination).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyApiClient.cs",
+          "version": "repo-file-v1:sha256:8b5e58412f0cd0f8b1596887b1d2020e8654af58fe8d2875810eea2ada9c0a33"
+        }
+      ]
+    },
+    {
+      "id": "claim_cdf03041f5db482da4c7fe3a548c560a",
+      "statement": "SpotifyOptions holds the app credentials (ClientId/ClientSecret from user secrets or environment variables, never committed), BaseUrl, AccountsBaseUrl, RedirectUri (default http://localhost:5192/api/spotify/auth/callback), WebBaseUrl (default http://localhost:5173), Market (default SE), and the Connect scopes; ValidateOnStart fails the app early when credentials are missing.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs",
+          "version": "repo-file-v1:sha256:f7924d6ef7ec788a53efa8646db999f6a125e68982763841d67eabb6e0ba9b67"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifyOptions.cs",
+          "version": "repo-file-v1:sha256:a4893cac6eb418ba48e8d873d367b56df06774675037d4e16b145f81d788e411"
+        }
+      ]
+    },
+    {
+      "id": "claim_68a5c774e5914afd99b82c8730660410",
+      "statement": "PollingOptions.Interval defaults to 12 hours and must be between 6 and 24 hours (validated by PollingOptions.Validate with ValidateOnStart).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs",
+          "version": "repo-file-v1:sha256:f7924d6ef7ec788a53efa8646db999f6a125e68982763841d67eabb6e0ba9b67"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/PollingOptions.cs",
+          "version": "repo-file-v1:sha256:23214a36dd24c3064e20ac67aad7382c240546def682ef810363a4f6eee9842f"
+        }
+      ]
+    },
+    {
+      "id": "claim_c0c94eb5e00f494ba60ff640faf82258",
+      "statement": "Katalog.ServiceDefaults provides thin Aspire defaults: OpenTelemetry (metrics + tracing with health-check exclusion), health checks (/health in Development, /alive always), service discovery, and BackgroundServiceExceptionBehavior.StopHost; the standard AddStandardResilienceHandler is deliberately not used.",
+      "evidence": [
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs",
+          "version": "repo-file-v1:sha256:b7a7a240ac3ba9102311ce819ad815e64306e2bbbc7a9e87823d52d1e2e80718"
+        }
+      ]
+    },
+    {
+      "id": "claim_5faa404674f8423c91cb392f24b13ce9",
+      "statement": "Four named HttpClients are registered: spotify-accounts (token exchange, no resilience), spotify-catalog (typed catalog client with custom resilience), spotify-user (Connect playback with user token handler and custom resilience), and spotify-user-profile (profile lookup during callback, no token handler).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyClientNames.cs",
+          "version": "repo-file-v1:sha256:d215a295e796f7aab22edd858fb3478d3bd5ddedebc012400d43178d9b93346b"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifySetup.cs",
+          "version": "repo-file-v1:sha256:d7d893393c2478802739049e20042b25c158baa27c8654ede4a29fcb32ff5348"
+        }
+      ]
+    },
+    {
+      "id": "claim_edc8301acef940568e9f71b84b9efb51",
+      "statement": "KatalogContext is the EF Core DbContext with DbSets for Labels, Artists, Albums, LabelArtists, LabelAlbums, AlbumArtists, PollCursors, and SpotifyUserSessions; it applies configurations from the assembly and uses snake_case naming.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/KatalogContext.cs",
+          "version": "repo-file-v1:sha256:7d63963892e55efacddb53c2efa793bd48afec5318e54bb9ddc038cbba26d9e1"
+        }
+      ]
+    },
+    {
+      "id": "claim_7671dbda163448539b8206bca534e56b",
+      "statement": "SpotifyUserSession stores the OAuth tokens (access_token, refresh_token, expires_at_utc, scope) server-side; Id is the anonymous browser session id (uuidv7), SpotifyUserId has a unique index (one row per account), and tokens are never logged or returned in an API response.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Domain/SpotifyUserSession.cs",
+          "version": "repo-file-v1:sha256:847847ecaf7fed94ed735723b4e016cb95a57f117a8a8afb564466f16a0f3a91"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Configurations/SpotifyUserSessionConfiguration.cs",
+          "version": "repo-file-v1:sha256:5ca12175f456fcc23ced29fbbab973eb1db3f808138295f0206d7ee4d7e1ddac"
+        }
+      ]
+    },
+    {
+      "id": "claim_b364d15fb9164cc38218d3b4c5f81e7a",
+      "statement": "DatabaseMigrationRunner.CreateMigrationBuilder creates a minimal WebApplicationBuilder for migration-only runs (content root set to the executable directory); RunAsync applies all pending migrations (--migrate) or reverts to a named migration (--rollback, '0' reverts all) and returns a process exit code.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs",
+          "version": "repo-file-v1:sha256:d0241eb131e28e97b46a383472c61dadb210208587ef14e37d713388e095c189"
+        }
+      ]
+    },
+    {
+      "id": "claim_3ab8592790634689afe212c4178278fa",
+      "statement": "ApplyMigrationsForNonDeploymentEnvironmentOnStartupAsync applies pending migrations at startup in non-deployment environments with a bounded 5-attempt retry loop (1s, 2s, 3s, 4s backoff) for cold-start connection issues; it is skipped in Staging/Production and during OpenAPI generation.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs",
+          "version": "repo-file-v1:sha256:d0241eb131e28e97b46a383472c61dadb210208587ef14e37d713388e095c189"
+        }
+      ]
+    },
+    {
+      "id": "claim_28794d7e8aed4fa3ad72f79ac5b2c959",
+      "statement": "ReleasePoller.AuditLabelLinksAsync re-verifies every existing label_albums link of a label against the label's (possibly new) name before a rename commits; a positively verified mismatch unlinks the album, an exact match re-upserts it, a 404 removes the stale link, and any other unverifiable link aborts with LabelLinkAuditIncompleteException so the caller can roll back.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/LabelLinkAuditIncompleteException.cs",
+          "version": "repo-file-v1:sha256:36aac0d7e851c13b4445da09a15b489d60adb4d106cbeb284f61484ed727c77e"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs",
+          "version": "repo-file-v1:sha256:4a12265018937f0218d97136a51c2079d4c029a2832599e2ea856cc6d17488ea"
+        }
+      ]
+    },
+    {
+      "id": "claim_9b773932a51948719b3c79c2aeaba847",
+      "statement": "ReleasePoller.UpsertLabelAlbumAsync links a discovered album to the discovering label via a single atomic SQL statement that checks the label's committed current name (with FOR KEY SHARE row lock) against the album's verified real label, so a poll pass carrying a stale pre-rename snapshot can never link an album whose real label no longer matches.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs",
+          "version": "repo-file-v1:sha256:4a12265018937f0218d97136a51c2079d4c029a2832599e2ea856cc6d17488ea"
+        }
+      ]
+    },
+    {
+      "id": "claim_f3ee3b6a00b447dc9008bbc39fd7040f",
+      "statement": "The committed OpenAPI contract (contracts/katalog-api/openapi.json) is OpenAPI 3.1.1 with 18 endpoints across four tags (LabelsEndpoints, ArtistsEndpoints, ReleasesEndpoints, SpotifyEndpoints), each with a stable operationId.",
+      "evidence": [
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json",
+          "version": "repo-file-v1:sha256:f26f1f3c585599e68aced62650ef267b450d761641f21be26498e92a7ade390b"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.6.0",
+    "at": "2026-09-29T19:32:34.878Z"
+  }
+}

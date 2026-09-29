@@ -1,12 +1,12 @@
 ---
 type: "Reference"
 title: "Katalog - Architecture"
-description: "How the Vue SPA, .NET 10 minimal API, PostgreSQL, Aspire AppHost, and the committed OpenAPI contract fit together, including the handwritten typed client and the paged-releases data path."
-tags: [architecture, aspire, vue, dotnet, postgresql, openapi, paging]
+description: "How the Vue SPA, .NET 10 minimal API, PostgreSQL, Aspire AppHost, and the committed OpenAPI contract fit together, including the handwritten typed client, the paged-releases data path, and the two Spotify auth domains (app client credentials for the catalog, user OAuth for Spotify Connect playback)."
+tags: [architecture, aspire, vue, dotnet, postgresql, openapi, paging, spotify]
 openwiki_generated: true
 verified:
   - by: openwiki/0.6.0
-    at: 2026-09-29T18:57:22.615Z
+    at: 2026-09-29T19:32:34.878Z
 sources:
   - id: openwiki-source-a4f9914ac26d9e676f4e4647
     resource: repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs
@@ -87,12 +87,16 @@ Key structure:
 - `src/views/` - route components: `HomeView`, `LabelsView` (overview),
   `LabelDetailView` (artist/release tabs).
 - `src/router.ts` - lazy routes `/`, `/labels`, `/labels/:id`; sets `title`.
+- `src/stores/spotify.ts` - Pinia store for Spotify Connect: session status,
+  device list with client-side caching, playback state, play/pause toggle,
+  and sign-in callback consumption.
 - `src/stores/labels.ts` - Pinia store for labels: fetch with stale-response
   guards (`fetchId`/`revision`), follow/unfollow, mutation vs refresh
   protection.
 - `src/composables/useArtistSearch.ts` - debounced Spotify artist search for
   the add-label combobox (empty queries reset without hitting the API).
-- `src/api/` - **handwritten typed client** today (`http.ts`, `types.ts`,
+- `src/api/` - **handwritten typed client** today (including `spotify.ts` for
+the Spotify Connect endpoints) (`http.ts`, `types.ts`,
   `labels.ts`; `API_CLIENT_ORIGIN = 'handwritten'`); the committed
   `contracts/katalog-api/openapi.json` is available when switching to the
   generated `@hey-api/openapi-ts` client (`npm run generate:client`). Endpoint
@@ -113,10 +117,77 @@ to `API_HTTP`/`API_HTTPS` when injected (Aspire resource) with a
 release-polling `BackgroundService`, EF Core 10 + Npgsql against one
 `catalog` Postgres database, migrations via `--migrate` in the same binary, and
 the committed OpenAPI contract in `contracts/katalog-api/openapi.json`.
-Aspire orchestration is provided by `Katalog.AppHost`. No user OAuth and no app
-auth are used in the MVP - all Spotify data comes from a client-credentials app
-token.
+Aspire orchestration is provided by `Katalog.AppHost`. Spotify data comes from
+a client-credentials app token; Spotify Connect playback control additionally uses
+the signed-in user's own OAuth token (see the Connect sections below).
 Source of truth: `data/katalog-arch-ref-q1/report.md` (external to this repo).
+
+### Spotify Connect: user OAuth and playback control
+
+Katalog uses two distinct Spotify authentication paths, kept deliberately separate:
+
+- **App token (client credentials flow)** — used for all catalog data: label
+  search, artist search, artist lookup, album lookup, and release polling. The
+  `SpotifyTokenProvider` caches the token in memory with a semaphore-serialized
+  refresh, and the `SpotifyTokenHandler` delegating handler injects the Bearer
+  token into every catalog call, performing exactly one forced refresh + retry
+  on a 401. The catalog `HttpClient` uses a custom resilience pipeline
+  (`TotalTimeout → Retry (Retry-After aware) → CircuitBreaker → AttemptTimeout`)
+  because Spotify's 429 `Retry-After` delays can exceed the default total timeout.
+
+- **User OAuth (authorization code + PKCE)** — used only for Spotify Connect
+  playback control: sign-in, device listing, play/pause, and playback state. The
+  user's tokens are stored server-side in the `spotify_user_sessions` table and
+  never reach the browser. The browser is identified by an opaque HttpOnly
+  session cookie (`katalog_session`); the OAuth handshake (CSRF state + PKCE
+  verifier) rides in a second short-lived HttpOnly cookie (`katalog_oauth`). The
+  `SpotifyUserTokenHandler` injects the user's token and performs one refresh +
+  retry on 401. The Connect `HttpClient` uses a shorter total timeout (30 s)
+  because a player command is a fast call the user is waiting on.
+
+The app's client secret never leaves the backend. The Connect sign-in requests
+only the `user-read-playback-state` and `user-modify-playback-state` scopes —
+no `streaming` scope, because the Web API cannot stream audio.
+
+### Spotify Connect sign-in flow
+
+1. `GET /api/spotify/auth/login` - mints a CSRF state + PKCE verifier, stores
+   them in a short-lived HttpOnly cookie, and returns a 302 to
+   `accounts.spotify.com/authorize` with the playback scopes.
+2. `GET /api/spotify/auth/callback` - Spotify's redirect target. Proves the
+   callback belongs to this browser's sign-in (state match + PKCE verifier),
+   exchanges the code, reads the profile, and stores the tokens server-side.
+   Sends the browser back to the app with `?spotify=connected` or
+   `?spotify=failed&reason=...`. Never returns tokens to the browser.
+3. `GET /api/spotify/me` - reports whether an account is connected and who it
+   is (id, display name, product). Deliberately reports no tokens.
+4. `GET /api/spotify/devices` - the user's Spotify Connect devices, with the
+   active one flagged and restricted devices marked.
+5. `GET /api/spotify/playback` - current playback state for the play/pause
+   toggle.
+6. `PUT /api/spotify/playback/play` and `PUT /api/spotify/playback/pause` -
+   play/pause a release on the chosen device. A blank device id means
+   "Spotify's active device".
+
+### Spotify Connect sign-in flow
+
+1. `GET /api/spotify/auth/login` - mints a CSRF state + PKCE verifier, stores
+   them in a short-lived HttpOnly cookie, and returns a 302 to
+   `accounts.spotify.com/authorize` with the playback scopes.
+2. `GET /api/spotify/auth/callback` - Spotify's redirect target. Proves the
+   callback belongs to this browser's sign-in (state match + PKCE verifier),
+   exchanges the code, reads the profile, and stores the tokens server-side.
+   Sends the browser back to the app with `?spotify=connected` or
+   `?spotify=failed&reason=...`. Never returns tokens to the browser.
+3. `GET /api/spotify/me` - reports whether an account is connected and who it
+   is (id, display name, product). Deliberately reports no tokens.
+4. `GET /api/spotify/devices` - the user's Spotify Connect devices, with the
+   active one flagged and restricted devices marked.
+5. `GET /api/spotify/playback` - current playback state for the play/pause
+   toggle.
+6. `PUT /api/spotify/playback/play` and `PUT /api/spotify/playback/pause` -
+   play/pause a release on the chosen device. A blank device id means
+   "Spotify's active device".
 
 ## Frontend/backend coupling decisions
 
