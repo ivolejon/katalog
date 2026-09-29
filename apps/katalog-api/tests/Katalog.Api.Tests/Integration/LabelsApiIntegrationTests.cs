@@ -484,6 +484,37 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightEndsWithTerminalPunctuation()
+    {
+        // Regression: a standalone copyright line ending in terminal punctuation
+        // (e.g. "2025 Globuli.") must not capture the punctuation as part of the label.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/terminalartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("terminalartist1", "Terminal Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("terminalartist1", "terminalalbum1", "Terminal Album 1", 2025, "Terminal Artist"));
+        spotify.StubAlbumGetByCopyright("terminalalbum1", "Globuli", "terminalartist1", "Terminal Album 1", 2025, "Terminal Artist", ".");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "terminalartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("terminalalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();
