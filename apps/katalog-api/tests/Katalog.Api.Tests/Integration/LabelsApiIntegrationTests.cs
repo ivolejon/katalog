@@ -451,6 +451,39 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsTrailingLegalText()
+    {
+        // Regression: Spotify's copyright line may carry trailing legal text such as
+        // "under exclusive license to X" after the real label name. Extraction must stop at
+        // that suffix so the album is still verified as an exact match for the followed label.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/suffixartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("suffixartist1", "Suffix Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("suffixartist1", "globulialbum1", "Globuli Album 1", 2025, "Suffix Artist"));
+        spotify.StubAlbumGetByCopyright("globulialbum1", "Globuli", "suffixartist1", "Globuli Album 1", 2025, "Suffix Artist", " under exclusive license to Sony Music");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "suffixartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        var release = Assert.Single(detail.Releases);
+        Assert.Equal("globulialbum1", release.SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();

@@ -82,13 +82,13 @@ public sealed class WireMockSpotify : IAsyncDisposable
     /// albums (e.g. "2025 Globuli").
     /// </summary>
     public void StubAlbumGetByCopyright(string albumId, string label, string artistId = "artist1", string? name = null,
-        int releaseYear = 2010, string artistName = "Artist One")
+        int releaseYear = 2010, string artistName = "Artist One", string? copyrightSuffix = null)
     {
         Server.Given(Request.Create().WithPath($"/v1/albums/{albumId}").UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody(AlbumJsonWithoutLabel(albumId, label, artistId, name, releaseYear, artistName)));
+                .WithBody(AlbumJsonWithoutLabel(albumId, label, artistId, name, releaseYear, artistName, copyrightSuffix)));
     }
 
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
@@ -156,7 +156,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
 
     /// <summary>Full album object where the real label only appears in the copyrights array.</summary>
     public static string AlbumJsonWithoutLabel(string id, string label, string artistId = "artist1", string? name = null,
-        int releaseYear = 2010, string artistName = "Artist One") =>
+        int releaseYear = 2010, string artistName = "Artist One", string? copyrightSuffix = null) =>
         $$"""
         {
           "id": "{{id}}",
@@ -169,7 +169,7 @@ public sealed class WireMockSpotify : IAsyncDisposable
           "total_tracks": 10,
           "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}],
           "copyrights": [
-            {"text": "{{releaseYear}} {{label}}", "type": "P"},
+            {"text": "{{releaseYear}} {{label}}{{copyrightSuffix}}", "type": "P"},
             {"text": "{{releaseYear}} {{label}}", "type": "C"}
           ]
         }
