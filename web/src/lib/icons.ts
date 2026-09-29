@@ -17,6 +17,9 @@ import {
   Loading03Icon as Loading03IconData,
   MusicNote01Icon as MusicNote01IconData,
   MusicNote02Icon as MusicNote02IconData,
+  PauseIcon as PauseIconData,
+  PlayIcon as PlayIconData,
+  RefreshIcon as RefreshIconData,
   Search01Icon as Search01IconData,
   SpotifyIcon as SpotifyIconData,
   Tick02Icon as Tick02IconData,
@@ -74,6 +77,9 @@ export const Clock01Icon = iconComponent(Clock01IconData)
 export const Disc01Icon = iconComponent(DiscIconData)
 export const MusicNote01Icon = iconComponent(MusicNote01IconData)
 export const MusicNote02Icon = iconComponent(MusicNote02IconData)
+export const PauseIcon = iconComponent(PauseIconData)
+export const PlayIcon = iconComponent(PlayIconData)
+export const RefreshIcon = iconComponent(RefreshIconData)
 export const SpotifyIcon = iconComponent(SpotifyIconData)
 export const UserGroupIcon = iconComponent(UserGroupIconData)
 export const VinylIcon = iconComponent(Vynil01IconData)

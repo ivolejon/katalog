@@ -13,6 +13,7 @@ public sealed class KatalogContext(DbContextOptions<KatalogContext> options) : D
     public DbSet<LabelAlbum> LabelAlbums => Set<LabelAlbum>();
     public DbSet<AlbumArtist> AlbumArtists => Set<AlbumArtist>();
     public DbSet<PollCursor> PollCursors => Set<PollCursor>();
+    public DbSet<SpotifyUserSession> SpotifyUserSessions => Set<SpotifyUserSession>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

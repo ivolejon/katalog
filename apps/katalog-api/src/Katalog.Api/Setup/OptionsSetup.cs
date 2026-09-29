@@ -22,8 +22,10 @@ public static class OptionsSetup
                         !string.IsNullOrWhiteSpace(sp.ClientId)
                         && !string.IsNullOrWhiteSpace(sp.ClientSecret)
                         && Uri.IsWellFormedUriString(sp.BaseUrl, UriKind.Absolute)
-                        && Uri.IsWellFormedUriString(sp.AccountsBaseUrl, UriKind.Absolute),
-                    "Spotify ClientId/ClientSecret must be configured and BaseUrls must be well-formed URIs.")
+                        && Uri.IsWellFormedUriString(sp.AccountsBaseUrl, UriKind.Absolute)
+                        && Uri.IsWellFormedUriString(sp.RedirectUri, UriKind.Absolute)
+                        && Uri.IsWellFormedUriString(sp.WebBaseUrl, UriKind.Absolute),
+                    "Spotify ClientId/ClientSecret must be configured, and BaseUrls, RedirectUri and WebBaseUrl must be well-formed URIs.")
                 .ValidateOnStart();
 
             services.AddOptions<PollingOptions>()

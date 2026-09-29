@@ -3,6 +3,7 @@ using Katalog.Api.Features.Artists;
 using Katalog.Api.Features.Labels;
 using Katalog.Api.Features.Releases;
 using Katalog.Api.Features.Releases.Polling;
+using Katalog.Api.Features.SpotifyConnect;
 using Katalog.Api.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,13 @@ public static class FeaturesSetup
         services.AddScoped<SearchArtists>();
         services.AddScoped<SearchLabels>();
         services.AddScoped<GetLabelReleases>();
+
+        // Spotify Connect: sign-in round trip, devices and playback control.
+        services.AddScoped<GetSpotifySession>();
+        services.AddScoped<StartSpotifyLogin>();
+        services.AddScoped<CompleteSpotifyLogin>();
+        services.AddScoped<GetSpotifyDevices>();
+        services.AddScoped<ControlSpotifyPlayback>();
 
         services.AddScoped<ReleasePoller>();
 

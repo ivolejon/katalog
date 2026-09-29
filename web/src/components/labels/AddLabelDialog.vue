@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLabelSearch, collectArtistIds } from '@/composables/useLabelSearch'
+import ReleasePlayButton from '@/components/spotify/ReleasePlayButton.vue'
 import { useLabelsStore } from '@/stores/labels'
 import {
   Add01Icon,
@@ -154,31 +155,70 @@ async function submit() {
 
                   <!-- Label hits -->
                   <template v-else-if="labels.length">
-                    <button
+                    <div
                       v-for="label in labels"
                       :key="label.name"
-                      type="button"
-                      :disabled="collectArtistIds(label).length === 0"
-                      class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      @click="pickLabel(label)"
+                      class="flex flex-col gap-1"
                     >
-                      <div
-                        class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-lg"
+                      <button
+                        type="button"
+                        :disabled="collectArtistIds(label).length === 0"
+                        class="hover:bg-muted focus-visible:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        @click="pickLabel(label)"
                       >
-                        <Album01Icon class="size-5" />
+                        <div
+                          class="bg-muted text-muted-foreground flex size-12 shrink-0 items-center justify-center rounded-lg"
+                        >
+                          <Album01Icon class="size-5" />
+                        </div>
+                        <div class="flex min-w-0 flex-col gap-0.5">
+                          <span class="text-foreground truncate text-sm font-medium">
+                            {{ label.name }}
+                          </span>
+                          <span class="text-muted-foreground truncate text-xs">
+                            {{ label.albums.length }} {{ label.albums.length === 1 ? 'album' : 'albums' }}
+                            ·
+                            {{ collectArtistIds(label).length }}
+                            {{ collectArtistIds(label).length === 1 ? 'artist' : 'artists' }}
+                          </span>
+                        </div>
+                      </button>
+
+                      <!-- Search hits are releases too: play them straight from the results. -->
+                      <div
+                        v-if="label.albums.length"
+                        class="flex flex-col gap-1 pb-1 pl-6"
+                      >
+                        <div
+                          v-for="album in label.albums"
+                          :key="album.albumId"
+                          class="hover:bg-muted/60 flex items-center gap-2 rounded-lg p-1.5"
+                        >
+                          <img
+                            v-if="album.imageUrl"
+                            :src="album.imageUrl"
+                            :alt="album.name"
+                            class="size-8 shrink-0 rounded-md object-cover"
+                            loading="lazy"
+                          />
+                          <div class="flex min-w-0 flex-1 flex-col">
+                            <span class="text-foreground truncate text-xs font-medium">
+                              {{ album.name }}
+                            </span>
+                            <span class="text-muted-foreground truncate text-xs">
+                              {{ album.artists.map((a) => a.name).join(', ') }}
+                            </span>
+                          </div>
+                          <ReleasePlayButton
+                            :spotify-album-id="album.albumId"
+                            :album-name="album.name"
+                            variant="ghost"
+                            size="icon"
+                            class="shrink-0"
+                          />
+                        </div>
                       </div>
-                      <div class="flex min-w-0 flex-col gap-0.5">
-                        <span class="text-foreground truncate text-sm font-medium">
-                          {{ label.name }}
-                        </span>
-                        <span class="text-muted-foreground truncate text-xs">
-                          {{ label.albums.length }} {{ label.albums.length === 1 ? 'album' : 'albums' }}
-                          ·
-                          {{ collectArtistIds(label).length }}
-                          {{ collectArtistIds(label).length === 1 ? 'artist' : 'artists' }}
-                        </span>
-                      </div>
-                    </button>
+                    </div>
 
                   </template>
 

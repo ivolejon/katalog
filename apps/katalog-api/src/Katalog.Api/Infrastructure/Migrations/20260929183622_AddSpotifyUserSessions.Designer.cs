@@ -3,6 +3,7 @@ using System;
 using Katalog.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Katalog.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(KatalogContext))]
-    partial class KatalogContextModelSnapshot : ModelSnapshot
+    [Migration("20260929183622_AddSpotifyUserSessions")]
+    partial class AddSpotifyUserSessions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

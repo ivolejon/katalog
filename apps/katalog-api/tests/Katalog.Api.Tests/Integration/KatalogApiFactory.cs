@@ -29,6 +29,11 @@ public sealed class KatalogApiFactory(PostgresFixture postgres, WireMockSpotify 
         builder.UseSetting("Spotify:ClientSecret", "test-client-secret");
         builder.UseSetting("Spotify:Market", "SE");
 
+        // Spotify Connect: the redirect target and where the callback sends the browser back.
+        // Pinned here so the OAuth assertions do not depend on the dev ports.
+        builder.UseSetting("Spotify:RedirectUri", "http://localhost:5192/api/spotify/auth/callback");
+        builder.UseSetting("Spotify:WebBaseUrl", "http://localhost:5173");
+
         // Keep the polling worker idle in tests: a huge interval means it only does the
         // start-up poll, which with no artists is a no-op. NOTE: TimeSpan.Parse("24:00:00")
         // means 24 DAYS - use "12:00:00" (within the app's validated 6-24 h range).
@@ -50,7 +55,7 @@ public sealed class KatalogApiFactory(PostgresFixture postgres, WireMockSpotify 
         await connection.OpenAsync();
         await using var command = connection.CreateCommand();
         command.CommandText = """
-            TRUNCATE TABLE album_artists, label_albums, artist_label, albums, artists, labels, poll_cursors;
+            TRUNCATE TABLE album_artists, label_albums, artist_label, albums, artists, labels, poll_cursors, spotify_user_sessions;
             """;
         await command.ExecuteNonQueryAsync();
     }

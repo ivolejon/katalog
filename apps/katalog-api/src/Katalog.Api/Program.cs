@@ -52,6 +52,7 @@ app.MapOpenApi();
 app.MapLabelsEndpoints();
 app.MapArtistsEndpoints();
 app.MapReleasesEndpoints();
+app.MapSpotifyEndpoints();
 
 app.Run();
 return 0;
