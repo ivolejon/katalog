@@ -61,6 +61,21 @@ public sealed class WireMockSpotify : IAsyncDisposable
                 .WithBody(searchJson));
     }
 
+    /// <summary>
+    /// Stubs the full album object for GET /albums/{id} (one per search candidate).
+    /// <paramref name="label"/> is the album's real Spotify label, which release discovery
+    /// uses to verify the candidate exactly before upserting.
+    /// </summary>
+    public void StubAlbumGet(string albumId, string? label, string artistId = "artist1", string? name = null,
+        int releaseYear = 2010, string artistName = "Artist One")
+    {
+        Server.Given(Request.Create().WithPath($"/v1/albums/{albumId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(AlbumJson(albumId, label, artistId, name, releaseYear, artistName)));
+    }
+
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
     {
         Server.Given(Request.Create().WithPath("/api/token").UsingPost())
@@ -101,8 +116,10 @@ public sealed class WireMockSpotify : IAsyncDisposable
         return $"{{\"albums\": {{\"items\": [{string.Join(",", albumItems)}], \"total\": {albumItems.Length}, \"next\": {nextJson}, \"offset\": {offset}}}}}";
     }
 
-    public static string AlbumItemJson(string artistId, string id, string name, int releaseYear, string artistName = "Artist One") =>
-        $$"""
+    public static string AlbumItemJson(string artistId, string id, string name, int releaseYear, string artistName = "Artist One", string? label = null)
+    {
+        var labelJson = label is null ? string.Empty : $",\n  \"label\": \"{label}\"";
+        return $$"""
         {
           "id": "{{id}}",
           "name": "{{name}}",
@@ -112,9 +129,15 @@ public sealed class WireMockSpotify : IAsyncDisposable
           "images": [{"url": "https://i.scdn.co/image/{{id}}" }],
           "external_urls": {"spotify": "https://open.spotify.com/album/{{id}}"},
           "total_tracks": 10,
-          "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}]
+          "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}]{{labelJson}}
         }
         """;
+    }
+
+    /// <summary>Full album object (GET /albums/{id}); includes the real label field.</summary>
+    public static string AlbumJson(string id, string? label, string artistId = "artist1", string? name = null,
+        int releaseYear = 2010, string artistName = "Artist One") =>
+        AlbumItemJson(artistId, id, name ?? $"Album {id}", releaseYear, artistName, label);
 
     public async ValueTask DisposeAsync() => Server.Dispose();
 }

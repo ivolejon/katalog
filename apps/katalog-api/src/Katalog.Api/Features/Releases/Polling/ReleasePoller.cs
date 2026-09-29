@@ -13,6 +13,14 @@ namespace Katalog.Api.Features.Releases.Polling;
 /// crash-safe because a poll cursor row records the last successful run and re-running the same
 /// data is a no-op update.
 /// </summary>
+/// <remarks>
+/// Spotify's label search filter matches fuzzily (following "Globuli" also returns albums
+/// from near-miss labels such as "Globulin"), so each candidate album is verified against the
+/// full album object (GET /albums/{id} - one GET per candidate, the captain's explicit quota
+/// choice): only albums whose real label exactly (case-insensitive, trimmed) equals the
+/// followed label's name are upserted, and the stored <c>label_spotify</c> attribution is the
+/// album's real Spotify label, not the discovering label's name.
+/// </remarks>
 public sealed class ReleasePoller(
     KatalogContext context,
     ISpotifyApiClient spotifyApiClient,
@@ -48,7 +56,7 @@ public sealed class ReleasePoller(
                 var albums = await FetchLabelAlbumsAsync(label.Name, cancellationToken);
                 foreach (var album in albums)
                 {
-                    await UpsertAlbumAsync(label, album, cancellationToken);
+                    await VerifyAndUpsertAlbumAsync(label, album, cancellationToken);
                 }
 
                 logger.LogDebug("Polled {AlbumCount} albums for label {LabelName} ({LabelId}).",
@@ -96,7 +104,7 @@ public sealed class ReleasePoller(
             var albums = await FetchLabelAlbumsAsync(label.Name, cancellationToken);
             foreach (var album in albums)
             {
-                await UpsertAlbumAsync(label, album, cancellationToken);
+                await VerifyAndUpsertAlbumAsync(label, album, cancellationToken);
             }
 
             logger.LogInformation("Immediate release poll completed for label {LabelId} with {AlbumCount} album(s).",
@@ -115,6 +123,33 @@ public sealed class ReleasePoller(
         }
     }
 
+    /// <summary>
+    /// Verifies a search candidate against its real Spotify label before upserting: the
+    /// label:"..." search filter matches fuzzily (near-miss labels like "Globulin" for a
+    /// followed "Globuli"), so a candidate is only upserted when its full album object's
+    /// <c>label</c> exactly equals the followed label's name (case-insensitive, trimmed).
+    /// A candidate that cannot be verified (album GET fails or reports no label) is skipped;
+    /// the next poll cycle re-fetches and re-verifies it. The stored attribution is the
+    /// album's real Spotify label.
+    /// </summary>
+    private async Task VerifyAndUpsertAlbumAsync(Label label, SpotifyAlbumItem album,
+        CancellationToken cancellationToken)
+    {
+        var fullAlbum = await spotifyApiClient.GetAlbumAsync(album.Id, cancellationToken);
+        var realLabel = fullAlbum?.Label?.Trim();
+
+        if (string.IsNullOrWhiteSpace(realLabel)
+            || !string.Equals(realLabel, label.Name.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            logger.LogInformation(
+                "Skipping album {AlbumId} ({AlbumName}) for label {LabelName}: Spotify's real label {RealLabel} is not an exact match.",
+                album.Id, album.Name, label.Name, realLabel ?? "<none>");
+            return;
+        }
+
+        await UpsertAlbumAsync(label, album, realLabel, cancellationToken);
+    }
+
     private async Task<PollCursor> GetOrCreateCursorAsync(CancellationToken cancellationToken)
     {
         var cursor = await context.PollCursors.FindAsync([JobName], cancellationToken);
@@ -129,9 +164,12 @@ public sealed class ReleasePoller(
     /// <summary>
     /// Idempotent album upsert: INSERT ... ON CONFLICT (spotify_id) DO UPDATE, returning the
     /// album id so the album_artists and label_albums junction rows can be written
-    /// (research §2.5, arch §3.4).
+    /// (research §2.5, arch §3.4). <paramref name="spotifyLabel"/> is the album's real,
+    /// verified Spotify label - used as the stored attribution, so a discovered release
+    /// always shows the label Spotify itself reports (not the discovering label's name).
     /// </summary>
-    private async Task UpsertAlbumAsync(Label label, SpotifyAlbumItem album, CancellationToken cancellationToken)
+    private async Task UpsertAlbumAsync(Label label, SpotifyAlbumItem album, string spotifyLabel,
+        CancellationToken cancellationToken)
     {
         var albumType = ParseAlbumType(album.AlbumType);
         var (releaseDate, precision) = ParseReleaseDate(album.ReleaseDate, album.ReleaseDatePrecision);
@@ -156,6 +194,7 @@ public sealed class ReleasePoller(
                     album_type = EXCLUDED.album_type,
                     release_date = EXCLUDED.release_date,
                     release_date_precision = EXCLUDED.release_date_precision,
+                    label_spotify = EXCLUDED.label_spotify,
                     image_url = EXCLUDED.image_url,
                     external_url = EXCLUDED.external_url,
                     total_tracks = EXCLUDED.total_tracks,
@@ -172,7 +211,7 @@ public sealed class ReleasePoller(
         command.Parameters.Add(P("albumType", (int)albumType));
         command.Parameters.Add(P("releaseDate", releaseDate));
         command.Parameters.Add(P("releasePrecision", (int)precision));
-        command.Parameters.Add(P("labelSpotify", label.Name));
+        command.Parameters.Add(P("labelSpotify", spotifyLabel));
         command.Parameters.Add(P("labelId", label.Id));
         command.Parameters.Add(P("imageUrl", album.ImageUrl));
         command.Parameters.Add(P("externalUrl", album.ExternalUrl));

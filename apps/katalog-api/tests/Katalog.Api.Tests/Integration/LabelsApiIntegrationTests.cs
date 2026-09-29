@@ -21,6 +21,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
             .RespondWith(Response.Create().WithStatusCode(200).WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson("artistone", "Fever Ray")));
         spotify.StubLabelSearch("Ninja Tune", WireMockSpotify.AlbumItemJson("artistone", "albumone", "Album One", 2010, "Fever Ray"));
+        spotify.StubAlbumGet("albumone", "Ninja Tune", "artistone", "Album One", 2010, "Fever Ray");
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
@@ -387,6 +388,8 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         spotify.StubLabelSearch("Immediate Label",
             WireMockSpotify.AlbumItemJson("immediate1", "immediatealbum1", "Immediate Album 1", 2010, "Immediate Artist"),
             WireMockSpotify.AlbumItemJson("immediate1", "immediatealbum2", "Immediate Album 2", 2011, "Immediate Artist"));
+        spotify.StubAlbumGet("immediatealbum1", "Immediate Label", "immediate1", "Immediate Album 1", 2010, "Immediate Artist");
+        spotify.StubAlbumGet("immediatealbum2", "Immediate Label", "immediate1", "Immediate Album 2", 2011, "Immediate Artist");
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -484,6 +487,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         // The label search is the source of truth: only the album that actually belongs to the label.
         spotify.StubLabelSearch("Globuli",
             WireMockSpotify.AlbumItemJson("globartist1", "globuli-correct", "Correct Album", 2020, "Globuli Artist"));
+        spotify.StubAlbumGet("globuli-correct", "Globuli", "globartist1", "Correct Album", 2020, "Globuli Artist");
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -502,12 +506,13 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
-    public async Task CreateLabel_AlbumSharedByTwoLabels_AppearsUnderBoth()
+    public async Task CreateLabel_FuzzySearchHitWhoseRealLabelIsAnotherLabel_IsNotLinked()
     {
-        // Regression: an album returned by label searches for two different followed labels
-        // must appear under both labels. The label_albums junction table stores each link
-        // independently, so discovering the album for label B does not remove it from label A.
-        const string sharedAlbumId = "sharedalbum1";
+        // Regression (exact-label verification): an album search returns for label B even
+        // though its real Spotify label is label A ("Globuli" search pulling in a "Globulin"
+        // album, or vice versa). Only exact real-label matches are linked, so label B never
+        // sees label A's album - and label A's existing link is untouched either way.
+        const string otherAlbumId = "otherlabelalbum";
         const string artistId = "sharedartist1";
 
         spotify.Reset();
@@ -518,22 +523,25 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.ArtistJson(artistId, "Shared Artist")));
 
+        // Label A's search returns the album, whose real label is "Label A": verified and linked.
+        spotify.StubLabelSearch("Label A",
+            WireMockSpotify.AlbumItemJson(artistId, otherAlbumId, "Owned Album", 2020, "Shared Artist"));
+        spotify.StubAlbumGet(otherAlbumId, "Label A", artistId, "Owned Album", 2020, "Shared Artist");
+
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
 
-        // Label A search returns the shared album.
-        spotify.StubLabelSearch("Label A",
-            WireMockSpotify.AlbumItemJson(artistId, sharedAlbumId, "Shared Album", 2020, "Shared Artist"));
         var createA = await client.PostAsJsonAsync("/api/labels",
             new { name = "Label A", spotifyIds = new[] { artistId } });
         Assert.Equal(HttpStatusCode.Created, createA.StatusCode);
         var labelA = await createA.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(labelA);
 
-        // Label B search also returns the same shared album.
+        // Label B's fuzzy search also returns the same album, but the real-label verification
+        // excludes it: it must appear only under label A.
         spotify.StubLabelSearch("Label B",
-            WireMockSpotify.AlbumItemJson(artistId, sharedAlbumId, "Shared Album", 2020, "Shared Artist"));
+            WireMockSpotify.AlbumItemJson(artistId, otherAlbumId, "Owned Album", 2020, "Shared Artist"));
         var createB = await client.PostAsJsonAsync("/api/labels",
             new { name = "Label B", spotifyIds = new[] { artistId } });
         Assert.Equal(HttpStatusCode.Created, createB.StatusCode);
@@ -544,9 +552,8 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var detailB = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{labelB.Id}");
 
         Assert.Equal(1, detailA!.ReleaseCount);
-        Assert.Equal(sharedAlbumId, Assert.Single(detailA.Releases).SpotifyId);
+        Assert.Equal(otherAlbumId, Assert.Single(detailA.Releases).SpotifyId);
 
-        Assert.Equal(1, detailB!.ReleaseCount);
-        Assert.Equal(sharedAlbumId, Assert.Single(detailB.Releases).SpotifyId);
+        Assert.Equal(0, detailB!.ReleaseCount);
     }
 }

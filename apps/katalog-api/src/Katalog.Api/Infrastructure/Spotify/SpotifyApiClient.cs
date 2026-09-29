@@ -11,6 +11,13 @@ public interface ISpotifyApiClient
 {
     Task<SpotifyArtist?> GetArtistAsync(string spotifyArtistId, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Returns the full album object (GET /albums/{id}) or null on 404. Unlike simplified
+    /// search/discography items, the full object includes the <c>label</c> field, which
+    /// release discovery uses to verify each candidate album's real label.
+    /// </summary>
+    Task<SpotifyAlbumItem?> GetAlbumAsync(string spotifyAlbumId, CancellationToken cancellationToken);
+
     Task<SpotifySearchArtistsResponse> SearchArtistsAsync(string query, int limit, string market,
         CancellationToken cancellationToken);
 
@@ -45,6 +52,16 @@ public sealed class SpotifyApiClient(
 
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<SpotifyArtist>(cancellationToken);
+    }
+
+    public async Task<SpotifyAlbumItem?> GetAlbumAsync(string spotifyAlbumId, CancellationToken cancellationToken)
+    {
+        var response = await httpClient.GetAsync($"v1/albums/{spotifyAlbumId}", cancellationToken);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            return null;
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<SpotifyAlbumItem>(cancellationToken);
     }
 
     public async Task<SpotifySearchArtistsResponse> SearchArtistsAsync(string query, int limit, string market,
