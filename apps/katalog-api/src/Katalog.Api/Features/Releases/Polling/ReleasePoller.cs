@@ -19,7 +19,10 @@ namespace Katalog.Api.Features.Releases.Polling;
 /// full album object (GET /albums/{id} - one GET per candidate, the captain's explicit quota
 /// choice): only albums whose real label exactly (case-insensitive, trimmed) equals the
 /// followed label's name are upserted, and the stored <c>label_spotify</c> attribution is the
-/// album's real Spotify label, not the discovering label's name.
+/// album's real Spotify label, not the discovering label's name. When verification finds a
+/// positive real-label mismatch for an album that is already linked to the label, the existing
+/// junction link is removed, so releases whose real label is not exactly the followed one can
+/// never stay listed - including links written before exact verification existed.
 /// </remarks>
 public sealed class ReleasePoller(
     KatalogContext context,
@@ -129,8 +132,10 @@ public sealed class ReleasePoller(
     /// followed "Globuli"), so a candidate is only upserted when its full album object's
     /// <c>label</c> exactly equals the followed label's name (case-insensitive, trimmed).
     /// A candidate that cannot be verified (album GET fails or reports no label) is skipped;
-    /// the next poll cycle re-fetches and re-verifies it. The stored attribution is the
-    /// album's real Spotify label.
+    /// the next poll cycle re-fetches and re-verifies it. A verified mismatch removes any
+    /// existing link between the album and the label (self-heal), so a release never stays
+    /// listed under a label whose real label is not exactly the followed one. The stored
+    /// attribution is the album's real Spotify label.
     /// </summary>
     private async Task VerifyAndUpsertAlbumAsync(Label label, SpotifyAlbumItem album,
         CancellationToken cancellationToken)
@@ -138,16 +143,64 @@ public sealed class ReleasePoller(
         var fullAlbum = await spotifyApiClient.GetAlbumAsync(album.Id, cancellationToken);
         var realLabel = fullAlbum?.Label?.Trim();
 
-        if (string.IsNullOrWhiteSpace(realLabel)
-            || !string.Equals(realLabel, label.Name.Trim(), StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(realLabel))
         {
             logger.LogInformation(
-                "Skipping album {AlbumId} ({AlbumName}) for label {LabelName}: Spotify's real label {RealLabel} is not an exact match.",
-                album.Id, album.Name, label.Name, realLabel ?? "<none>");
+                "Skipping album {AlbumId} ({AlbumName}) for label {LabelName}: Spotify reported no label to verify.",
+                album.Id, album.Name, label.Name);
+            return;
+        }
+
+        if (!string.Equals(realLabel, label.Name.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            await RemoveVerifiedMismatchedLabelAlbumAsync(album.Id, label.Id, label.Name, realLabel,
+                cancellationToken);
             return;
         }
 
         await UpsertAlbumAsync(label, album, realLabel, cancellationToken);
+    }
+
+    /// <summary>
+    /// Removes an album's junction link to a label after a positively verified real-label
+    /// mismatch (the album GET succeeded and reported a label that is not exactly the
+    /// followed one). This is the only deletion path for label_albums rows: a candidate that
+    /// cannot be verified, or that search no longer returns, never causes a deletion. For
+    /// links created before exact verification existed, poll cycles self-heal because every
+    /// discovery query re-encounters contaminated albums.
+    /// </summary>
+    private async Task RemoveVerifiedMismatchedLabelAlbumAsync(string spotifyAlbumId, Guid labelId,
+        string labelName, string realLabel, CancellationToken cancellationToken)
+    {
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM label_albums la
+            USING albums a
+            WHERE la.album_id = a.id
+              AND la.label_id = @labelId
+              AND a.spotify_id = @spotifyId
+            """;
+
+        command.Parameters.Add(P("labelId", labelId));
+        command.Parameters.Add(P("spotifyId", spotifyAlbumId));
+
+        var removed = await command.ExecuteNonQueryAsync(cancellationToken);
+        if (removed > 0)
+        {
+            logger.LogInformation(
+                "Removed mismatched release {AlbumId} from label {LabelName}: Spotify's real label {RealLabel} is not an exact match.",
+                spotifyAlbumId, labelName, realLabel);
+        }
+        else
+        {
+            logger.LogDebug(
+                "Verified label mismatch for album {AlbumId} against label {LabelName} (real label {RealLabel}); no existing link to remove.",
+                spotifyAlbumId, labelName, realLabel);
+        }
     }
 
     private async Task<PollCursor> GetOrCreateCursorAsync(CancellationToken cancellationToken)
@@ -289,10 +342,10 @@ public sealed class ReleasePoller(
 
     /// <summary>
     /// Links a discovered album to the discovering label via the label_albums junction table.
-    /// Existing links for other labels are left untouched, so an album that matches multiple
-    /// followed labels appears under each of them. Links are add/confirm-only: once discovered,
-    /// a release stays listed for its label even if a later poll's search no longer returns it
-    /// (a transient miss must never delete legitimately discovered data).
+    /// Links are add/confirm only here: a transient search miss never deletes a legitimately
+    /// discovered album. Deletion happens solely in
+    /// <see cref="RemoveVerifiedMismatchedLabelAlbumAsync"/> when verification positively
+    /// proves the album's real label is not exactly the followed label's name.
     /// </summary>
     private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, CancellationToken cancellationToken)
     {
