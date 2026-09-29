@@ -535,7 +535,7 @@ public sealed class ReleasePoller(
             if (afterPrefix.StartsWith(expected, StringComparison.OrdinalIgnoreCase))
             {
                 var tail = afterPrefix[expected.Length..];
-                if (tail.Length == 0 || char.IsWhiteSpace(tail[0]) || tail[0] is ',' or '.' or ';' or '(')
+                if (tail.Length == 0 || tail[0] is ',' or '.' or ';' or '(')
                     return expected;
             }
 
