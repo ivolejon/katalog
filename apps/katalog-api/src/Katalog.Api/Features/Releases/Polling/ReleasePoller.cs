@@ -251,7 +251,9 @@ public sealed class ReleasePoller(
     /// <summary>
     /// Links a discovered album to the discovering label via the label_albums junction table.
     /// Existing links for other labels are left untouched, so an album that matches multiple
-    /// followed labels appears under each of them.
+    /// followed labels appears under each of them. Links are add/confirm-only: once discovered,
+    /// a release stays listed for its label even if a later poll's search no longer returns it
+    /// (a transient miss must never delete legitimately discovered data).
     /// </summary>
     private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, CancellationToken cancellationToken)
     {
