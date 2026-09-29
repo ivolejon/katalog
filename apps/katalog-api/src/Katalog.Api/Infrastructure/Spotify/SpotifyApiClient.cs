@@ -17,11 +17,13 @@ public interface ISpotifyApiClient
     /// <summary>
     /// Searches albums whose Spotify label field matches <paramref name="labelName"/> via the
     /// undocumented-but-working <c>label:"&lt;name&gt;"</c> search filter (verified live 2026-09-22;
-    /// not listed in the official spec's filter list). Pages through the full result set using
-    /// Spotify's <c>next</c> URLs; per-request limit is capped at Spotify's max 10.
+    /// not listed in the official spec's filter list). Pages through the result set using
+    /// Spotify's <c>next</c> URLs; per-request limit is capped at Spotify's max 10. When
+    /// <paramref name="maxItems"/> is set, pagination stops early once at least that many items
+    /// are collected; when null, the full result set is paged through.
     /// </summary>
     Task<IReadOnlyList<SpotifyAlbumItem>> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken);
+        int? maxItems, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns the artist discography (albums + singles, as configured by include_groups).
@@ -57,7 +59,7 @@ public sealed class SpotifyApiClient(
     }
 
     public async Task<IReadOnlyList<SpotifyAlbumItem>> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken)
+        int? maxItems, CancellationToken cancellationToken)
     {
         // Spotify caps search limit at 10 (spec, verified 2026-09-22); higher returns HTTP 400 "Invalid limit".
         // Pagination runs on the next URL, so clamping the page size is safe and never loses data.
@@ -82,6 +84,8 @@ public sealed class SpotifyApiClient(
             items.AddRange(page.Albums.Items);
             logger.LogDebug("Fetched {Count} albums for label {LabelName} (next: {HasNext}).",
                 page.Albums.Items.Count, labelName, page.Albums.Next is not null);
+            if (maxItems is int max && items.Count >= max)
+                break;
             next = page.Albums.Next is null ? null : ValidateNextPage(page.Albums.Next);
         }
 

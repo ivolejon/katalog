@@ -29,7 +29,7 @@ public sealed class ReleasePoller(
         CancellationToken cancellationToken)
     {
         return await spotifyApiClient.SearchAlbumsByLabelAsync(
-            labelName, SpotifyOptions.SearchLimitMax, spotifyOptions.Value.Market, cancellationToken);
+            labelName, SpotifyOptions.SearchLimitMax, spotifyOptions.Value.Market, maxItems: null, cancellationToken);
     }
 
     public async Task PollOnceAsync(CancellationToken cancellationToken)

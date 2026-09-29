@@ -255,6 +255,50 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task SearchLabels_StopsPaging_OnceLimitReached()
+    {
+        // Regression: pagination must stop once `limit` items are collected - the search
+        // endpoint used to page through the label's entire result set and discard all but the
+        // first `limit` albums. Page 2 returns 500 so unbounded pagination fails the request.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        const string labelName = "Cap Label";
+        var page1 = new[]
+        {
+            WireMockSpotify.AlbumItemJson("capartist1", "capalbum1", "Cap Album 1", 2021),
+            WireMockSpotify.AlbumItemJson("capartist1", "capalbum2", "Cap Album 2", 2022),
+        };
+        var encodedQuery = Uri.EscapeDataString($"label:\"{labelName}\"");
+        var nextUrl = $"{spotify.BaseUrl}/v1/search?q={encodedQuery}&type=album&market=SE&limit=2&offset=2";
+        spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", $"label:\"{labelName}\"")
+                .WithParam("type", "album")
+                .WithParam("market", "SE")
+                .WithParam("limit", "2")
+                .WithParam("offset", "0"))
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.AlbumSearchJson(page1, nextUrl, 0)));
+        spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", $"label:\"{labelName}\"")
+                .WithParam("offset", "2"))
+            .RespondWith(Response.Create().WithStatusCode(500));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/labels/search?q=Cap%20Label&limit=2");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<LabelSearchResponse>();
+        Assert.NotNull(result);
+        Assert.Equal(new[] { "capalbum1", "capalbum2" },
+            Assert.Single(result.Labels).Albums.Select(a => a.AlbumId).ToArray());
+    }
+
+    [Fact]
     public async Task SearchLabels_EscapesQuotesInsideLabelFilter()
     {
         spotify.Reset();

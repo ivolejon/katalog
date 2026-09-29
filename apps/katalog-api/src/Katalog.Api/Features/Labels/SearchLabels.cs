@@ -15,8 +15,10 @@ public sealed class SearchLabels(ISpotifyApiClient spotifyApiClient, IOptions<Sp
 {
     public async Task<LabelSearchResponse> SearchAsync(string query, int limit, CancellationToken cancellationToken)
     {
+        // maxItems caps pagination at the caller's limit: the search endpoint only ever shows
+        // `limit` albums, so exhausting a well-known label's full result set would burn quota.
         var searchResults = await spotifyApiClient.SearchAlbumsByLabelAsync(
-            query, limit, spotifyOptions.Value.Market, cancellationToken);
+            query, limit, spotifyOptions.Value.Market, maxItems: limit, cancellationToken);
 
         var albums = searchResults
             .Take(limit)
