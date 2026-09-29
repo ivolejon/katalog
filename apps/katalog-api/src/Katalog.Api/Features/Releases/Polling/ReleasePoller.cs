@@ -497,19 +497,14 @@ public sealed class ReleasePoller(
         Value = value ?? DBNull.Value
     };
 
-    private static readonly Regex CopyrightPrefixRegex = new(
-        @"^\s*(?:\u00a9|\u2117|\(C\)|\(P\)|C|P)?\s*\d{4}\s+",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
     /// <summary>
     /// Extracts the album's real label from the full album object. Spotify currently returns
     /// the label either in the <c>label</c> field or, when that field is absent, embedded in
     /// the <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). The top-level
     /// <c>label</c> is returned as-is so callers can detect a verified mismatch and unlink.
-    /// When the top-level label is absent, copyright lines are scanned for a value that
-    /// matches the followed <paramref name="expectedLabel"/>: the expected label is tried
-    /// verbatim after the year prefix first (preserving punctuation such as "Globuli, LLC"),
-    /// then the generic extractor is used with an exact-match guard.
+    /// When the top-level label is absent, each copyright line is extracted with the shared
+    /// terminator set and only a value that exactly matches the followed
+    /// <paramref name="expectedLabel"/> is returned.
     /// </summary>
     private static string? ExtractRealLabel(SpotifyAlbumItem? album, string expectedLabel)
     {
@@ -530,14 +525,6 @@ public sealed class ReleasePoller(
             var text = copyright.Text?.Trim();
             if (string.IsNullOrWhiteSpace(text))
                 continue;
-
-            var afterPrefix = CopyrightPrefixRegex.Replace(text, string.Empty);
-            if (afterPrefix.StartsWith(expected, StringComparison.OrdinalIgnoreCase))
-            {
-                var tail = afterPrefix[expected.Length..];
-                if (tail.Length == 0 || tail[0] is ',' or '.' or ';' or '(')
-                    return expected;
-            }
 
             var extracted = ExtractLabelFromCopyright(text);
             if (!string.IsNullOrWhiteSpace(extracted) &&
