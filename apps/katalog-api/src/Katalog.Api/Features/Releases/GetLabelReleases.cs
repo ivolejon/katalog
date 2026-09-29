@@ -8,8 +8,9 @@ namespace Katalog.Api.Features.Releases;
 public sealed class GetLabelReleases(KatalogContext context)
 {
     /// <summary>
-    /// Returns the releases for all artists under a label, newest first. NULL release dates sort
-    /// last in Postgres by default for DESC, so they are coalesced to the minimum date.
+    /// Returns the releases discovered for a label via the label_albums junction table,
+    /// newest first. NULL release dates sort last in Postgres by default for DESC, so they
+    /// are coalesced to the minimum date.
     /// </summary>
     public async Task<IReadOnlyList<AlbumResponse>?> ListAsync(Guid labelId, CancellationToken cancellationToken)
     {
@@ -18,7 +19,7 @@ public sealed class GetLabelReleases(KatalogContext context)
             return null;
 
         var rows = await context.Albums
-            .Where(a => a.AlbumArtists.Any(aa => aa.Artist.LabelArtists.Any(la => la.LabelId == labelId)))
+            .Where(a => a.LabelAlbums.Any(la => la.LabelId == labelId))
             .OrderByDescending(a => a.ReleaseDate ?? DateOnly.MinValue)
             .Select(a => new
             {

@@ -22,4 +22,5 @@ public sealed class Album
     public DateTimeOffset UpdatedAtUtc { get; set; }
 
     public List<AlbumArtist> AlbumArtists { get; } = [];
+    public List<LabelAlbum> LabelAlbums { get; } = [];
 }

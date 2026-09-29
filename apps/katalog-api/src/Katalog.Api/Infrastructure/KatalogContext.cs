@@ -10,6 +10,7 @@ public sealed class KatalogContext(DbContextOptions<KatalogContext> options) : D
     public DbSet<Artist> Artists => Set<Artist>();
     public DbSet<Album> Albums => Set<Album>();
     public DbSet<LabelArtist> LabelArtists => Set<LabelArtist>();
+    public DbSet<LabelAlbum> LabelAlbums => Set<LabelAlbum>();
     public DbSet<AlbumArtist> AlbumArtists => Set<AlbumArtist>();
     public DbSet<PollCursor> PollCursors => Set<PollCursor>();
 

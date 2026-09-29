@@ -24,6 +24,8 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
 
     public async Task<LabelDetailResponse?> GetDetailAsync(Guid labelId, CancellationToken cancellationToken)
     {
+        var releases = await getLabelReleases.ListAsync(labelId, cancellationToken) ?? [];
+
         var detail = await context.Labels
             .Where(l => l.Id == labelId)
             .Select(l => new LabelDetailResponse(
@@ -32,7 +34,7 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,
-                l.LabelArtists.SelectMany(la => la.Artist.AlbumArtists.Select(aa => aa.AlbumId)).Distinct().Count(),
+                l.LabelAlbums.Count,
                 l.CreatedAtUtc,
                 l.UpdatedAtUtc,
                 l.LabelArtists
@@ -52,7 +54,6 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
         if (detail is null)
             return null;
 
-        var releases = await getLabelReleases.ListAsync(labelId, cancellationToken) ?? [];
         return detail with { Releases = releases };
     }
 }

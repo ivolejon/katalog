@@ -1,3 +1,5 @@
+using Katalog.Api.Setup;
+
 namespace Katalog.Api.Infrastructure.Spotify;
 
 /// <summary>
@@ -15,10 +17,13 @@ public interface ISpotifyApiClient
     /// <summary>
     /// Searches albums whose Spotify label field matches <paramref name="labelName"/> via the
     /// undocumented-but-working <c>label:"&lt;name&gt;"</c> search filter (verified live 2026-09-22;
-    /// not listed in the official spec's filter list). Returns simplified album objects.
+    /// not listed in the official spec's filter list). Pages through the result set using
+    /// Spotify's <c>next</c> URLs; per-request limit is capped at Spotify's max 10. When
+    /// <paramref name="maxItems"/> is set, pagination stops early once at least that many items
+    /// are collected; when null, the full result set is paged through.
     /// </summary>
-    Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken);
+    Task<IReadOnlyList<SpotifyAlbumItem>> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
+        int? maxItems, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns the artist discography (albums + singles, as configured by include_groups).
@@ -53,19 +58,38 @@ public sealed class SpotifyApiClient(
                ?? throw new SpotifyApiException("Spotify search returned an empty body.");
     }
 
-    public async Task<SpotifySearchAlbumsResponse> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
-        CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<SpotifyAlbumItem>> SearchAlbumsByLabelAsync(string labelName, int limit, string market,
+        int? maxItems, CancellationToken cancellationToken)
     {
+        // Spotify caps search limit at 10 (spec, verified 2026-09-22); higher returns HTTP 400 "Invalid limit".
+        // Pagination runs on the next URL, so clamping the page size is safe and never loses data.
+        limit = Math.Min(limit, SpotifyOptions.SearchLimitMax);
+
         // EscapeDataString encodes the quotes as %22 (q=label%3A%22<name>%22), which Spotify
         // accepts for the label: filter - verified live 2026-09-22.
         var escapedLabelName = labelName.Replace("\\", "\\\\", StringComparison.Ordinal)
             .Replace("\"", "\\\"", StringComparison.Ordinal);
         var queryString = Uri.EscapeDataString($"label:\"{escapedLabelName}\"");
-        var response = await httpClient.GetAsync(
-            $"v1/search?q={queryString}&type=album&market={market}&limit={limit}", cancellationToken);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SpotifySearchAlbumsResponse>(cancellationToken)
-               ?? throw new SpotifyApiException("Spotify album search returned an empty body.");
+
+        var items = new List<SpotifyAlbumItem>();
+        Uri? next = new($"v1/search?q={queryString}&type=album&market={market}&limit={limit}&offset=0", UriKind.Relative);
+
+        while (next is not null)
+        {
+            var response = await httpClient.GetAsync(next, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            var page = await response.Content.ReadFromJsonAsync<SpotifySearchAlbumsResponse>(cancellationToken)
+                       ?? throw new SpotifyApiException("Spotify album search returned an empty body.");
+
+            items.AddRange(page.Albums.Items);
+            logger.LogDebug("Fetched {Count} albums for label {LabelName} (next: {HasNext}).",
+                page.Albums.Items.Count, labelName, page.Albums.Next is not null);
+            if (maxItems is int max && items.Count >= max)
+                break;
+            next = page.Albums.Next is null ? null : ValidateNextPage(page.Albums.Next);
+        }
+
+        return items;
     }
 
     public async Task<IReadOnlyList<SpotifyAlbumItem>> GetArtistAlbumsAsync(string spotifyArtistId, int limit, string market,

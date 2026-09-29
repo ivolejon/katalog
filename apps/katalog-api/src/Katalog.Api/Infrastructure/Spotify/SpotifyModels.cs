@@ -20,7 +20,9 @@ public sealed record SpotifySearchAlbumsResponse(
 
 public sealed record SpotifyAlbumPage(
     [property: JsonPropertyName("items")] IReadOnlyList<SpotifyAlbumItem> Items,
-    [property: JsonPropertyName("total")] int Total);
+    [property: JsonPropertyName("total")] int Total,
+    [property: JsonPropertyName("next")] string? Next,
+    [property: JsonPropertyName("offset")] int Offset);
 
 public sealed record SpotifyArtistPage(
     [property: JsonPropertyName("items")] IReadOnlyList<SpotifyArtist> Items,

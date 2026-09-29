@@ -14,4 +14,5 @@ public sealed class Label
     public DateTimeOffset UpdatedAtUtc { get; set; }
 
     public List<LabelArtist> LabelArtists { get; } = [];
+    public List<LabelAlbum> LabelAlbums { get; } = [];
 }

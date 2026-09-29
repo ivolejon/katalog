@@ -30,6 +30,37 @@ public sealed class WireMockSpotify : IAsyncDisposable
                 .WithBody(body));
     }
 
+    /// <summary>Stubs the label-filtered album search used by release discovery.</summary>
+    public void StubLabelSearch(string labelName, params string[] albumItems)
+    {
+        var searchJson = AlbumSearchJson(albumItems);
+        Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", $"label:\"{labelName}\"")
+                .WithParam("type", "album")
+                .WithParam("market", "SE")
+                .WithParam("limit", "10"))
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(searchJson));
+    }
+
+    /// <summary>Stubs a specific page of the label-filtered album search.</summary>
+    public void StubLabelSearchPage(string labelName, int offset, string? next, params string[] albumItems)
+    {
+        var searchJson = AlbumSearchJson(albumItems, next, offset);
+        Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
+                .WithParam("q", $"label:\"{labelName}\"")
+                .WithParam("type", "album")
+                .WithParam("market", "SE")
+                .WithParam("limit", "10")
+                .WithParam("offset", offset.ToString()))
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(searchJson));
+    }
+
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
     {
         Server.Given(Request.Create().WithPath("/api/token").UsingPost())
@@ -62,7 +93,13 @@ public sealed class WireMockSpotify : IAsyncDisposable
 
     /// <summary>Spotify search response body (type=album): a page of simplified album items.</summary>
     public static string AlbumSearchJson(params string[] albumItems) =>
-        "{\"albums\": {\"items\": [" + string.Join(",", albumItems) + "], \"total\": " + albumItems.Length + "}}";
+        AlbumSearchJson(albumItems, null, 0);
+
+    public static string AlbumSearchJson(string[] albumItems, string? next, int offset)
+    {
+        var nextJson = next is null ? "null" : $"\"{next}\"";
+        return $"{{\"albums\": {{\"items\": [{string.Join(",", albumItems)}], \"total\": {albumItems.Length}, \"next\": {nextJson}, \"offset\": {offset}}}}}";
+    }
 
     public static string AlbumItemJson(string artistId, string id, string name, int releaseYear, string artistName = "Artist One") =>
         $$"""
