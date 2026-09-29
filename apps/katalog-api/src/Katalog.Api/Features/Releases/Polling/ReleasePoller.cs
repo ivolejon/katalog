@@ -527,7 +527,7 @@ public sealed class ReleasePoller(
     }
 
     private static readonly Regex CopyrightLabelRegex = new(
-        @"^\s*(?:\u00a9|\u2117|\(C\)|\(P\)|C|P)?\s*\d{4}\s+(?<label>.+?)(?:\s*[,\-;\:.\(]?\s*\b(?:under|a division of|licensed by|licensed to|distributed by|all rights reserved)\b.*)?$",
+        @"^\s*(?:\u00a9|\u2117|\(C\)|\(P\)|C|P)?\s*\d{4}\s+(?<label>.+?)(?=[,\.;]\s+|\s*\((?=\s*(?:distributed|licensed|marketed|manufactured|under|a division of|a subsidiary of)\b)|\s+(?:under|licensed|distributed|marketed|manufactured|a division of|a subsidiary of|all rights reserved)\b|\s*$)",
         RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     private static string? ExtractLabelFromCopyright(string? text)

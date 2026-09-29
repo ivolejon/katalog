@@ -571,6 +571,35 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsSubsidiary()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/subsidiaryartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("subsidiaryartist1", "Subsidiary Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("subsidiaryartist1", "subsidiaryalbum1", "Subsidiary Album 1", 2025, "Subsidiary Artist"));
+        spotify.StubAlbumGetByCopyright("subsidiaryalbum1", "Globuli", "subsidiaryartist1", "Subsidiary Album 1", 2025, "Subsidiary Artist", ", a subsidiary of Sony Music");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "subsidiaryartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("subsidiaryalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();
