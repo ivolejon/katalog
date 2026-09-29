@@ -50,7 +50,7 @@ public sealed class KatalogApiFactory(PostgresFixture postgres, WireMockSpotify 
         await connection.OpenAsync();
         await using var command = connection.CreateCommand();
         command.CommandText = """
-            TRUNCATE TABLE album_artists, artist_label, albums, artists, labels, poll_cursors;
+            TRUNCATE TABLE album_artists, label_albums, artist_label, albums, artists, labels, poll_cursors;
             """;
         await command.ExecuteNonQueryAsync();
     }

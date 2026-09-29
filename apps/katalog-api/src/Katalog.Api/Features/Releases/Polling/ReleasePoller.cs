@@ -20,33 +20,16 @@ public sealed class ReleasePoller(
     TimeProvider timeProvider,
     IOptions<SpotifyOptions> spotifyOptions)
 {
+    // The cursor primary key predates the switch from artist-discography polling to label-search
+    // polling. Keeping the name avoids a cursor migration; the poller now discovers releases by
+    // label instead of by artist.
     public const string JobName = "artist_new_releases";
 
     public async Task<IReadOnlyList<SpotifyAlbumItem>> FetchLabelAlbumsAsync(string labelName,
         CancellationToken cancellationToken)
     {
-        var limit = SpotifyOptions.SearchLimitMax;
-        var market = spotifyOptions.Value.Market;
-        var items = new List<SpotifyAlbumItem>();
-        var offset = 0;
-
-        while (true)
-        {
-            var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
-                labelName, limit, market, offset, cancellationToken);
-            var page = response.Albums;
-            items.AddRange(page.Items);
-
-            logger.LogDebug("Fetched {Count} albums for label {LabelName} at offset {Offset} (next: {HasNext}).",
-                page.Items.Count, labelName, offset, page.Next is not null);
-
-            if (page.Next is null || page.Items.Count < limit)
-                break;
-
-            offset += limit;
-        }
-
-        return items;
+        return await spotifyApiClient.SearchAlbumsByLabelAsync(
+            labelName, SpotifyOptions.SearchLimitMax, spotifyOptions.Value.Market, cancellationToken);
     }
 
     public async Task PollOnceAsync(CancellationToken cancellationToken)
@@ -145,9 +128,8 @@ public sealed class ReleasePoller(
 
     /// <summary>
     /// Idempotent album upsert: INSERT ... ON CONFLICT (spotify_id) DO UPDATE, returning the
-    /// album id so the album_artists junction row can be written (research §2.5, arch §3.4).
-    /// The label is set to the followed label that produced the search hit, so the release feed
-    /// only shows albums Spotify returned for <c>label:"&lt;name&gt;"</c>.
+    /// album id so the album_artists and label_albums junction rows can be written
+    /// (research §2.5, arch §3.4).
     /// </summary>
     private async Task UpsertAlbumAsync(Label label, SpotifyAlbumItem album, CancellationToken cancellationToken)
     {
@@ -174,8 +156,6 @@ public sealed class ReleasePoller(
                     album_type = EXCLUDED.album_type,
                     release_date = EXCLUDED.release_date,
                     release_date_precision = EXCLUDED.release_date_precision,
-                    label_spotify = EXCLUDED.label_spotify,
-                    label_id = EXCLUDED.label_id,
                     image_url = EXCLUDED.image_url,
                     external_url = EXCLUDED.external_url,
                     total_tracks = EXCLUDED.total_tracks,
@@ -200,6 +180,8 @@ public sealed class ReleasePoller(
 
         var idResult = await command.ExecuteScalarAsync(cancellationToken);
         var storedAlbumId = idResult is Guid stored ? stored : albumId;
+
+        await UpsertLabelAlbumAsync(storedAlbumId, label.Id, cancellationToken);
 
         if (album.Artists is not { Count: > 0 })
         {
@@ -262,6 +244,31 @@ public sealed class ReleasePoller(
         command.Parameters.Add(P("albumId", albumId));
         command.Parameters.Add(P("artistId", artistId));
         command.Parameters.Add(P("position", position));
+
+        await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Links a discovered album to the discovering label via the label_albums junction table.
+    /// Existing links for other labels are left untouched, so an album that matches multiple
+    /// followed labels appears under each of them.
+    /// </summary>
+    private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, CancellationToken cancellationToken)
+    {
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            INSERT INTO label_albums (label_id, album_id, first_seen_at_utc, last_confirmed_at_utc)
+            VALUES (@labelId, @albumId, now(), now())
+            ON CONFLICT (label_id, album_id) DO UPDATE SET
+                last_confirmed_at_utc = now()
+            """;
+
+        command.Parameters.Add(P("labelId", labelId));
+        command.Parameters.Add(P("albumId", albumId));
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }

@@ -15,10 +15,11 @@ public sealed class SearchLabels(ISpotifyApiClient spotifyApiClient, IOptions<Sp
 {
     public async Task<LabelSearchResponse> SearchAsync(string query, int limit, CancellationToken cancellationToken)
     {
-        var response = await spotifyApiClient.SearchAlbumsByLabelAsync(
-            query, limit, spotifyOptions.Value.Market, offset: 0, cancellationToken);
+        var searchResults = await spotifyApiClient.SearchAlbumsByLabelAsync(
+            query, limit, spotifyOptions.Value.Market, cancellationToken);
 
-        var albums = response.Albums.Items
+        var albums = searchResults
+            .Take(limit)
             .Select(a => new LabelSearchAlbumResult(
                 a.Id,
                 a.Name,

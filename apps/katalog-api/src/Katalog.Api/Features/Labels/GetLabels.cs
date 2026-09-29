@@ -34,7 +34,7 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
                 l.Name,
                 l.Slug,
                 l.LabelArtists.Count,
-                releases.Count,
+                l.LabelAlbums.Count,
                 l.CreatedAtUtc,
                 l.UpdatedAtUtc,
                 l.LabelArtists

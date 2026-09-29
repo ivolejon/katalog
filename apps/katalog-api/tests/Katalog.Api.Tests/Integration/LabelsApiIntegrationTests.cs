@@ -456,4 +456,53 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var release = Assert.Single(detail.Releases);
         Assert.Equal("globuli-correct", release.SpotifyId);
     }
+
+    [Fact]
+    public async Task CreateLabel_AlbumSharedByTwoLabels_AppearsUnderBoth()
+    {
+        // Regression: an album returned by label searches for two different followed labels
+        // must appear under both labels. The label_albums junction table stores each link
+        // independently, so discovering the album for label B does not remove it from label A.
+        const string sharedAlbumId = "sharedalbum1";
+        const string artistId = "sharedartist1";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Shared Artist")));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        // Label A search returns the shared album.
+        spotify.StubLabelSearch("Label A",
+            WireMockSpotify.AlbumItemJson(artistId, sharedAlbumId, "Shared Album", 2020, "Shared Artist"));
+        var createA = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Label A", spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createA.StatusCode);
+        var labelA = await createA.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(labelA);
+
+        // Label B search also returns the same shared album.
+        spotify.StubLabelSearch("Label B",
+            WireMockSpotify.AlbumItemJson(artistId, sharedAlbumId, "Shared Album", 2020, "Shared Artist"));
+        var createB = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Label B", spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createB.StatusCode);
+        var labelB = await createB.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(labelB);
+
+        var detailA = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{labelA.Id}");
+        var detailB = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{labelB.Id}");
+
+        Assert.Equal(1, detailA!.ReleaseCount);
+        Assert.Equal(sharedAlbumId, Assert.Single(detailA.Releases).SpotifyId);
+
+        Assert.Equal(1, detailB!.ReleaseCount);
+        Assert.Equal(sharedAlbumId, Assert.Single(detailB.Releases).SpotifyId);
+    }
 }

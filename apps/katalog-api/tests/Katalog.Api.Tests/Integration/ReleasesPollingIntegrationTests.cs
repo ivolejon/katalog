@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using Katalog.Api.Contracts;
 using Katalog.Api.Features.Releases.Polling;
@@ -114,23 +115,36 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
     [Fact]
     public async Task PollOnce_WhenLabelSearchFails_SkipsLabel_ButCursorStillAdvances()
     {
+        // The immediate poll during label creation must also fail, otherwise it would store the
+        // successful album and the scheduled poll failure would not be observable.
         spotify.Reset();
         spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
         spotify.Server.Given(Request.Create().WithPath("/v1/search").UsingGet()
                 .WithParam("q", $"label:\"{LabelName}\""))
             .RespondWith(Response.Create().WithStatusCode(500));
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
-        var labelId = await SeedLabelWithArtistAsync(factory);
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
 
         await RunPollerAsync(factory);
 
-        // The label search failed (500 after all retries) so no new album is stored during the
-        // scheduled poll, but the cycle completed and the cursor advanced.
-        var releases = await factory.CreateClient().GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{labelId}/releases");
+        // The label search failed (500 after all retries) so no album is stored, but the cycle
+        // completed and the cursor advanced.
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
         Assert.NotNull(releases);
-        Assert.Single(releases);
+        Assert.Empty(releases);
 
         var cursor = await factory.Services.CreateScope().ServiceProvider
             .GetRequiredService<KatalogContext>().PollCursors.FindAsync([ReleasePoller.JobName]);
@@ -192,10 +206,12 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
                 .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
 
         // Page 1 has a full 10 items and a next pointer; page 2 has one item and no next.
+        var encodedQuery = Uri.EscapeDataString($"label:\"{LabelName}\"");
+        var nextUrl = $"{spotify.BaseUrl}/v1/search?q={encodedQuery}&type=album&market=SE&limit=10&offset=10";
         var page1Items = Enumerable.Range(0, 10)
             .Select(i => WireMockSpotify.AlbumItemJson(ArtistId, $"album{i}", $"Album {i}", 2010 + i, "Artist One"))
             .ToArray();
-        spotify.StubLabelSearchPage(LabelName, offset: 0, next: $"{spotify.BaseUrl}/v1/search?next=page2", page1Items);
+        spotify.StubLabelSearchPage(LabelName, offset: 0, next: nextUrl, page1Items);
         spotify.StubLabelSearchPage(LabelName, offset: 10, next: null,
             WireMockSpotify.AlbumItemJson(ArtistId, page2AlbumId, "Album 10", 2020, "Artist One"));
 
