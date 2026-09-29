@@ -452,6 +452,7 @@ public sealed class ReleasePoller(
             FROM labels l
             WHERE l.id = @labelId
               AND trim(lower(l.name)) = trim(lower(@spotifyLabel))
+            FOR KEY SHARE OF l
             ON CONFLICT (label_id, album_id) DO UPDATE SET
                 last_confirmed_at_utc = now()
             """;

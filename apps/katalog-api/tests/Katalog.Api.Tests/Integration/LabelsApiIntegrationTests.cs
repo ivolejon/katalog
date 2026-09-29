@@ -838,6 +838,7 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         // excludes it: it must appear only under label A.
         spotify.StubLabelSearch("Label B",
             WireMockSpotify.AlbumItemJson(artistId, otherAlbumId, "Owned Album", 2020, "Shared Artist"));
+        spotify.StubAlbumGet(otherAlbumId, "Label A", artistId, "Owned Album", 2020, "Shared Artist");
         var createB = await client.PostAsJsonAsync("/api/labels",
             new { name = "Label B", spotifyIds = new[] { artistId } });
         Assert.Equal(HttpStatusCode.Created, createB.StatusCode);

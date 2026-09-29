@@ -36,6 +36,7 @@ public sealed class UpdateLabel(KatalogContext context, ReleasePoller releasePol
             return new UpdateLabelOutcome(UpdateLabelStatus.NotFound, null);
 
         var normalized = name.Trim();
+        var nameChanged = label.Name != normalized;
         var slug = LabelSlug.From(normalized);
         var slugTaken = await context.Labels.AnyAsync(l => l.Slug == slug && l.Id != labelId, cancellationToken);
         if (slugTaken)
@@ -60,7 +61,10 @@ public sealed class UpdateLabel(KatalogContext context, ReleasePoller releasePol
                 var response = new LabelSummaryResponse(label.Id, spotifyIds, label.Name, label.Slug, artistCount,
                     label.CreatedAtUtc, label.UpdatedAtUtc);
 
-                await releasePoller.AuditLabelLinksAsync(labelId, normalized, cancellationToken);
+                if (nameChanged)
+                {
+                    await releasePoller.AuditLabelLinksAsync(labelId, normalized, cancellationToken);
+                }
 
                 await transaction.CommitAsync(cancellationToken);
                 return new UpdateLabelOutcome(UpdateLabelStatus.Updated, response);
