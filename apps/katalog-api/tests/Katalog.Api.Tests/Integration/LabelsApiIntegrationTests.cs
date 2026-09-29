@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Katalog.Api.Contracts;
 using Katalog.Api.Features.Releases.Polling;
 using Katalog.Api.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -634,8 +635,9 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
 
         var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
         Assert.Equal(HttpStatusCode.ServiceUnavailable, renameResponse.StatusCode);
-        var problem = await renameResponse.Content.ReadAsStringAsync();
-        Assert.Contains("was not renamed", problem);
+        var problem = await renameResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Equal("The label was not renamed.", problem!.Title);
 
         // The rename rolled back: old name, old slug and all links are intact.
         var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");

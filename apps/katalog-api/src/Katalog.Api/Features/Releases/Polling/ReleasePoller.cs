@@ -432,15 +432,13 @@ public sealed class ReleasePoller(
 
     /// <summary>
     /// Links a discovered album to the discovering label via the label_albums junction table.
-    /// Linking re-reads the label's current committed name under a row lock (FOR UPDATE), so a
-    /// poll pass carrying a stale pre-rename snapshot can never link (or resurrect after the
-    /// audit's delete) an album whose real label no longer matches the renamed label - the
-    /// rename transaction serializes against this read, and the read observes the committed
-    /// current name either before or after the rename, never a mix. The candidate's
+    /// The check and insert are collapsed into one atomic SQL statement, so a poll pass
+    /// carrying a stale pre-rename snapshot can never link (or resurrect after the audit's
+    /// delete) an album whose real label no longer matches the renamed label. The candidate's
     /// already-verified real label (<paramref name="spotifyLabel"/>, fetched once per candidate
-    /// per pass) must exactly equal that current name; otherwise the insert is skipped. Links
-    /// are add/confirm only here: a transient search miss never deletes a legitimately
-    /// discovered album. Deletion happens solely in
+    /// per pass) must exactly equal the label's committed current name; otherwise the statement
+    /// affects zero rows and the link is skipped. Links are add/confirm only here: a transient
+    /// search miss never deletes a legitimately discovered album. Deletion happens solely in
     /// <see cref="RemoveVerifiedMismatchedLabelAlbumAsync"/> (verified mismatch) and in the
     /// rename-time audit.
     /// </summary>
@@ -449,31 +447,25 @@ public sealed class ReleasePoller(
     {
         await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
-            SELECT name FROM labels WHERE id = @labelId FOR UPDATE
-            """;
-        command.Parameters.Add(P("labelId", labelId));
-        var currentName = await command.ExecuteScalarAsync(cancellationToken) as string;
-
-        if (currentName is null
-            || !string.Equals(currentName.Trim(), spotifyLabel.Trim(), StringComparison.OrdinalIgnoreCase))
-        {
-            logger.LogInformation(
-                "Skipping album link for label {LabelId}: the label's current name {CurrentName} does not match the album's verified real label {RealLabel}.",
-                labelId, currentName ?? "<label deleted>", spotifyLabel);
-            return;
-        }
-
-        command.Parameters.Clear();
-        command.CommandText = """
             INSERT INTO label_albums (label_id, album_id, first_seen_at_utc, last_confirmed_at_utc)
-            VALUES (@labelId, @albumId, now(), now())
+            SELECT @labelId, @albumId, now(), now()
+            FROM labels l
+            WHERE l.id = @labelId
+              AND trim(lower(l.name)) = trim(lower(@spotifyLabel))
             ON CONFLICT (label_id, album_id) DO UPDATE SET
                 last_confirmed_at_utc = now()
             """;
         command.Parameters.Add(P("labelId", labelId));
         command.Parameters.Add(P("albumId", albumId));
+        command.Parameters.Add(P("spotifyLabel", spotifyLabel));
 
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var affected = await command.ExecuteNonQueryAsync(cancellationToken);
+        if (affected == 0)
+        {
+            logger.LogInformation(
+                "Skipping album link for label {LabelId}: the label's current name does not match the album's verified real label {RealLabel}.",
+                labelId, spotifyLabel);
+        }
     }
 
     private async Task RemoveMissingAlbumArtistsAsync(Guid albumId, IReadOnlyCollection<Guid> artistIds,
