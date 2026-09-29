@@ -40,6 +40,10 @@ public sealed record SpotifyArtist(
     public string? ExternalUrl => ExternalUrls?.Spotify;
 }
 
+public sealed record SpotifyCopyright(
+    [property: JsonPropertyName("text")] string Text,
+    [property: JsonPropertyName("type")] string Type);
+
 public sealed record SpotifyArtistAlbumsResponse(
     [property: JsonPropertyName("items")] IReadOnlyList<SpotifyAlbumItem> Items,
     [property: JsonPropertyName("next")] string? Next,
@@ -61,7 +65,9 @@ public sealed record SpotifyAlbumItem(
     [property: JsonPropertyName("total_tracks")] int TotalTracks,
     [property: JsonPropertyName("artists")] IReadOnlyList<SpotifyAlbumArtist>? Artists,
     /// <summary>The album's real label; only populated by the full album object (GET /albums/{id}).</summary>
-    [property: JsonPropertyName("label")] string? Label = null)
+    [property: JsonPropertyName("label")] string? Label = null,
+    /// <summary>The album's copyright lines; Spotify currently returns the real label here when the top-level <c>label</c> field is absent.</summary>
+    [property: JsonPropertyName("copyrights")] IReadOnlyList<SpotifyCopyright>? Copyrights = null)
 {
     public string? ImageUrl => Images is { Count: > 0 } ? Images[0].Url : null;
     public string? ExternalUrl => ExternalUrls?.Spotify;

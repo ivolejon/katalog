@@ -76,6 +76,21 @@ public sealed class WireMockSpotify : IAsyncDisposable
                 .WithBody(AlbumJson(albumId, label, artistId, name, releaseYear, artistName)));
     }
 
+    /// <summary>
+    /// Stubs the full album object with the real label carried in <c>copyrights</c> instead
+    /// of the top-level <c>label</c> field - the shape Spotify currently returns for many
+    /// albums (e.g. "2025 Globuli").
+    /// </summary>
+    public void StubAlbumGetByCopyright(string albumId, string label, string artistId = "artist1", string? name = null,
+        int releaseYear = 2010, string artistName = "Artist One")
+    {
+        Server.Given(Request.Create().WithPath($"/v1/albums/{albumId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(AlbumJsonWithoutLabel(albumId, label, artistId, name, releaseYear, artistName)));
+    }
+
     public void StubTokenExchange(string accessToken = "test-access-token", int expiresIn = 3600)
     {
         Server.Given(Request.Create().WithPath("/api/token").UsingPost())
@@ -138,6 +153,27 @@ public sealed class WireMockSpotify : IAsyncDisposable
     public static string AlbumJson(string id, string? label, string artistId = "artist1", string? name = null,
         int releaseYear = 2010, string artistName = "Artist One") =>
         AlbumItemJson(artistId, id, name ?? $"Album {id}", releaseYear, artistName, label);
+
+    /// <summary>Full album object where the real label only appears in the copyrights array.</summary>
+    public static string AlbumJsonWithoutLabel(string id, string label, string artistId = "artist1", string? name = null,
+        int releaseYear = 2010, string artistName = "Artist One") =>
+        $$"""
+        {
+          "id": "{{id}}",
+          "name": "{{name ?? $"Album {id}"}}",
+          "album_type": "album",
+          "release_date": "{{releaseYear:D4}}-01-15",
+          "release_date_precision": "day",
+          "images": [{"url": "https://i.scdn.co/image/{{id}}" }],
+          "external_urls": {"spotify": "https://open.spotify.com/album/{{id}}"},
+          "total_tracks": 10,
+          "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}],
+          "copyrights": [
+            {"text": "{{releaseYear}} {{label}}", "type": "P"},
+            {"text": "{{releaseYear}} {{label}}", "type": "C"}
+          ]
+        }
+        """;
 
     public async ValueTask DisposeAsync() => Server.Dispose();
 }

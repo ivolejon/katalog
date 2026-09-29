@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Katalog.Api.Domain;
 using Katalog.Api.Infrastructure;
 using Katalog.Api.Infrastructure.Spotify;
@@ -140,10 +141,11 @@ public sealed class ReleasePoller(
     /// match re-upserts it, correcting any stale <c>label_spotify</c> attribution; a 404 means
     /// the album no longer exists in Spotify's catalog (a verified upstream fact, never an
     /// exact-match candidate), so its stale link is removed. Any other unverifiable link -
-    /// album GET failure, 5xx/429, cancellation, or an album reporting no label - aborts the
-    /// audit with <see cref="LabelLinkAuditIncompleteException"/> so the caller can roll back
-    /// instead of silently completing a rename with unverified links. Runs inside the caller's
-    /// transaction when one is active (all its DB writes are raw SQL on the shared connection).
+    /// album GET failure, 5xx/429, cancellation, or an album reporting no usable label -
+    /// aborts the audit with <see cref="LabelLinkAuditIncompleteException"/> so the caller can
+    /// roll back instead of silently completing a rename with unverified links. Runs inside the
+    /// caller's transaction when one is active (all its DB writes are raw SQL on the shared
+    /// connection).
     /// </summary>
     public async Task AuditLabelLinksAsync(Guid labelId, string labelName, CancellationToken cancellationToken)
     {
@@ -181,7 +183,7 @@ public sealed class ReleasePoller(
                 continue;
             }
 
-            var realLabel = fullAlbum.Label?.Trim();
+            var realLabel = ExtractRealLabel(fullAlbum);
             if (string.IsNullOrWhiteSpace(realLabel))
             {
                 logger.LogInformation(
@@ -208,18 +210,21 @@ public sealed class ReleasePoller(
     /// Verifies a search candidate against its real Spotify label before upserting: the
     /// label:"..." search filter matches fuzzily (near-miss labels like "Globulin" for a
     /// followed "Globuli"), so a candidate is only upserted when its full album object's
-    /// <c>label</c> exactly equals the followed label's name (case-insensitive, trimmed).
-    /// A candidate that cannot be verified (album GET fails or reports no label) is skipped;
-    /// the next poll cycle re-fetches and re-verifies it. A verified mismatch removes any
-    /// existing link between the album and the label (self-heal), so a release never stays
-    /// listed under a label whose real label is not exactly the followed one. The stored
-    /// attribution is the album's real Spotify label.
+    /// real label exactly equals the followed label's name (case-insensitive, trimmed).
+    /// Spotify currently returns the real label either in the <c>label</c> field or, when
+    /// that field is absent, in the <c>copyrights</c> array (e.g. "2025 Globuli"); both
+    /// sources are normalised and used for verification.
+    /// A candidate that cannot be verified (album GET fails or reports no usable label) is
+    /// skipped; the next poll cycle re-fetches and re-verifies it. A verified mismatch
+    /// removes any existing link between the album and the label (self-heal), so a release
+    /// never stays listed under a label whose real label is not exactly the followed one.
+    /// The stored attribution is the album's real Spotify label.
     /// </summary>
     private async Task VerifyAndUpsertAlbumAsync(Label label, SpotifyAlbumItem album,
         CancellationToken cancellationToken)
     {
         var fullAlbum = await spotifyApiClient.GetAlbumAsync(album.Id, cancellationToken);
-        var realLabel = fullAlbum?.Label?.Trim();
+        var realLabel = ExtractRealLabel(fullAlbum);
 
         if (string.IsNullOrWhiteSpace(realLabel))
         {
@@ -491,6 +496,48 @@ public sealed class ReleasePoller(
         ParameterName = name,
         Value = value ?? DBNull.Value
     };
+
+    /// <summary>
+    /// Extracts the album's real label from the full album object. Spotify currently returns
+    /// the label either in the <c>label</c> field or, when that field is absent, embedded in
+    /// the <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). The copyright
+    /// line is normalised by stripping an optional prefix and the leading year, leaving the
+    /// label name to be matched against the followed label.
+    /// </summary>
+    private static string? ExtractRealLabel(SpotifyAlbumItem? album)
+    {
+        if (album is null)
+            return null;
+
+        var label = album.Label?.Trim();
+        if (!string.IsNullOrWhiteSpace(label))
+            return label;
+
+        if (album.Copyrights is not { Count: > 0 })
+            return null;
+
+        foreach (var copyright in album.Copyrights)
+        {
+            var extracted = ExtractLabelFromCopyright(copyright.Text);
+            if (!string.IsNullOrWhiteSpace(extracted))
+                return extracted;
+        }
+
+        return null;
+    }
+
+    private static readonly Regex CopyrightLabelRegex = new(
+        @"^\s*(?:\u00a9|\u2117|\(C\)|\(P\)|C|P)?\s*\d{4}\s+(?<label>.+)$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static string? ExtractLabelFromCopyright(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var match = CopyrightLabelRegex.Match(text.Trim());
+        return match.Success ? match.Groups["label"].Value.Trim() : null;
+    }
 
     internal static AlbumType ParseAlbumType(string? albumType) => albumType switch
     {

@@ -415,6 +415,42 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenSpotifyOmitsAlbumLabelField()
+    {
+        // Regression: Spotify's full album object no longer includes the top-level "label"
+        // field for many albums; the real label is instead embedded in the "copyrights" text
+        // (e.g. "2025 Globuli"). Discovery must still link exact-matching albums when the
+        // label field is absent but a copyright line parses to the followed label name.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/copyrightartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("copyrightartist1", "Copyright Artist")));
+        spotify.StubLabelSearch("Copyright Label",
+            WireMockSpotify.AlbumItemJson("copyrightartist1", "copyrightalbum1", "Copyright Album 1", 2020, "Copyright Artist"),
+            WireMockSpotify.AlbumItemJson("copyrightartist1", "copyrightalbum2", "Copyright Album 2", 2021, "Copyright Artist"));
+        spotify.StubAlbumGetByCopyright("copyrightalbum1", "Copyright Label", "copyrightartist1", "Copyright Album 1", 2020, "Copyright Artist");
+        spotify.StubAlbumGetByCopyright("copyrightalbum2", "Copyright Label", "copyrightartist1", "Copyright Album 2", 2021, "Copyright Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Copyright Label", spotifyIds = new[] { "copyrightartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(2, detail!.ReleaseCount);
+        Assert.Equal(new[] { "copyrightalbum1", "copyrightalbum2" },
+            detail.Releases.Select(r => r.SpotifyId).OrderBy(id => id).ToArray());
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();
