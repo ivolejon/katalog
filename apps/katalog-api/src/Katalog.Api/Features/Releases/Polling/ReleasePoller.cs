@@ -25,6 +25,9 @@ namespace Katalog.Api.Features.Releases.Polling;
 /// junction link is removed, so releases whose real label is not exactly the followed one can
 /// never stay listed - including links written before exact verification existed, and links
 /// invalidated by a label rename (the rename-time link audit re-verifies every existing link).
+/// Linking additionally re-reads the label's committed current name under a row lock, so a
+/// poll pass carrying a pre-rename snapshot can never link an album whose real label does not
+/// match the label's current name.
 /// </remarks>
 public sealed class ReleasePoller(
     KatalogContext context,
@@ -368,7 +371,7 @@ public sealed class ReleasePoller(
         var idResult = await command.ExecuteScalarAsync(cancellationToken);
         var storedAlbumId = idResult is Guid stored ? stored : albumId;
 
-        await UpsertLabelAlbumAsync(storedAlbumId, label.Id, cancellationToken);
+        await UpsertLabelAlbumAsync(storedAlbumId, label.Id, spotifyLabel, cancellationToken);
 
         if (album.Artists is not { Count: > 0 })
         {
@@ -429,21 +432,44 @@ public sealed class ReleasePoller(
 
     /// <summary>
     /// Links a discovered album to the discovering label via the label_albums junction table.
-    /// Links are add/confirm only here: a transient search miss never deletes a legitimately
+    /// Linking re-reads the label's current committed name under a row lock (FOR UPDATE), so a
+    /// poll pass carrying a stale pre-rename snapshot can never link (or resurrect after the
+    /// audit's delete) an album whose real label no longer matches the renamed label - the
+    /// rename transaction serializes against this read, and the read observes the committed
+    /// current name either before or after the rename, never a mix. The candidate's
+    /// already-verified real label (<paramref name="spotifyLabel"/>, fetched once per candidate
+    /// per pass) must exactly equal that current name; otherwise the insert is skipped. Links
+    /// are add/confirm only here: a transient search miss never deletes a legitimately
     /// discovered album. Deletion happens solely in
-    /// <see cref="RemoveVerifiedMismatchedLabelAlbumAsync"/> when verification positively
-    /// proves the album's real label is not exactly the followed label's name.
+    /// <see cref="RemoveVerifiedMismatchedLabelAlbumAsync"/> (verified mismatch) and in the
+    /// rename-time audit.
     /// </summary>
-    private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, CancellationToken cancellationToken)
+    private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, string spotifyLabel,
+        CancellationToken cancellationToken)
     {
         await using var command = await PrepareCommandAsync(cancellationToken);
+        command.CommandText = """
+            SELECT name FROM labels WHERE id = @labelId FOR UPDATE
+            """;
+        command.Parameters.Add(P("labelId", labelId));
+        var currentName = await command.ExecuteScalarAsync(cancellationToken) as string;
+
+        if (currentName is null
+            || !string.Equals(currentName.Trim(), spotifyLabel.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            logger.LogInformation(
+                "Skipping album link for label {LabelId}: the label's current name {CurrentName} does not match the album's verified real label {RealLabel}.",
+                labelId, currentName ?? "<label deleted>", spotifyLabel);
+            return;
+        }
+
+        command.Parameters.Clear();
         command.CommandText = """
             INSERT INTO label_albums (label_id, album_id, first_seen_at_utc, last_confirmed_at_utc)
             VALUES (@labelId, @albumId, now(), now())
             ON CONFLICT (label_id, album_id) DO UPDATE SET
                 last_confirmed_at_utc = now()
             """;
-
         command.Parameters.Add(P("labelId", labelId));
         command.Parameters.Add(P("albumId", albumId));
 

@@ -725,6 +725,81 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task PollPass_WithStalePreRenameName_CannotLinkAlbumWhoseRealLabelIsTheOldName()
+    {
+        // Regression (stale poll snapshot vs rename): a poll pass that starts before a rename
+        // holds the pre-rename label name. The rename commits, its audit unlinks the album
+        // (real label = old name), and the stale pass must not link (or resurrect) that album
+        // afterwards: linking re-verifies against the label's committed CURRENT name, so the
+        // real-label mismatch skips the insert.
+        const string artistId = "stalerenameartist";
+        const string albumId = "stalerenamealbum";
+        const string oldName = "Old Label";
+        const string newName = "New Label";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Stale Rename Artist")));
+
+        // Both the immediate poll and the stale pass search the old name; the album's real
+        // label is the old name.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, albumId, "Stale Album", 2019, "Stale Rename Artist"));
+        spotify.StubAlbumGet(albumId, oldName, artistId, "Stale Album", 2019, "Stale Rename Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        // The immediate poll linked the album under the correct old name.
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(1, before!.ReleaseCount);
+
+        // Start an in-flight poll pass; its label snapshot carries the pre-rename name.
+        var pollTask = Task.Run(async () =>
+        {
+            await using var scope = factory.Services.CreateAsyncScope();
+            var poller = scope.ServiceProvider.GetRequiredService<ReleasePoller>();
+            await poller.PollOnceAsync(CancellationToken.None);
+        });
+
+        // Wait until that pass has taken its snapshot (its own search request reached Spotify -
+        // the immediate poll's earlier search makes existing entries, so wait for a second one).
+        var searchRequest = Request.Create().WithPath("/v1/search")
+            .WithParam("q", $"label:\"{oldName}\"");
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        while (spotify.Server.FindLogEntries(searchRequest).Count() < 2 && DateTime.UtcNow < deadline)
+            await Task.Delay(50);
+        Assert.True(spotify.Server.FindLogEntries(searchRequest).Count() >= 2,
+            "the in-flight poll pass never reached Spotify");
+
+        // Rename while the pass is in flight: the audit verifies the one link, finds the real
+        // label does not match the new name, and unlinks it; the rename commits.
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.OK, renameResponse.StatusCode);
+
+        await pollTask;
+
+        // The stale pass was blocked on the rename transaction's row lock and re-verified
+        // against the committed new name: the album must NOT be linked again.
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        Assert.Equal(newName, after!.Name);
+        Assert.Equal(0, after.ReleaseCount);
+    }
+
+    [Fact]
     public async Task CreateLabel_FuzzySearchHitWhoseRealLabelIsAnotherLabel_IsNotLinked()
     {
         // Regression (exact-label verification): an album search returns for label B even
