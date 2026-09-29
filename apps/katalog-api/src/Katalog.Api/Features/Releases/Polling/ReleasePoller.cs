@@ -502,14 +502,14 @@ public sealed class ReleasePoller(
         RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     /// <summary>
-    /// Extracts the album's real label from the full album object, returning the value that
-    /// matches the followed <paramref name="expectedLabel"/>. Spotify currently returns the
-    /// label either in the <c>label</c> field or, when that field is absent, embedded in the
-    /// <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). When multiple
-    /// copyright lines are present, every line is checked so a line matching the followed
-    /// label is preferred over the first line that merely parses. Labels containing
-    /// punctuation (e.g. "Globuli, LLC") are recognised when they appear verbatim after the
-    /// year prefix.
+    /// Extracts the album's real label from the full album object. Spotify currently returns
+    /// the label either in the <c>label</c> field or, when that field is absent, embedded in
+    /// the <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). The top-level
+    /// <c>label</c> is returned as-is so callers can detect a verified mismatch and unlink.
+    /// When the top-level label is absent, copyright lines are scanned for a value that
+    /// matches the followed <paramref name="expectedLabel"/>: the expected label is tried
+    /// verbatim after the year prefix first (preserving punctuation such as "Globuli, LLC"),
+    /// then the generic extractor is used with an exact-match guard.
     /// </summary>
     private static string? ExtractRealLabel(SpotifyAlbumItem? album, string expectedLabel)
     {
@@ -520,13 +520,7 @@ public sealed class ReleasePoller(
 
         var label = album.Label?.Trim();
         if (!string.IsNullOrWhiteSpace(label))
-        {
-            // The top-level label is authoritative. Only use it when it matches the
-            // followed label exactly; otherwise the album does not belong here.
-            return string.Equals(label, expected, StringComparison.OrdinalIgnoreCase)
-                ? label
-                : null;
-        }
+            return label;
 
         if (album.Copyrights is not { Count: > 0 })
             return null;
