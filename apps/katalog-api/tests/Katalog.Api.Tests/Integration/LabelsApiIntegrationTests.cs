@@ -716,6 +716,63 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task UpdateLabel_RenameAuditsCopyrightLinkedAlbum_UnlinksWhenCopyrightSaysOldName()
+    {
+        // Regression (copyright-linked rename audit): an album linked through copyright
+        // extraction (top-level label absent, copyright "2025 Globuli") is audited on rename.
+        // The copyright still reports the old name, a verified mismatch, so the audit unlinks
+        // it and the rename succeeds instead of aborting as unverifiable.
+        const string artistId = "copyrightrenameartist";
+        const string albumId = "copyrightrenamealbum";
+        const string oldName = "Globuli";
+        const string newName = "Globuli Records";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Copyright Rename Artist")));
+
+        // Pre-rename: the album's real label only appears in the copyrights array and matches
+        // the followed label, so discovery links it.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, albumId, "Copyright Rename Album", 2025, "Copyright Rename Artist"));
+        spotify.StubAlbumGetByCopyright(albumId, oldName, artistId, "Copyright Rename Album", 2025, "Copyright Rename Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(1, before!.ReleaseCount);
+
+        // Post-rename reality: the album's copyright still reports the old name, so the audit
+        // must treat it as a verified mismatch and unlink it, letting the rename succeed.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubAlbumGetByCopyright(albumId, oldName, artistId, "Copyright Rename Album", 2025, "Copyright Rename Artist");
+
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.OK, renameResponse.StatusCode);
+        var renamed = await renameResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(renamed);
+        Assert.Equal(newName, renamed!.Name);
+
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        Assert.Equal(0, after!.ReleaseCount);
+    }
+
+    [Fact]
     public async Task UpdateLabel_RenameFailsWith503_KeepingOldNameAndLinks_WhenSpotifyVerificationFails()
     {
         // Regression (fail-closed rename audit): if Spotify cannot verify a linked album

@@ -503,8 +503,10 @@ public sealed class ReleasePoller(
     /// the <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). The top-level
     /// <c>label</c> is returned as-is so callers can detect a verified mismatch and unlink.
     /// When the top-level label is absent, each copyright line is extracted with the shared
-    /// terminator set and only a value that exactly matches the followed
-    /// <paramref name="expectedLabel"/> is returned.
+    /// terminator set; the first value that exactly matches the followed
+    /// <paramref name="expectedLabel"/> is returned, and when no line matches, the first
+    /// non-empty extracted label is returned so callers can still detect a verified
+    /// mismatch. Null is returned only when Spotify reports no usable label at all.
     /// </summary>
     private static string? ExtractRealLabel(SpotifyAlbumItem? album, string expectedLabel)
     {
@@ -520,6 +522,7 @@ public sealed class ReleasePoller(
         if (album.Copyrights is not { Count: > 0 })
             return null;
 
+        string? firstExtracted = null;
         foreach (var copyright in album.Copyrights)
         {
             var text = copyright.Text?.Trim();
@@ -527,12 +530,17 @@ public sealed class ReleasePoller(
                 continue;
 
             var extracted = ExtractLabelFromCopyright(text);
-            if (!string.IsNullOrWhiteSpace(extracted) &&
-                string.Equals(extracted, expected, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrWhiteSpace(extracted))
+                continue;
+
+            if (firstExtracted is null)
+                firstExtracted = extracted;
+
+            if (string.Equals(extracted, expected, StringComparison.OrdinalIgnoreCase))
                 return extracted;
         }
 
-        return null;
+        return firstExtracted;
     }
 
     private static readonly Regex CopyrightLabelRegex = new(
