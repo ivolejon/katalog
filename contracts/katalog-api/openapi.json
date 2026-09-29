@@ -182,6 +182,9 @@
           },
           "409": {
             "description": "Conflict"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       },

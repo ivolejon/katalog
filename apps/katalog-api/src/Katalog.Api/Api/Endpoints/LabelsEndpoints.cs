@@ -45,7 +45,8 @@ public static class LabelsEndpoints
             .AddEndpointFilter<ValidationFilter<UpdateLabelRequest>>()
             .Produces<LabelSummaryResponse>()
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status409Conflict);
+            .Produces(StatusCodes.Status409Conflict)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
 
         group.MapDelete("/{id:guid}", DeleteLabel)
             .WithName("DeleteLabel")
@@ -117,6 +118,10 @@ public static class LabelsEndpoints
         {
             UpdateLabelStatus.Updated => TypedResults.Ok(outcome.Response),
             UpdateLabelStatus.NotFound => TypedResults.NotFound(),
+            UpdateLabelStatus.RenameVerificationFailed => TypedResults.Problem(
+                detail: "The label was not renamed: Spotify could not verify the label's releases. The label keeps its old name and all its releases; retry when Spotify is reachable.",
+                statusCode: StatusCodes.Status503ServiceUnavailable,
+                title: "The label was not renamed."),
             _ => TypedResults.Conflict(new ProblemDetails
             {
                 Title = "A label with this name already exists.",

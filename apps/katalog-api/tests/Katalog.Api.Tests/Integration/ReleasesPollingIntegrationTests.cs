@@ -28,6 +28,8 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         spotify.StubLabelSearch(LabelName,
             WireMockSpotify.AlbumItemJson(ArtistId, AlbumId, "Album 1", 2010, "Artist One"));
+        // Discovery verifies each candidate's real label via GET /albums/{id}.
+        spotify.StubAlbumGet(AlbumId, LabelName, ArtistId, "Album 1", 2010, "Artist One");
 
         var labelResponse = await client.PostAsJsonAsync("/api/labels",
             new { name = LabelName, spotifyIds = new[] { ArtistId } });
@@ -54,6 +56,8 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
                 .WithHeader("Content-Type", "application/json")
                 .WithBody(WireMockSpotify.AlbumSearchJson(
                     WireMockSpotify.AlbumItemJson(ArtistId, albumId, "Album 1", 2010, "Artist One"))));
+
+        spotify.StubAlbumGet(albumId, LabelName, ArtistId, "Album 1", 2010, "Artist One");
     }
 
     [Fact]
@@ -77,6 +81,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         Assert.Equal("2010-01-15", album.ReleaseDate);
         Assert.Equal("day", album.ReleaseDatePrecision);
         Assert.Equal("Artist One", Assert.Single(album.ArtistNames));
+        Assert.Equal(LabelName, album.LabelSpotify);
 
         // Second poll is a no-op upsert: same rows, same ids
         await RunPollerAsync(factory);
@@ -171,6 +176,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         // Label search is the source of truth.
         spotify.StubLabelSearch(LabelName,
             WireMockSpotify.AlbumItemJson(ArtistId, AlbumId, "Album 1", 2010, "Artist One"));
+        spotify.StubAlbumGet(AlbumId, LabelName, ArtistId, "Album 1", 2010, "Artist One");
 
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
@@ -215,6 +221,14 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         spotify.StubLabelSearchPage(LabelName, offset: 10, next: null,
             WireMockSpotify.AlbumItemJson(ArtistId, page2AlbumId, "Album 10", 2020, "Artist One"));
 
+        // Every search candidate is verified via GET /albums/{id}.
+        var allAlbumIds = Enumerable.Range(0, 10).Select(i => $"album{i}")
+            .Append(page2AlbumId);
+        foreach (var id in allAlbumIds)
+        {
+            spotify.StubAlbumGet(id, LabelName, ArtistId, $"Album {id}", 2010, "Artist One");
+        }
+
         await using var factory = new KatalogApiFactory(postgres, spotify);
         await factory.ResetDatabaseAsync();
         var client = factory.CreateClient();
@@ -228,6 +242,186 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         Assert.NotNull(releases);
         Assert.Equal(11, releases.Length);
         Assert.Contains(releases, r => r.SpotifyId == page2AlbumId);
+    }
+
+    [Fact]
+    public async Task PollOnce_ExcludesAlbumWhoseRealLabelIsANearMiss()
+    {
+        // Regression (Globuli vs Globulin): Spotify's label search filter matches fuzzily, so
+        // search on "Globuli" can return an album whose real label is "Globulin". Discovery
+        // must verify each candidate via GET /albums/{id} and exclude non-exact labels.
+        const string nearMissAlbumId = "albumnearmiss";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
+
+        spotify.StubLabelSearch(LabelName,
+            WireMockSpotify.AlbumItemJson(ArtistId, nearMissAlbumId, "Near Miss Album", 2015, "Artist One"));
+        spotify.StubAlbumGet(nearMissAlbumId, "Test Labels", ArtistId, "Near Miss Album", 2015, "Artist One");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        // The immediate poll on label creation must also verify, so the near-miss album
+        // never lands even before the scheduled poll runs.
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(releases);
+        Assert.Empty(releases);
+
+        await RunPollerAsync(factory);
+
+        var afterPoll = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(afterPoll);
+        Assert.Empty(afterPoll);
+    }
+
+    [Fact]
+    public async Task PollOnce_IncludesExactRealLabelMatch_CaseInsensitive_AndStoresRealLabel()
+    {
+        // Regression (exact-match semantics): an album whose real Spotify label matches the
+        // followed label exactly - case-insensitively and trimmed - must be included, and the
+        // stored attribution must be the album's real label (Spotify's casing), not e.g. the
+        // discovering label's name.
+        const string exactAlbumId = "albumexactmatch";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
+
+        spotify.StubLabelSearch(LabelName,
+            WireMockSpotify.AlbumItemJson(ArtistId, exactAlbumId, "Exact Album", 2016, "Artist One"));
+        spotify.StubAlbumGet(exactAlbumId, $" {LabelName.ToLowerInvariant()} ", ArtistId, "Exact Album", 2016, "Artist One");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        await RunPollerAsync(factory);
+
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(releases);
+        var album = Assert.Single(releases);
+        Assert.Equal(exactAlbumId, album.SpotifyId);
+        Assert.Equal($" {LabelName.ToLowerInvariant()} ".Trim(), album.LabelSpotify);
+    }
+
+    [Fact]
+    public async Task PollOnce_SkipsUnverifiableCandidate_ButCursorStillAdvances()
+    {
+        // A candidate the verifier cannot confirm (album GET 404 or a label-less album) is
+        // skipped: discovery never upserts an unverified candidate, and the poll cycle still
+        // completes so the cursor advances.
+        const string unverifiableAlbumId = "albumunverifiable";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
+
+        spotify.StubLabelSearch(LabelName,
+            WireMockSpotify.AlbumItemJson(ArtistId, unverifiableAlbumId, "Mystery Album", 2017, "Artist One"));
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        await RunPollerAsync(factory);
+
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(releases);
+        Assert.Empty(releases);
+
+        var cursor = await factory.Services.CreateScope().ServiceProvider
+            .GetRequiredService<KatalogContext>().PollCursors.FindAsync([ReleasePoller.JobName]);
+        Assert.NotNull(cursor);
+        Assert.Equal("completed", cursor!.Status);
+    }
+
+    [Fact]
+    public async Task PollOnce_UnlinksPreExistingContaminatedLink_OnVerifiedMismatch_AndCorrectsLabelSpotify()
+    {
+        // Regression (Globuli vs Globulin, second cycle): a label_albums link created before
+        // exact verification existed stays in the DB. On the next poll the discovery search
+        // re-encounters the contaminated album; a positively verified real-label mismatch must
+        // remove the link, while the exact-match album keeps its link and its label_spotify
+        // attribution is corrected to the album's real Spotify label.
+        const string exactAlbumId = "albumexacttrue";
+        const string contaminatedAlbumId = "albumcontaminated";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{ArtistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(ArtistId, "Artist One")));
+
+        // Seed the pre-exact-verification state: search returns both albums and both album GETs
+        // report the followed label, so both are linked and attributed with the label's name.
+        spotify.StubLabelSearch(LabelName,
+            WireMockSpotify.AlbumItemJson(ArtistId, exactAlbumId, "True Album", 2010, "Artist One"),
+            WireMockSpotify.AlbumItemJson(ArtistId, contaminatedAlbumId, "Contaminated Album", 2011, "Artist One"));
+        spotify.StubAlbumGet(exactAlbumId, LabelName, ArtistId, "True Album", 2010, "Artist One");
+        spotify.StubAlbumGet(contaminatedAlbumId, LabelName, ArtistId, "Contaminated Album", 2011, "Artist One");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var labelResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = LabelName, spotifyIds = new[] { ArtistId } });
+        var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var seeded = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(seeded);
+        Assert.Equal(2, seeded.Length);
+
+        // Flip to the real state: the contaminated album's real label is a near miss; the true
+        // album's real label differs only in case/whitespace.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubLabelSearch(LabelName,
+            WireMockSpotify.AlbumItemJson(ArtistId, exactAlbumId, "True Album", 2010, "Artist One"),
+            WireMockSpotify.AlbumItemJson(ArtistId, contaminatedAlbumId, "Contaminated Album", 2011, "Artist One"));
+        spotify.StubAlbumGet(exactAlbumId, $" {LabelName.ToLowerInvariant()} ", ArtistId, "True Album", 2010, "Artist One");
+        spotify.StubAlbumGet(contaminatedAlbumId, "Test Labels", ArtistId, "Contaminated Album", 2011, "Artist One");
+
+        await RunPollerAsync(factory);
+
+        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        Assert.NotNull(releases);
+        var album = Assert.Single(releases);
+        Assert.Equal(exactAlbumId, album.SpotifyId);
+        Assert.Equal(LabelName.ToLowerInvariant(), album.LabelSpotify);
     }
 
     private static async Task RunPollerAsync(KatalogApiFactory factory)

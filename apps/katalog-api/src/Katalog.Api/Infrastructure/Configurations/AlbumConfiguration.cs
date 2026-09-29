@@ -37,7 +37,8 @@ public sealed class AlbumConfiguration : IEntityTypeConfiguration<Album>
             .HasConversion<int>()
             .IsRequired();
 
-        // Raw, deprecated Spotify label field - kept for diagnostics (research §5).
+        // The album's real Spotify label (deprecated field on full album objects), used as
+        // the ground truth for exact matching and stored as the release attribution.
         builder.Property(x => x.LabelSpotify)
             .HasMaxLength(255);
 
