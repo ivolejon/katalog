@@ -484,6 +484,93 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsAllRightsReserved()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/rightsartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("rightsartist1", "Rights Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("rightsartist1", "rightsalbum1", "Rights Album 1", 2025, "Rights Artist"));
+        spotify.StubAlbumGetByCopyright("rightsalbum1", "Globuli", "rightsartist1", "Rights Album 1", 2025, "Rights Artist", ". All rights reserved.");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "rightsartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("rightsalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsLicensedBy()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/licensedartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("licensedartist1", "Licensed Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("licensedartist1", "licensedalbum1", "Licensed Album 1", 2025, "Licensed Artist"));
+        spotify.StubAlbumGetByCopyright("licensedalbum1", "Globuli", "licensedartist1", "Licensed Album 1", 2025, "Licensed Artist", ", licensed by Sony Music");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "licensedartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("licensedalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsDistributedBy()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/distributedartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("distributedartist1", "Distributed Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("distributedartist1", "distributedalbum1", "Distributed Album 1", 2025, "Distributed Artist"));
+        spotify.StubAlbumGetByCopyright("distributedalbum1", "Globuli", "distributedartist1", "Distributed Album 1", 2025, "Distributed Artist", " (distributed by The Orchard)");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "distributedartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("distributedalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();
