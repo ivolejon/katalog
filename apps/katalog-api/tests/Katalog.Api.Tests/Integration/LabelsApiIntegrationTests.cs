@@ -506,6 +506,82 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task UpdateLabel_RenameAuditsLinks_UnlinksVerifiedMismatches_KeepsExactMatches()
+    {
+        // Regression (rename retarget): a rename changes the followed name without the old
+        // links ever being re-encountered by search under the new name. PUT /api/labels/{id}
+        // must audit every existing link once: albums whose real Spotify label does not exactly
+        // match the NEW name are unlinked; exact matches keep their link and get their
+        // labelSpotify attribution corrected to the real label.
+        const string artistId = "renameartist1";
+        const string exactAlbumId = "renamealbumkeep";
+        const string mismatchAlbumId = "renamealbumdrop";
+        const string oldName = "Ninja Tune";
+        const string newName = "Sunset Recordings";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Rename Artist")));
+
+        // Pre-rename: both albums' real label is the followed label, so both are linked.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, exactAlbumId, "Keep Album", 2020, "Rename Artist"),
+            WireMockSpotify.AlbumItemJson(artistId, mismatchAlbumId, "Drop Album", 2021, "Rename Artist"));
+        spotify.StubAlbumGet(exactAlbumId, oldName, artistId, "Keep Album", 2020, "Rename Artist");
+        spotify.StubAlbumGet(mismatchAlbumId, oldName, artistId, "Drop Album", 2021, "Rename Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(2, before!.ReleaseCount);
+
+        // The rename flips reality: the label now targets "Sunset Recordings", one linked
+        // album's real label matches the new name, the other one's is still the old name.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubLabelSearch(newName,
+            WireMockSpotify.AlbumItemJson(artistId, exactAlbumId, "Keep Album", 2020, "Rename Artist"));
+        spotify.StubAlbumGet(exactAlbumId, $" {newName.ToLowerInvariant()} ", artistId, "Keep Album", 2020, "Rename Artist");
+        spotify.StubAlbumGet(mismatchAlbumId, oldName, artistId, "Drop Album", 2021, "Rename Artist");
+
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.OK, renameResponse.StatusCode);
+        var renamed = await renameResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(renamed);
+        Assert.Equal("sunset-recordings", renamed!.Slug);
+
+        // The rename audit unlinked the mismatch; only the exact match stays, attributed with
+        // its real label.
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        var release = Assert.Single(after!.Releases);
+        Assert.Equal(exactAlbumId, release.SpotifyId);
+        Assert.Equal(newName.ToLowerInvariant(), release.LabelSpotify);
+
+        // The next scheduled poll searches the new name and never re-lists the dropped album.
+        await using var pollScope = factory.Services.CreateAsyncScope();
+        var poller = pollScope.ServiceProvider.GetRequiredService<ReleasePoller>();
+        await poller.PollOnceAsync(CancellationToken.None);
+
+        var afterPoll = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(afterPoll);
+        Assert.Equal(exactAlbumId, Assert.Single(afterPoll!.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_FuzzySearchHitWhoseRealLabelIsAnotherLabel_IsNotLinked()
     {
         // Regression (exact-label verification): an album search returns for label B even

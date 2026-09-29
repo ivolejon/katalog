@@ -22,7 +22,8 @@ namespace Katalog.Api.Features.Releases.Polling;
 /// album's real Spotify label, not the discovering label's name. When verification finds a
 /// positive real-label mismatch for an album that is already linked to the label, the existing
 /// junction link is removed, so releases whose real label is not exactly the followed one can
-/// never stay listed - including links written before exact verification existed.
+/// never stay listed - including links written before exact verification existed, and links
+/// invalidated by a label rename (the rename-time link audit re-verifies every existing link).
 /// </remarks>
 public sealed class ReleasePoller(
     KatalogContext context,
@@ -124,6 +125,69 @@ public sealed class ReleasePoller(
             logger.LogError(ex, "Immediate release polling failed for label {LabelName} ({LabelId}).",
                 label.Name, labelId);
         }
+    }
+
+    /// <summary>
+    /// Audits every existing label_albums link of a label against the label's (possibly new)
+    /// name — used after a rename, which deliberately retargets the label and can invalidate
+    /// links that the discovery search will never re-encounter under the new name. For each
+    /// linked album the real Spotify label is fetched via the same GET /albums/{id}
+    /// verification discovery uses: a positively verified mismatch unlinks the album; an
+    /// exact match re-upserts it, correcting any stale <c>label_spotify</c> attribution. A
+    /// link whose album cannot be verified (album GET fails or reports no label) is kept - only
+    /// a positively verified mismatch ever deletes. One album GET per link; a failing album
+    /// GET does not abort the audit of the remaining links.
+    /// </summary>
+    public async Task AuditLabelLinksAsync(Guid labelId, string labelName, CancellationToken cancellationToken)
+    {
+        var links = await context.LabelAlbums
+            .AsNoTracking()
+            .Where(la => la.LabelId == labelId)
+            .Join(context.Albums, la => la.AlbumId, a => a.Id,
+                (la, a) => new { a.Id, a.SpotifyId, a.Name })
+            .ToListAsync(cancellationToken);
+
+        var label = new Label { Id = labelId, Name = labelName };
+
+        foreach (var link in links)
+        {
+            try
+            {
+                var fullAlbum = await spotifyApiClient.GetAlbumAsync(link.SpotifyId, cancellationToken);
+                var realLabel = fullAlbum?.Label?.Trim();
+
+                if (string.IsNullOrWhiteSpace(realLabel))
+                {
+                    logger.LogInformation(
+                        "Link audit keeping album {AlbumId} ({AlbumName}) under label {LabelName}: Spotify reported no label to verify.",
+                        link.SpotifyId, link.Name, labelName);
+                    continue;
+                }
+
+                if (!string.Equals(realLabel, labelName.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    await RemoveVerifiedMismatchedLabelAlbumAsync(link.SpotifyId, labelId, labelName, realLabel,
+                        cancellationToken);
+                    continue;
+                }
+
+                await UpsertAlbumAsync(label, fullAlbum!, realLabel, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // One failing album GET must not abort the audit of the remaining links; the
+                // next poll cycle re-verifies re-encountered candidates.
+                logger.LogError(ex, "Link audit failed for album {AlbumId} under label {LabelName} ({LabelId}).",
+                    link.SpotifyId, labelName, labelId);
+            }
+        }
+
+        logger.LogInformation("Link audit completed for label {LabelName} ({LabelId}) over {LinkCount} link(s).",
+            labelName, labelId, links.Count);
     }
 
     /// <summary>
