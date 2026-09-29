@@ -1,10 +1,9 @@
 ---
 type: "Reference"
 title: "Katalog - Quickstart"
+description: "Entry point for the Katalog wiki: what the label-following app is, how to run the full local stack (Vue SPA, .NET API, PostgreSQL via Aspire), and a task-routing map into the refreshed documentation hierarchy."
+tags: [quickstart, aspire, dotnet, vue, spotify, onboarding]
 openwiki_generated: true
-verified:
-  - by: openwiki/0.5.2
-    at: 2026-09-24T00:35:33.000Z
 sources:
   - id: openwiki-source-40176359058e84debec9e8ac
     resource: repo://apps/katalog-api/src/Katalog.Api/Program.cs
@@ -14,7 +13,10 @@ sources:
     resource: repo://Katalog.AppHost/Program.cs
   - id: openwiki-source-23775c3de52f3ab95a13cb8b
     resource: repo://README.md
-generated: { by: "pi", at: "2026-09-24T00:35:33.000Z" }
+generated: { by: "openwiki/0.6.0", at: "2026-09-29T18:32:14.763Z" }
+verified:
+  - by: openwiki/0.6.0
+    at: 2026-09-29T18:32:14.763Z
 ---
 
 # Katalog - Quickstart
@@ -36,7 +38,8 @@ The repository contains the complete local application stack:
   artist/release tabs, Spotify-linked album cards).
 - `apps/katalog-api/` - the .NET API, EF Core persistence, and release poller.
 - `Katalog.AppHost/` - Aspire orchestration for PostgreSQL, the API, and web.
-- `contracts/katalog-api/openapi.json` - the committed OpenAPI contract.
+- `contracts/katalog-api/openapi.json` - the committed OpenAPI contract
+  (`Katalog.Api | v1`, version 1.0.0; paths start at `/api/labels/search`).
 - `.github/workflows/ci.yml` and `.github/workflows/web.yml` - backend and
   frontend CI.
 - `.no-mistakes.yaml` - the no-mistakes gate configuration (opencode agent,
@@ -56,11 +59,11 @@ dotnet test Katalog.slnx
 aspire run
 ```
 
-`aspire run` starts PostgreSQL, the API, and web. The API runs in the
-Development environment, so the Spotify user-secrets (set once with `dotnet
-user-secrets set` on the API project) load and startup migrations run. For a
-fresh database, use the catalog resource's **Reset Database** dashboard action
-(`aspire resource catalog reset-db`).
+`aspire run` starts PostgreSQL, the API, and web. The AppHost forces the API
+resource into the Development environment, so the Spotify user-secrets (set
+once with `dotnet user-secrets set` on the API project) load and startup
+migrations run. For a fresh database, use the catalog resource's **Reset
+Database** dashboard action (`aspire resource catalog reset-db`).
 
 ## Run the frontend
 
@@ -79,11 +82,17 @@ In dev, `vite.config.ts` proxies `/api` to the backend: `API_HTTP`/`API_HTTPS`
 ## Where to go next
 
 - [Architecture](architecture/README.md) - how the SPA, API, database, and
-  Aspire host fit together.
-- [Domain](domain/README.md) - the label-following business model and the
-  Spotify API constraints behind it.
+  Aspire host fit together, including the `label_albums` persistence model.
+- [Domain](domain/README.md) - the label-following business model: app-owned
+  labels, Spotify API constraints, and exact real-label verification semantics.
+- [Release Discovery and Label Verification](workflows/release-discovery.md) -
+  the end-to-end workflow of followed-label release discovery: label-filtered
+  Spotify search, per-album real-label verification, idempotent upsert, and
+  self-healing unlinks. Route label-following, release-polling, and Spotify
+  label-verification questions here.
 - [Workflows](workflows/README.md) - development commands, CI, the no-mistakes
   gate, and the OpenWiki update flow.
-- [Operations](operations/README.md) - secrets, environments, and deployment
-  state.
-- [Testing](testing/README.md) - frontend and backend verification layers.
+- [Operations](operations/README.md) - secrets, environments, ports, database
+  reset, and health/retry behavior.
+- [Testing](testing/README.md) - frontend and backend verification layers
+  (unit, Testcontainers + WireMock integration, AppHost smoke tests).

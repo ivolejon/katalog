@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:29c29c698f170bc8745925fd3c9d0ab83a60c26d5a6d76943da10a1b96ae3a27",
+  "pageVersion": "sha256:94c7af5221be076051378464553538859398a47e1aeff006a937d230e9f0defe",
   "claims": [
     {
       "id": "claim_0676b47f82ee48038fcd4c7c6754e446",
-      "statement": "The local workflow builds and tests the solution, starts PostgreSQL, API, and web resources through Aspire, and can regenerate the OpenAPI client from the committed contract.",
+      "statement": "The local workflow builds and tests the solution, and `aspire run` orchestrates PostgreSQL (via SetupPostgres with a reset-db command on the catalog database), the API (via SetupKatalogApi), and the Vite web app (via AddViteApp) from Katalog.AppHost/Program.cs, all on stable committed ports; the OpenAPI client can be regenerated from the committed contract.",
       "evidence": [
         {
-          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
-          "version": "repo-lines-v1:sha256:a319ad43b24df151c26dc52c6d90b5f3193a8aea86d5742da760e1659f4a8403:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
+          "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
-          "resource": "repo://README.md#L32-L52",
-          "version": "repo-lines-v1:sha256:c196f1588491bd8f2329f10da0b6aaba2f97d4834caa1d6a6e690f62f406b14c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzMDY4ZmIzYmRiZjI0N2FjYzkyYTdmMDU1MzE0NzE4ZDhkZTZkNTQzYmE0YWEzMjI4OTNjNzNmZmQwNDA4N2EiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE4OWMyMGQ1ODZjYzNjNThhYTZkZTA1YjZiZmVkZTQzMjM0YWYwNzBjMTYxNjg2MTVlNGYzNjhlMjU5NmYzM2IifQ"
+          "resource": "repo://README.md#L40-L49",
+          "version": "repo-lines-v1:sha256:7596e127b28755b273e40fad425371feb57c53f63dc20210c4665e80ce6af195:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3YzA2YzU2MWQ1YzMyNzM0MzY4NTI2OGE0NmIzMzkxZjM5OThlZWU4OTBkMmJlNTFmMGQyMWNjNGE1M2FlNmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJkZjgyOTgyYmQxMGRmZjZjMmI2MmMwMzU4ODA3OTVjM2RlZmU0OGE3OWMyNjIyMjc3OGExZTU3YTk5YmFkZjAifQ"
         },
         {
-          "resource": "repo://web/package.json#L1-L30",
-          "version": "repo-lines-v1:sha256:5a1855d58fa727fd923631d93e2fc770e720f0be3a92cf224d4f5bf7fe37dfef:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjczYTc5YTFlMTJlM2M0MmIxZmQ4YzZjMTdkZmQ1ZmNmYTdlMWViNmQ0OTkyN2YyYjIzNzViZTEyNmMzZjZmYzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI1ODU5NzFhN2NlZjE0MGM2NWQ1N2IwNGZkZDlmYTA2MTEwOTE5Y2M4MDE2YWFlMmVhYTBiNWFhZjAwOWRhZjMifQ"
+          "resource": "repo://web/package.json#L6-L12",
+          "version": "repo-lines-v1:sha256:543eeca9ec9af3471402550997410ccf3bb19ca6a870b40f24c0b3cda6722cbc:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ4MzNkNTk0OWMwM2E0MGNhOTUyNDkxNjEwYTY2NTk2NDRiM2FhNDY2MzYyZjc5OTAyMGRiZjE5ODE1NDdkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDlkNWJkODk5YzM5ZDA0MDRjZWE1NTFkOTliYTE3MDU5ZjU3MjZjZmJiMWViNjNmYTY3ZThiMjQ3ODVlZjhjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
         }
       ]
     },
@@ -33,10 +33,68 @@
           "version": "repo-lines-v1:sha256:4a914e1ea6b834c8eba5c7ae686510a8a700c345a858748e1eadadb5433787aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkOWY0ZDljYzI3YjE1ZDNjNTgwMWEzZGMyMzJiODQyMjYwMzZjYWNkNDAyNWU0YTdiNjE1Y2U3OGU3ZWM0NGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MWFhNTAyMzdjNTIwNjlkYzY3OTBlNDcwZWM4YWUzMWNmMWM3YTljM2UxYjVhM2EzNmZlMGE0Y2Q0OGZmYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
+    },
+    {
+      "id": "claim_f4824860d25842d591988c2d15f7e66d",
+      "statement": "The Aspire AppHost pins stable ports for every `aspire run`: the dashboard at https://localhost:15000 via the committed launchSettings.json applicationUrl (the mechanism Aspire CLI 13.5.x uses to pin the dashboard port), the API at host port 5192 in Resources/Api/KatalogApi.cs, and web at port 5173 via WithHttpEndpoint in Program.cs matching Vite's default port.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L14-L26",
+          "version": "repo-lines-v1:sha256:0dca14c973ba484cb0abe00533e46880a2e1cdd26a1f0e34ce9a6ac20f31f70b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRhZGY3OTUzNTZlNTNmYTU0OGE2YmI0Y2UzNGQyZWE5ZWUwNjRjNDlmODJlNGE0OTdjN2VkY2MwNDI1Y2M2YTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkMDM1Y2EzZjE3NmRlZTMzMmFiNThiOTljYmEwM2I5M2VlZGJjMjkwNDJhZDYzMTYyZDAyZjViZTQ5ODM1NDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Properties/launchSettings.json#L4-L14",
+          "version": "repo-lines-v1:sha256:30a9b62f11cf783932161cff3d5a1b9b727a5aa8d2b5ad9f94e27aa49773d7ee:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2YzVjZGRlYmNiYjljOTc3Y2IyMTMyMjRiMTk3MGMzOTU5YzFiNDFkZDU5ODVmNDFhNDRkYzg2OTFjMmYzOGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliNjJmNjBkODU5MGE1NzljZjQ2ZjhkNjczNzhjNGM1NzJiOTYyY2VjY2RiOTBjN2E1ZjdiNDJiOTYwNzgyYTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdmYTAwNGZjMzBkNGU3YzlhYjg3OTEzNTI0ODY2ZDdlMDU4MmEzOTUyZGI0ZmQ2MzJlNzY3YzZkYTYxNzQ2YzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBlMGY3MjkzZDE1NmE2ZDEyNTI4ZGIxMjkzMzc5ZTUyYTVmODM2NzA0NDI5N2IyMjgyYjk3ZmYyYzg2MDQzOGQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a51404b66c24540a024003179735392",
+      "statement": "ci.yml runs two jobs on push to main and pull requests: Build & test (restore, Release build with warnings-as-errors, full solution tests, installing Aspire CLI 13.5.4 first) and Contract drift (rebuild with /p:OpenApiGenerateDocuments=true, then fail on any git diff under contracts/).",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L18-L76",
+          "version": "repo-lines-v1:sha256:20c4b3bb08d022cf19b10e945440c895914c8e0cd03f8633878d9e7994e1e4f2:eyJzZWxlY3RlZExpbmVDb3VudCI6NTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU5ZDgwMTU0ZWQ0MmZjNWM3NzliMTMzMTU3OGI1OGI4OWM4MDFlYWNlNzRmMjRjZDQ4ZWI0YTIzNTc5NDBhOTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjYWNlMDY0M2IzOTk0MmJjMWJlYWYyYTQ0MDJlNjcwOTI3NmI1ZWNiYTQ3ODZmYmI1ODI1MjY0NDkxMWU0NTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_87e5e29d61584d40a5300887c77312cd",
+      "statement": "web.yml separately validates the frontend on pull requests to main: Node 22 setup with npm cache, npm ci, npm run typecheck, and npm run build in the web/ directory.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/web.yml#L1-L29",
+          "version": "repo-lines-v1:sha256:4a914e1ea6b834c8eba5c7ae686510a8a700c345a858748e1eadadb5433787aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkOWY0ZDljYzI3YjE1ZDNjNTgwMWEzZGMyMzJiODQyMjYwMzZjYWNkNDAyNWU0YTdiNjE1Y2U3OGU3ZWM0NGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MWFhNTAyMzdjNTIwNjlkYzY3OTBlNDcwZWM4YWUzMWNmMWM3YTljM2UxYjVhM2EzNmZlMGE0Y2Q0OGZmYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0d3a083137704066b447560d40b7f4ef",
+      "statement": "The no-mistakes gate (.no-mistakes.yaml) uses agent pi with OCR review delegation, defines prepare/lint/test/format commands that mirror the CI build and test steps, and its settings are read only from the trusted default branch so feature branches cannot weaken the gate.",
+      "evidence": [
+        {
+          "resource": "repo://.no-mistakes.yaml#L1-L34",
+          "version": "repo-lines-v1:sha256:2e15ecd0faedb739cb1852fcdc440ce10934600874c3f70962572032a0dfe8c8:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2YzQ2MDE1NDQxOWMzOTJhNmFkOTE1ZjQ1NWUxYzMwMjY3YjE1MTA3NWFiMWU4MWEwNDAxMmFjMTJlMGU0MjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImViZTdmNWEwZTBlMjEzMDZiNjMzNDFlNGVkMjZlYmU1ZjQ3NjU1MTk0ZjIyZmZjYjIyNGYxOTYzOGQ2YjVjZDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_81d59e91905a4f76be18fcd49898d445",
+      "statement": "The Vite dev server proxies /api to the backend using the Aspire-injected API_HTTP/API_HTTPS environment variables, falling back to http://localhost:5192 when running outside Aspire.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L21-L26",
+          "version": "repo-lines-v1:sha256:9e19fa8a9955a2266291fa57aee00b3a02f19ed4b127db2bcaf015213b45033c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzYmZjMjRkZGMwODVhMzgzZTYyM2M2ZTYwN2M1Y2Y5Y2NlYmE5YThkOTE4ZmIyZmIwYzY5ZWExZDY4MmUzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTRmN2I1N2JjYmE4NzE3NjIwNmM3NTBkMDRjOWQwOTkwOTNhY2JmM2JhMDFhNjE5MWMzMjA4OTQ5ZThiNDc2OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZlOTI5YmJiM2QxMDNiZWU4ZjdhYmEyY2UyMmMyYjgzYzg0NjhiZjdlNzVmMDcwZmYzMWViMTA0MDJjNDhlOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGY0MTAwMmE1ZDI0M2FkZjAzYWVkZTUwZjgwN2E1MzJhMmY0ZDY3Zjk4Yjc4OTY1MGY4MzBlZGRjMTU3ZmYzMiJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L12-L19",
+          "version": "repo-lines-v1:sha256:d78088e680677892ab173f3f0fa124a9610a516412a271144ec84fc270aa1c8f:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmI0ZjExYjViYWQ0M2RlMzRlYjdjOWMxYjViMDMwYTBlY2FkMzAzNDY2NDgxYTNiNjVhNTc2YjZlZTBhMWM0ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmOWFkNDY3YjZkYzU5YTVjNTRlMDQ1MmIwYTA3MDJkM2M4NzJjNmVkZmIwZWNmZTU1MTRhMjMzOWQ1Yjk4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDk1NDJiYWRiYjRlMjk2ZGNiZTVhNGY0Mjc3YWE4OTAwZGI4ZWZmYTMwZWFlYTU3ZmRiYWIxNWY3ZTYxODgyOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTNjMTE0ZDk3Zjk3MTc2NDQ0ZDA2YmM5YTQ0ZGI4ZGFjMmI2N2RjMjkxMzJkY2JkOTU1NTMyM2JlNzEwZjBhMSJ9"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.5.2",
-    "at": "2026-09-22T17:28:24.726Z"
+    "by": "openwiki/0.6.0",
+    "at": "2026-09-29T18:32:14.763Z"
   }
 }
