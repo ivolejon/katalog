@@ -68,7 +68,8 @@ limits with `Retry-After`) bounds polling frequency.
   Spotify artist search (`useArtistSearch`, 350 ms, empties reset without an
   API call); follow/unfollow toggles.
 - `LabelDetailView`: tabs for **Artists** and **Releases**; album cards link
-  to Spotify.
+  to Spotify. The Releases tab shows an initial batch and reveals more via a
+  **Ladda mer** button.
 - Empty/error/skeleton states everywhere; stale-response guards in the Pinia
   store so an in-flight refresh cannot overwrite newer local state.
 - No login: the app opens straight to the landing page and `/labels`.

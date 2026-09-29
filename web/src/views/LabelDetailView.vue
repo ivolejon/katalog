@@ -31,11 +31,14 @@ const props = defineProps<{
 const router = useRouter()
 const store = useLabelsStore()
 
+const PAGE_SIZE = 5
+
 const detail = ref<LabelDetail | null>(null)
 const loading = ref(true)
 const notFound = ref(false)
 const error = ref<string | null>(null)
 const removing = ref(false)
+const visibleCount = ref(PAGE_SIZE)
 let loadRequest = 0
 
 const sortedReleases = computed(() => {
@@ -48,6 +51,14 @@ const sortedReleases = computed(() => {
     ),
   )
 })
+
+const visibleReleases = computed(() => sortedReleases.value.slice(0, visibleCount.value))
+
+const hasMore = computed(() => visibleReleases.value.length < sortedReleases.value.length)
+
+function loadMore() {
+  visibleCount.value += PAGE_SIZE
+}
 
 const isFollowing = computed(() => {
   if (!detail.value) {
@@ -63,6 +74,7 @@ async function load() {
   notFound.value = false
   error.value = null
   detail.value = null
+  visibleCount.value = PAGE_SIZE
   try {
     const loaded = await api.getLabel(id)
     if (request === loadRequest) {
@@ -201,8 +213,16 @@ async function unfollow() {
 
         <!-- Releases -->
         <TabsContent value="releases" class="mt-4">
-          <div v-if="sortedReleases.length" class="flex flex-col gap-3">
-            <AlbumCard v-for="album in sortedReleases" :key="album.id" :album="album" />
+          <div v-if="visibleReleases.length" class="flex flex-col gap-3">
+            <AlbumCard v-for="album in visibleReleases" :key="album.id" :album="album" />
+            <Button
+              v-if="hasMore"
+              variant="outline"
+              class="self-center"
+              @click="loadMore"
+            >
+              Ladda mer
+            </Button>
           </div>
           <EmptyState
             v-else
