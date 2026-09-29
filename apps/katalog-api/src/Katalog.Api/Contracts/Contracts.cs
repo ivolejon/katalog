@@ -81,6 +81,14 @@ public sealed record AlbumResponse(
     int TotalTracks,
     IReadOnlyList<string> ArtistNames);
 
+/// <summary>Paged releases for a label. The database is the source of truth; no Spotify calls are made per page.</summary>
+public sealed record LabelReleasesResponse(
+    int Page,
+    int PageSize,
+    int TotalCount,
+    bool HasMore,
+    IReadOnlyList<AlbumResponse> Releases);
+
 public sealed record CreateLabelRequest(string Name, IReadOnlyList<string> SpotifyIds);
 
 public sealed record UpdateLabelRequest(string Name);

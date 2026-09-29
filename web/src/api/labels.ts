@@ -2,6 +2,7 @@ import { http } from './http'
 import type {
   CreateLabelInput,
   LabelDetail,
+  LabelReleasesPage,
   LabelSearchResponse,
   LabelSummary,
 } from './types'
@@ -32,9 +33,26 @@ export const api = {
     return http.delete<void>(`/labels/${id}`)
   },
 
-  /** Full label detail with artists and releases. */
-  getLabel(id: string): Promise<LabelDetail> {
-    return http.get<LabelDetail>(`/labels/${id}`)
+  /**
+   * Full label detail with artists and counters.
+   * Pass includeReleases=false when releases are loaded page-by-page via getLabelReleases.
+   */
+  getLabel(id: string, includeReleases = true): Promise<LabelDetail> {
+    const query = new URLSearchParams()
+    if (!includeReleases) {
+      query.set('includeReleases', 'false')
+    }
+    const suffix = query.toString() ? `?${query.toString()}` : ''
+    return http.get<LabelDetail>(`/labels/${id}${suffix}`)
+  },
+
+  /** Paged releases for a label. No Spotify calls are made per page. */
+  getLabelReleases(id: string, page: number, pageSize: number): Promise<LabelReleasesPage> {
+    const query = new URLSearchParams({
+      page: String(page),
+      pageSize: String(pageSize),
+    })
+    return http.get<LabelReleasesPage>(`/labels/${id}/releases?${query.toString()}`)
   },
 
   /** Spotify label search (primary add-label flow): label hits matching the query. */

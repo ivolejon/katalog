@@ -1,8 +1,8 @@
 ---
 type: "Reference"
 title: "Katalog - Domain"
-description: "Katalog's label-following business model: app-owned labels, Spotify Web API constraints, exact real-label verification, the label_albums junction invariant, and the implemented API surface."
-tags: [katalog, domain, spotify, labels, release-polling, api]
+description: "The Katalog label-following business model: app-owned labels with artist anchors, Spotify label-search discovery with exact-match verification, the label_albums authoritative link, the rename-time link audit, and the implemented API surface including paged releases."
+tags: [katalog, domain, labels, spotify, release-polling, api]
 openwiki_generated: true
 sources:
   - id: openwiki-source-e0c539bee171277d0d387075
@@ -11,40 +11,34 @@ sources:
     resource: repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs
   - id: openwiki-source-a4f9914ac26d9e676f4e4647
     resource: repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs
-  - id: openwiki-source-126d98f1667a78c6b163976a
-    resource: repo://apps/katalog-api/src/Katalog.Api/Domain/Album.cs
-  - id: openwiki-source-8ac64c98631f8ac0b4db1acb
-    resource: repo://apps/katalog-api/src/Katalog.Api/Domain/Label.cs
+  - id: openwiki-source-3c763c43a1537f0a5607f0a4
+    resource: repo://apps/katalog-api/src/Katalog.Api/Contracts/Contracts.cs
   - id: openwiki-source-49687e36602309b75fa99b81
     resource: repo://apps/katalog-api/src/Katalog.Api/Domain/LabelAlbum.cs
-  - id: openwiki-source-5eba8b32245b8374e90fe01f
-    resource: repo://apps/katalog-api/src/Katalog.Api/Features/Labels/CreateLabel.cs
   - id: openwiki-source-5acf6e2be2729e358db87f81
     resource: repo://apps/katalog-api/src/Katalog.Api/Features/Labels/SearchLabels.cs
   - id: openwiki-source-e7c0b1df5b2e1c1667c8f284
     resource: repo://apps/katalog-api/src/Katalog.Api/Features/Labels/UpdateLabel.cs
   - id: openwiki-source-d3294089ae22810e19e27ec1
     resource: repo://apps/katalog-api/src/Katalog.Api/Features/Releases/GetLabelReleases.cs
-  - id: openwiki-source-0adb98ff56b305f1f0159c27
-    resource: repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/LabelLinkAuditIncompleteException.cs
   - id: openwiki-source-58ae3d06ebcb0a21c5b26e22
     resource: repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs
-  - id: openwiki-source-0e9cacfbaf4c025a152cc799
-    resource: repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasesPollingService.cs
-  - id: openwiki-source-bf4ce253af065f2bf88b51c6
-    resource: repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyApiClient.cs
-  - id: openwiki-source-189a20d60246dfdfb96a4668
-    resource: repo://apps/katalog-api/src/Katalog.Api/Setup/PollingOptions.cs
+  - id: openwiki-source-417579a58fbbf8a47fb8a114
+    resource: repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Configurations/PollCursorConfiguration.cs
   - id: openwiki-source-c4e6278c448892ab6ee9060c
     resource: repo://contracts/katalog-api/openapi.json
   - id: openwiki-source-ca248e99bf5d44b0aa64b70c
     resource: repo://web/src/api/README.md
+  - id: openwiki-source-9f5b46e5bcdaf05596eb9060
+    resource: repo://web/src/api/types.ts
+  - id: openwiki-source-7af276dd62867dad418aa665
+    resource: repo://web/src/components/labels/AddLabelDialog.vue
   - id: openwiki-source-bcebeed4f761d52b0c3f321d
     resource: repo://web/src/composables/useLabelSearch.ts
-generated: { by: "openwiki/0.6.0", at: "2026-09-29T18:32:14.763Z" }
+generated: { by: "openwiki/0.6.0", at: "2026-09-29T18:57:22.615Z" }
 verified:
   - by: openwiki/0.6.0
-    at: 2026-09-29T18:32:14.763Z
+    at: 2026-09-29T18:57:22.615Z
 ---
 
 # Katalog - Domain
@@ -52,14 +46,14 @@ verified:
 ## The product
 
 Follow record labels ("labels") via Spotify and see their releases. The user
-adds a label (name + linked artists), and the app discovers and tracks the
-albums/singles that Spotify attributes to that label.
+adds a label (name + linked artists), and the app tracks new albums/singles
+from those artists.
 
 Decisions recorded with the captain:
 
 - **Single user** - no multi-tenant design, no user accounts.
-- **User adds labels manually** - via the Spotify label search in the
-  add-label dialog; the label entity is app-owned.
+- **User adds labels manually** - via Spotify label search in the add-label
+  dialog; the label entity is app-owned.
 - **No tracks stored** - albums/artists/labels only.
 - **No Spotify user OAuth in the MVP** - all Spotify catalog data is fetched
   with a client-credentials app token. Consequences: the user's personal
@@ -79,129 +73,91 @@ it, and the batch albums endpoint is also deprecated.
 Therefore "following a label" is implemented as:
 
 1. A label row in the app database (created by the user).
-2. Discovery: Spotify's undocumented-but-working `label:"<name>"` album search
-   filter (verified live 2026-09-22; not in the official spec's filter list).
-   The filter matches **fuzzily** - searching "Globuli" also returns albums
-   from near-miss labels such as "Globulin" - so discovery alone can never
-   decide membership.
-3. Exact verification: each candidate album is re-fetched as a full album
-   object (`GET /albums/{id}`, one GET per candidate - the captain's explicit
-   quota choice). The album's **real label** is read from the `label` field
-   or, when that field is absent, parsed from the `copyrights` array (e.g.
-   "© 2025 Globuli" → "Globuli"). Only albums whose real label exactly equals
-   the followed label's name (case-insensitive, trimmed) are linked.
-4. A release poller **per followed label** in the backend
-   (`ReleasePoller.PollOnceAsync` iterates `Labels`, not artists), with an
-   idempotent upsert on Spotify album id (`ON CONFLICT (spotify_id)`).
-
-The artists linked at add-label time remain as **anchors**: they seed the
-label from the search hits' album artists and give the label detail page its
-artist roster, but they no longer drive release discovery - the poller
-discovers by label name, not by artist discography.
+2. Artists linked to that label (manual selection via label search today;
+   album-metadata derivation remains a future option).
+3. A release poller per followed label in the backend that discovers albums via
+   Spotify's `label:"<name>"` album-search filter and upserts them
+   idempotently (`ON CONFLICT (spotify_id)`).
 
 Spotify policy constraints that shape the domain: no indefinite storage of
 Spotify content (metadata retention/cleanup required), display must link back
 to Spotify with attribution, and dev-mode quota (~5 authenticated users / rate
-limits with `Retry-After`) bounds polling frequency - the poll interval is
-configured for a 6-24 h rhythm (default 12 h).
+limits with `Retry-After`) bounds polling frequency.
 
-## Data model: label_albums is the source of truth
+## Exact-match verification and label_albums invariants
 
-The domain entities live in `apps/katalog-api/src/Katalog.Api/Domain`:
+Spotify's `label:"..."` search filter matches **fuzzily** (following "Globuli"
+also returns albums from near-miss labels such as "Globulin"), so the poller
+never trusts a search hit. These invariants protect the release feed:
 
-- `Label` - the app-owned followed label (name, unique slug, timestamps).
-- `Album` - a Spotify release. `LabelSpotify` stores the album's **real,
-  verified Spotify label** as the release attribution (what the UI shows);
-  `LabelId` is a denormalized pointer to the app-owned label the album was
-  last discovered/verified for.
-- `LabelAlbum` - the many-to-many junction between labels and albums, with
-  `FirstSeenAtUtc` / `LastConfirmedAtUtc` timestamps.
-- `LabelArtist` - the many-to-many junction between labels and artists, with
-  a `Provenance` (manual today).
+- **Verify before linking.** Every candidate album is re-fetched as a full
+  album object (`GET /albums/{id}` - one GET per candidate, the captain's
+  explicit quota choice). Only albums whose real Spotify `label` field
+  **exactly (case-insensitive, trimmed) equals the followed label's name** are
+  upserted, and the stored `label_spotify` attribution is the album's real
+  label, not the discovering label's name.
+- **`label_albums` is the authoritative link.** Album-to-label membership is
+  modeled by the `label_albums` junction (`LabelId`/`AlbumId`,
+  `FirstSeenAtUtc`/`LastConfirmedAtUtc`), independent of the denormalized
+  `albums.label_id` column. Release listing reads through this junction only.
+- **Verified mismatch self-heals.** If verification positively reports a real
+  label that does not match, the poller removes any existing `label_albums`
+  link. This is the *only* deletion path during polling: a candidate that
+  cannot be verified (album GET fails, no label reported) is skipped, and a
+  transient search miss never deletes a link.
+- **Linking is guarded against renames.** The junction insert re-reads the
+  label's committed current name under a row lock (`FOR KEY SHARE`) inside one
+  atomic SQL statement, so a poll pass carrying a pre-rename snapshot can never
+  link an album whose real label no longer matches the renamed label.
+- **A rename audits all links.** Renaming a label deliberately retargets it,
+  so `UpdateLabel` runs `ReleasePoller.AuditLabelLinksAsync` inside the same
+  transaction: exact matches are re-upserted (correcting stale `label_spotify`
+  attribution), verified mismatches and Spotify-404 albums are unlinked, and
+  any link Spotify cannot verify (GET failure, 5xx/429, cancellation, or no
+  label reported) throws `LabelLinkAuditIncompleteException`. The exception
+  rolls the whole transaction back - the label keeps its old name and all its
+  links - and the API returns **503 Service Unavailable** so the rename can be
+  retried when Spotify is reachable. Nothing unverified is ever listed.
+- **Cursor name kept for compatibility.** `ReleasePoller.JobName` remains
+  `'artist_new_releases'` even though polling is now label-search based: the
+  constant is the `poll_cursors` primary key, and keeping the name avoids a
+  cursor migration.
 
-**`label_albums` is the source of truth for which releases belong to a
-label** - release listing (`GetLabelReleases`) queries the junction, never
-`album.label_id`. The denormalized `album.label_id` is only a hint about the
-last discovering label and plays no role in listing.
+The poll runs on a configurable rhythm (6-24 h, default 12 h, poll once at
+startup then on a `PeriodicTimer`) via `ReleasesPollingService`, and following
+a new label triggers an immediate `PollLabelAsync` so releases appear without
+waiting for the next cycle.
 
-The core invariant, enforced at write time and healed at negative verification
-time:
+## Paging domain rule for releases
 
-> A release is only listed under a label whose name exactly matches the
-> album's verified real Spotify label.
+`GET /api/labels/{labelId}/releases` is dual-mode. With no query parameters it
+returns the full release list (backwards compatibility for older clients).
+With `page`/`pageSize` it returns a paged `LabelReleasesResponse`:
 
-Enforcement points (all in `ReleasePoller`):
+- `page` and `pageSize` are **1-based and must be positive**; a non-positive
+  value yields **400 Bad Request** ("Page and pageSize must be positive."). A
+  missing value defaults to `page=1` / `pageSize=20`. An unknown label yields
+  **404**.
+- Releases sort **newest first**; NULL release dates are coalesced to
+  `DateOnly.MinValue` so they sort last under descending order (Postgres
+  sorts NULLs first on DESC by default, hence the explicit coalesce).
+- `hasMore = page * pageSize < totalCount`, where `totalCount` is the count of
+  `label_albums` links for the label. Paging is performed in the database; no
+  Spotify calls are made per page.
 
-- **Linking** (`UpsertLabelAlbumAsync`): a single atomic SQL statement inserts
-  the junction row only when the label's committed current name, re-read under
-  a `FOR KEY SHARE` row lock, exactly equals the candidate's already-verified
-  real label (`trim(lower(...))` on both sides). A poll pass carrying a stale
-  pre-rename snapshot therefore cannot link - or resurrect - an album whose
-  real label no longer matches.
-- **Self-heal on verified mismatch** (`RemoveVerifiedMismatchedLabelAlbumAsync`):
-  when a poll cycle positively verifies that an album's real label is not the
-  followed label, any existing junction link is deleted. This is the *only*
-  deletion path for `label_albums` rows: a candidate that cannot be verified,
-  or that search simply stops returning, never causes a deletion, so a
-  transient Spotify failure can never strip legitimately discovered releases.
-- **Unverifiable candidates are skipped**, not linked and not unlinked; the
-  next poll cycle re-fetches and re-verifies them.
-- The stored `label_spotify` attribution is always the album's real Spotify
-  label, never the discovering label's name.
-
-## Rename semantics: audit-or-rollback
-
-Renaming a label (`PUT /api/labels/{id}`) deliberately **retargets** the
-follow: the label keeps its artists, but its releases must now match the new
-name. Because the discovery search will never re-encounter the old links under
-the new name, the rename runs `ReleasePoller.AuditLabelLinksAsync` inside the
-same transaction:
-
-- Exact real-label match → link kept, attribution corrected.
-- Positively verified mismatch → link removed.
-- Album 404 (gone from Spotify's catalog) → stale link removed (a verified
-  upstream fact, never an exact-match candidate).
-- Any other unverifiable link (album GET failure, 5xx/429, cancellation, or
-  an album reporting no usable label) → `LabelLinkAuditIncompleteException`,
-  the whole transaction rolls back, and the API returns **503**
-  (`RenameVerificationFailed`). The label keeps its old name and all its
-  releases, so nothing unverified can ever be listed; the client can retry
-  when Spotify is reachable.
-
-A no-op rename (name unchanged) skips the audit entirely and succeeds even
-when Spotify is unreachable.
-
-## Release polling lifecycle
-
-`ReleasesPollingService` (a hosted background service that waits for
-migrations) polls once at startup and then on every `PeriodicTimer` tick
-(`PollingOptions.Interval`, 6-24 h, default 12 h). Each cycle:
-
-1. Loads all followed labels and polls each one independently - a single
-   label's failure is logged and skipped, never kills the cycle.
-2. For each label, pages through the full `label:"<name>"` search result set
-   (Spotify caps search `limit` at 10; pagination follows validated same-origin
-   `next` URLs).
-3. Verifies and upserts each candidate as above, also upserting the album's
-   artists into `album_artists` (position-preserving) and pruning artist links
-   Spotify no longer reports.
-4. Advances a singleton `PollCursor` row (job name `artist_new_releases` - a
-   historical name kept to avoid a cursor migration; the poller now discovers
-   by label, not by artist). Re-running the same data is a no-op update, so
-   polling is crash-safe.
-
-Creating a label also triggers an immediate `PollLabelAsync` in its own DI
-scope so releases appear right away; a polling failure there is logged but
-never rolls the label creation back.
+The frontend's **Releaser** tab (`LabelDetailView`) consumes pages of 5 and
+reveals more via a **Ladda mer** button, merging pages and surfacing newly
+polled releases as a "new releases available" indicator.
 
 ## Current frontend behavior
 
-- `LabelsView`: list of followed labels; add-label dialog backed by the
-  debounced Spotify **label** search (`useLabelSearch`, 350 ms, empties reset
-  without an API call); `collectArtistIds` builds the artist anchors from the
-  album hits of the chosen label hit. Follow/unfollow toggles.
+- `LabelsView`: list of followed labels; add-label dialog with debounced
+  Spotify label search (`useLabelSearch`, 350 ms, empties reset without an API
+  call) against `GET /api/labels/search`; the dialog derives artist anchors by
+  collecting unique Spotify artist ids from the hit's albums
+  (`collectArtistIds`).
 - `LabelDetailView`: tabs for **Artists** and **Releases**; album cards link
-  to Spotify. The Releases tab shows an initial batch and reveals more via a
+  to Spotify. The Releases tab shows an initial page and reveals more via a
   **Ladda mer** button.
 - Empty/error/skeleton states everywhere; stale-response guards in the Pinia
   store so an in-flight refresh cannot overwrite newer local state.
@@ -211,37 +167,21 @@ never rolls the label creation back.
 
 | Endpoint | Purpose |
 |---|---|
-| `GET /api/labels/search` | Spotify label search via the `label:"<name>"` album filter (primary add-label flow); 400 on invalid query/limit |
 | `GET /api/labels` | List followed labels |
-| `POST /api/labels` | Add a label (create + link artist anchors + immediate release poll); 404 unknown artist, 409 slug conflict |
-| `GET /api/labels/{id}` | Label detail (artists/releases) |
-| `PUT /api/labels/{id}` | Rename a label with rename-time link audit; 404, 409 slug conflict, **503 when Spotify verification fails** (rename rolled back) |
-| `DELETE /api/labels/{id}` | Unfollow label |
+| `POST /api/labels` | Add a label (create; links Spotify artist ids as anchors; 404 unknown artist, 409 slug conflict) |
+| `GET /api/labels/search?q=...&limit=...` | Spotify label search proxying the `label:"..."` album filter; returns the searched term as one label hit with matching albums for anchor building |
+| `GET /api/labels/{id}?includeReleases=...` | Label detail (artists + release count); `includeReleases=false` omits the release list (defaults to true) |
+| `PUT /api/labels/{id}` | Rename a label (audits all links; 404 unknown, 409 slug conflict, 503 when Spotify cannot verify) |
+| `DELETE /api/labels/{id}` | Unfollow label (204 / 404) |
 | `POST /api/labels/{labelId}/artists` | Link an artist to a label |
-| `DELETE /api/labels/{labelId}/artists/{artistId}` | Unlink an artist from a label; 409 when it is the label's last artist |
-| `GET /api/labels/{labelId}/releases` | List releases for a label (from `label_albums`, newest first) |
-| `GET /api/search?type=artist` | Spotify artist search |
+| `DELETE /api/labels/{labelId}/artists/{artistId}` | Unlink an artist (409 when it is the label's last artist - a label must keep at least one) |
+| `GET /api/labels/{labelId}/releases` | Dual-mode: full list without params, or paged `LabelReleasesResponse` with `page`/`pageSize` (400 non-positive, 404 unknown label) |
+| `GET /api/search?q=...&type=artist` | Spotify artist search proxy (`type` must be `artist` when given) |
 
-The route definitions are implemented in `apps/katalog-api/src/Katalog.Api`
-(`LabelsEndpoints`, `ReleasesEndpoints`, `ArtistsEndpoints`) and the complete
-contract is committed at `contracts/katalog-api/openapi.json` (OpenAPI 3.1.1,
-`Katalog.Api | v1`). The frontend currently uses a handwritten typed client
-(`web/src/api/`) matching the contract's endpoint surface; running
-`npm run generate:client` regenerates a client from the committed contract.
-
-## Focused tests
-
-- `LabelsApiIntegrationTests` - CRUD end-to-end, label search proxying
-  (including quote escaping in the `label:"..."` filter and limit validation),
-  immediate discovery on create (incl. `label`-field-absent and
-  copyrights-parsing cases), fuzzy-hit exclusion, rename audit
-  (unlink verified mismatches, keep exact matches, 503 rollback on
-  verification failure, 404-album unlink, no-op rename skipping the audit),
-  and the stale-pre-rename poll-pass guard.
-- `ReleasesPollingIntegrationTests` - idempotent upsert and cursor advance,
-  429/`Retry-After` resilience, per-label failure isolation, pagination,
-  near-miss exclusion, case-insensitive exact match storing the real label,
-  unverifiable-candidate skip, and self-heal of pre-existing contaminated
-  links.
-- `SlugAndPollingParsingTests` (unit) - slug derivation, album-type and
-  release-date precision parsing.
+The route definitions are implemented in `apps/katalog-api/src/Katalog.Api` and
+the complete contract - OpenAPI 3.1.1, `"title": "Katalog.Api | v1"`,
+`"version": "1.0.0"` - is committed at `contracts/katalog-api/openapi.json`.
+The frontend currently uses a handwritten typed client (`web/src/api/types.ts`,
+`web/src/api/README.md`) matching that contract; running
+`npm run generate:client` (hey-api) emits a generated client under
+`web/src/api/generated/` that is intended to replace the handwritten one.

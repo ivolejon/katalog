@@ -88,7 +88,17 @@ export interface LabelDetail {
   spotifyIds: string[]
   name: string
   artistCount: number
+  releaseCount: number
   createdAt: string
   artists: LabelArtist[]
+  releases: AlbumSummary[]
+}
+
+/** A page of releases for a label (GET /api/labels/{id}/releases). */
+export interface LabelReleasesPage {
+  page: number
+  pageSize: number
+  totalCount: number
+  hasMore: boolean
   releases: AlbumSummary[]
 }

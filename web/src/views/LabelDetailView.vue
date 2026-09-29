@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { api } from '@/api'
-import type { LabelDetail } from '@/api'
+import type { LabelDetail, AlbumSummary, LabelReleasesPage } from '@/api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -16,6 +16,7 @@ import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import { useLabelsStore } from '@/stores/labels'
 import { releaseSortKey } from '@/utils/dates'
+import { countUniqueArtists, mergeReleasePages } from '@/utils/paging'
 import {
   ArrowLeft01Icon,
   Cancel01Icon,
@@ -38,27 +39,32 @@ const loading = ref(true)
 const notFound = ref(false)
 const error = ref<string | null>(null)
 const removing = ref(false)
-const visibleCount = ref(PAGE_SIZE)
+
+const loadedReleases = ref<AlbumSummary[]>([])
+const currentPage = ref(1)
+const hasMore = ref(false)
+const totalCount = ref(0)
+const initialTotalCount = ref(0)
+const loadingMore = ref(false)
+const newReleasesCount = ref(0)
+
 let loadRequest = 0
+let loadMoreRequest = 0
 
 const sortedReleases = computed(() => {
-  if (!detail.value) {
-    return []
-  }
-  return [...detail.value.releases].sort((a, b) =>
+  return [...loadedReleases.value].sort((a, b) =>
     releaseSortKey(b.releaseDate, b.releaseDatePrecision).localeCompare(
       releaseSortKey(a.releaseDate, a.releaseDatePrecision),
     ),
   )
 })
 
-const visibleReleases = computed(() => sortedReleases.value.slice(0, visibleCount.value))
+const displayedReleaseCount = computed(() => loadedReleases.value.length)
+const displayedArtistCount = computed(() => countUniqueArtists(loadedReleases.value))
 
-const hasMore = computed(() => visibleReleases.value.length < sortedReleases.value.length)
-
-function loadMore() {
-  visibleCount.value += PAGE_SIZE
-}
+const newReleasesAvailable = computed(
+  () => newReleasesCount.value > 0 && loadedReleases.value.length < totalCount.value,
+)
 
 const isFollowing = computed(() => {
   if (!detail.value) {
@@ -67,32 +73,101 @@ const isFollowing = computed(() => {
   return store.labels.some((label) => label.id === detail.value?.id)
 })
 
+function resetPaging() {
+  loadedReleases.value = []
+  currentPage.value = 1
+  hasMore.value = false
+  totalCount.value = 0
+  initialTotalCount.value = 0
+  newReleasesCount.value = 0
+}
+
+function applyPage(page: LabelReleasesPage, isFirstPage: boolean) {
+  if (isFirstPage) {
+    loadedReleases.value = page.releases
+    initialTotalCount.value = page.totalCount
+    newReleasesCount.value = 0
+  } else {
+    loadedReleases.value = mergeReleasePages(loadedReleases.value, page)
+    if (page.totalCount > initialTotalCount.value) {
+      newReleasesCount.value = page.totalCount - initialTotalCount.value
+    }
+  }
+  currentPage.value = page.page
+  totalCount.value = page.totalCount
+  hasMore.value = page.hasMore
+}
+
 async function load() {
   const request = ++loadRequest
   const id = props.id
   loading.value = true
+  loadingMore.value = false
   notFound.value = false
   error.value = null
   detail.value = null
-  visibleCount.value = PAGE_SIZE
+  resetPaging()
+
   try {
-    const loaded = await api.getLabel(id)
-    if (request === loadRequest) {
-      detail.value = loaded
+    const [labelDetail, firstPage] = await Promise.all([
+      api.getLabel(id, false),
+      api.getLabelReleases(id, 1, PAGE_SIZE),
+    ])
+
+    if (request !== loadRequest) {
+      return
     }
+
+    detail.value = labelDetail
+    applyPage(firstPage, true)
   } catch (err) {
-    if (request === loadRequest) {
-      if (err instanceof Error && 'status' in err && (err as { status: number }).status === 404) {
-        notFound.value = true
-      } else {
-        error.value = err instanceof Error ? err.message : 'Failed to load label'
-      }
+    if (request !== loadRequest) {
+      return
+    }
+    if (err instanceof Error && 'status' in err && (err as { status: number }).status === 404) {
+      notFound.value = true
+    } else {
+      error.value = err instanceof Error ? err.message : 'Failed to load label'
     }
   } finally {
     if (request === loadRequest) {
       loading.value = false
     }
   }
+}
+
+async function loadMore() {
+  if (loadingMore.value || !hasMore.value) {
+    return
+  }
+
+  const request = ++loadMoreRequest
+  loadingMore.value = true
+  const nextPage = currentPage.value + 1
+
+  try {
+    const page = await api.getLabelReleases(props.id, nextPage, PAGE_SIZE)
+    if (request !== loadMoreRequest) {
+      return
+    }
+    applyPage(page, false)
+  } catch (err) {
+    if (request !== loadMoreRequest) {
+      return
+    }
+    toast.error('Could not load more releases', {
+      description: err instanceof Error ? err.message : undefined,
+    })
+  } finally {
+    if (request === loadMoreRequest) {
+      loadingMore.value = false
+    }
+  }
+}
+
+async function reloadForNewReleases() {
+  resetPaging()
+  await load()
 }
 
 watch(() => props.id, load, { immediate: true })
@@ -180,14 +255,22 @@ async function unfollow() {
             <div class="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
               <span class="flex items-center gap-1.5">
                 <UserGroupIcon class="size-4" />
-                {{ detail.artistCount }}
-                {{ detail.artistCount === 1 ? 'artist' : 'artists' }}
+                {{ displayedArtistCount }}
+                {{ displayedArtistCount === 1 ? 'artist' : 'artists' }}
               </span>
               <span class="flex items-center gap-1.5">
                 <Disc01Icon class="size-4" />
-                {{ detail.releases.length }}
-                {{ detail.releases.length === 1 ? 'release' : 'releases' }}
+                {{ displayedReleaseCount }}
+                {{ displayedReleaseCount === 1 ? 'release' : 'releases' }}
               </span>
+              <Badge
+                v-if="newReleasesAvailable"
+                variant="outline"
+                class="cursor-pointer"
+                @click="reloadForNewReleases"
+              >
+                {{ newReleasesCount }} new since you started
+              </Badge>
             </div>
           </div>
           <div class="flex shrink-0 items-center gap-2">
@@ -213,15 +296,17 @@ async function unfollow() {
 
         <!-- Releases -->
         <TabsContent value="releases" class="mt-4">
-          <div v-if="visibleReleases.length" class="flex flex-col gap-3">
-            <AlbumCard v-for="album in visibleReleases" :key="album.id" :album="album" />
+          <div v-if="sortedReleases.length" class="flex flex-col gap-3">
+            <AlbumCard v-for="album in sortedReleases" :key="album.id" :album="album" />
             <Button
               v-if="hasMore"
               variant="outline"
               class="self-center"
+              :disabled="loadingMore"
               @click="loadMore"
             >
-              Ladda mer
+              <template v-if="loadingMore">Laddar…</template>
+              <template v-else>Ladda mer</template>
             </Button>
           </div>
           <EmptyState

@@ -104,9 +104,10 @@ public static class LabelsEndpoints
                 label.CreatedAtUtc, label.UpdatedAtUtc));
     }
 
-    private static async Task<IResult> GetLabelDetail(Guid id, GetLabels getLabels, CancellationToken cancellationToken)
+    private static async Task<IResult> GetLabelDetail(Guid id, bool? includeReleases, GetLabels getLabels,
+        CancellationToken cancellationToken)
     {
-        var detail = await getLabels.GetDetailAsync(id, cancellationToken);
+        var detail = await getLabels.GetDetailAsync(id, includeReleases ?? true, cancellationToken);
         return detail is null ? TypedResults.NotFound() : TypedResults.Ok(detail);
     }
 

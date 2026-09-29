@@ -1,3 +1,3 @@
 # Files
 
-- [Katalog - Domain](README.md) - Katalog's label-following business model: app-owned labels, Spotify Web API constraints, exact real-label verification, the label_albums junction invariant, and the implemented API surface.
+- [Katalog - Domain](README.md) - The Katalog label-following business model: app-owned labels with artist anchors, Spotify label-search discovery with exact-match verification, the label_albums authoritative link, the rename-time link audit, and the implemented API surface including paged releases.
