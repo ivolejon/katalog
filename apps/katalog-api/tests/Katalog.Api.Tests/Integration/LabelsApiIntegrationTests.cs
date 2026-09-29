@@ -515,6 +515,39 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightLineMatchesExpectedLabel()
+    {
+        // Regression: when Spotify returns multiple copyright lines and the first one names a
+        // different rights holder, extraction must consider the followed label and pick the
+        // line that actually matches it instead of returning the first parsed line.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/multicopyrightartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("multicopyrightartist1", "Multi Copyright Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("multicopyrightartist1", "multicopyrightalbum1", "Multi Copyright Album 1", 2025, "Multi Copyright Artist"));
+        spotify.StubAlbumGetWithCopyrights("multicopyrightalbum1", null,
+            ["2025 Sony Music", "2025 Globuli"], "multicopyrightartist1", "Multi Copyright Album 1", 2025, "Multi Copyright Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "multicopyrightartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("multicopyrightalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();

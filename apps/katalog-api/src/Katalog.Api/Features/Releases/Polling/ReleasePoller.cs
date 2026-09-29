@@ -183,7 +183,7 @@ public sealed class ReleasePoller(
                 continue;
             }
 
-            var realLabel = ExtractRealLabel(fullAlbum);
+            var realLabel = ExtractRealLabel(fullAlbum, labelName);
             if (string.IsNullOrWhiteSpace(realLabel))
             {
                 logger.LogInformation(
@@ -224,7 +224,7 @@ public sealed class ReleasePoller(
         CancellationToken cancellationToken)
     {
         var fullAlbum = await spotifyApiClient.GetAlbumAsync(album.Id, cancellationToken);
-        var realLabel = ExtractRealLabel(fullAlbum);
+        var realLabel = ExtractRealLabel(fullAlbum, label.Name);
 
         if (string.IsNullOrWhiteSpace(realLabel))
         {
@@ -497,29 +497,57 @@ public sealed class ReleasePoller(
         Value = value ?? DBNull.Value
     };
 
+    private static readonly Regex CopyrightPrefixRegex = new(
+        @"^\s*(?:\u00a9|\u2117|\(C\)|\(P\)|C|P)?\s*\d{4}\s+",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
     /// <summary>
-    /// Extracts the album's real label from the full album object. Spotify currently returns
-    /// the label either in the <c>label</c> field or, when that field is absent, embedded in
-    /// the <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). The copyright
-    /// line is normalised by stripping an optional prefix and the leading year, leaving the
-    /// label name to be matched against the followed label.
+    /// Extracts the album's real label from the full album object, returning the value that
+    /// matches the followed <paramref name="expectedLabel"/>. Spotify currently returns the
+    /// label either in the <c>label</c> field or, when that field is absent, embedded in the
+    /// <c>copyrights</c> text (e.g. "© 2025 Globuli" or "2025 Globuli"). When multiple
+    /// copyright lines are present, every line is checked so a line matching the followed
+    /// label is preferred over the first line that merely parses. Labels containing
+    /// punctuation (e.g. "Globuli, LLC") are recognised when they appear verbatim after the
+    /// year prefix.
     /// </summary>
-    private static string? ExtractRealLabel(SpotifyAlbumItem? album)
+    private static string? ExtractRealLabel(SpotifyAlbumItem? album, string expectedLabel)
     {
         if (album is null)
             return null;
 
+        var expected = expectedLabel.Trim();
+
         var label = album.Label?.Trim();
         if (!string.IsNullOrWhiteSpace(label))
-            return label;
+        {
+            // The top-level label is authoritative. Only use it when it matches the
+            // followed label exactly; otherwise the album does not belong here.
+            return string.Equals(label, expected, StringComparison.OrdinalIgnoreCase)
+                ? label
+                : null;
+        }
 
         if (album.Copyrights is not { Count: > 0 })
             return null;
 
         foreach (var copyright in album.Copyrights)
         {
-            var extracted = ExtractLabelFromCopyright(copyright.Text);
-            if (!string.IsNullOrWhiteSpace(extracted))
+            var text = copyright.Text?.Trim();
+            if (string.IsNullOrWhiteSpace(text))
+                continue;
+
+            var afterPrefix = CopyrightPrefixRegex.Replace(text, string.Empty);
+            if (afterPrefix.StartsWith(expected, StringComparison.OrdinalIgnoreCase))
+            {
+                var tail = afterPrefix[expected.Length..];
+                if (tail.Length == 0 || char.IsWhiteSpace(tail[0]) || tail[0] is ',' or '.' or ';' or '(')
+                    return expected;
+            }
+
+            var extracted = ExtractLabelFromCopyright(text);
+            if (!string.IsNullOrWhiteSpace(extracted) &&
+                string.Equals(extracted, expected, StringComparison.OrdinalIgnoreCase))
                 return extracted;
         }
 

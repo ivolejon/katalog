@@ -175,5 +175,42 @@ public sealed class WireMockSpotify : IAsyncDisposable
         }
         """;
 
+    /// <summary>
+    /// Stubs the full album object with an optional top-level label and a custom set of
+    /// copyright lines - used to verify label-aware extraction picks the copyright line
+    /// that matches the followed label rather than blindly returning the first parsed line.
+    /// </summary>
+    public void StubAlbumGetWithCopyrights(string albumId, string? label, string[] copyrights, string artistId = "artist1",
+        string? name = null, int releaseYear = 2010, string artistName = "Artist One")
+    {
+        Server.Given(Request.Create().WithPath($"/v1/albums/{albumId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(AlbumJsonWithCopyrights(albumId, label, copyrights, artistId, name, releaseYear, artistName)));
+    }
+
+    public static string AlbumJsonWithCopyrights(string id, string? label, string[] copyrights, string artistId = "artist1",
+        string? name = null, int releaseYear = 2010, string artistName = "Artist One")
+    {
+        var labelJson = label is null ? string.Empty : $",\n  \"label\": \"{label}\"";
+        var copyrightItems = string.Join(",", copyrights.Select(c => $"{{\"text\": \"{c}\", \"type\": \"C\"}}"));
+        var albumName = name ?? $"Album {id}";
+        return $$"""
+        {
+          "id": "{{id}}",
+          "name": "{{albumName}}",
+          "album_type": "album",
+          "release_date": "{{releaseYear:D4}}-01-15",
+          "release_date_precision": "day",
+          "images": [{"url": "https://i.scdn.co/image/{{id}}" }],
+          "external_urls": {"spotify": "https://open.spotify.com/album/{{id}}"},
+          "total_tracks": 10,
+          "artists": [{"id": "{{artistId}}", "name": "{{artistName}}"}],
+          "copyrights": [{{copyrightItems}}]{{labelJson}}
+        }
+        """;
+    }
+
     public async ValueTask DisposeAsync() => Server.Dispose();
 }
