@@ -10,13 +10,18 @@ report.md` (arkitekturgranskning) finns i firstmate-datan; de punkterna implemen
 
 - **En användare (single-user-app)**, ingen användarinloggning i MVP.
 - All Spotify-data hämtas med **app-token (client credentials flow)** - ingen Spotify-OAuth.
-- Labels och artistkopplingar är **app-egna entiteter** (Spotifys `label`-fält är deprecated).
+- Labels och artistkopplingar är **app-egna entiteter**. Spotifys `label`-fält (deprecated
+  men fortfarande tillgängligt på fulla albumobjekt) används som sanningskälla för att en
+  release verkligen tillhör den följda labeln.
 - **Inga tracks lagras.** MusicBrainz väntar.
 - Release-polling per label via Spotifysökfiltret `label:"<namn>"` (full paginering):
-  `BackgroundService` + `PeriodicTimer`, 6-24 h rytm, idempotent upsert
-  (`ON CONFLICT (spotify_id)`), poll-cursor i DB. Upptäckta releases länkas till labeln via
-  `label_albums`-junctionen (add/confirm-only: en gång upptäckt release stannar kvar även om
-  en senare sökning inte returnerar den).
+  `BackgroundService` + `PeriodicTimer`, 6-24 h rytm, poll-cursor i DB. Eftersom Spotifys
+  label-sökfilter matchar luddigt verifieras varje kandidat mot fulla albumobjektet
+  (GET /albums/{id}); endast releases vars verkliga label exakt (case-insensitive, trimmat)
+  matchar den följda labeln länkas via `label_albums`. En verifierad mismatch tar bort en
+  befintlig länk (självläkning), men en tillfällig sökträff som försvinner raderar aldrig
+  en redan länkad release. Vid omdöpning av en label revideras alla befintliga länkar i
+  samma transaktion och bytet rullas tillbaka om Spotify inte kan verifiera dem (503).
 
 ## Struktur
 
@@ -75,6 +80,7 @@ dotnet apps/katalog-api/src/Katalog.Api/bin/Debug/net10.0/Katalog.Api.dll --roll
 - EF Core 10 + Npgsql: junction-tabeller (`album_artists`, `artist_label`, `label_albums`
   – auktoritativ länk label↔release), inga JSON-kolumner, enums som `int` med gaps,
   `Guid.CreateVersion7()`/`uuidv7()`, `spotify_id text unique` + idempotent upsert,
-  denormaliserad `label_spotify` + `label_id` (attribuering av upptäcktslabeln).
+  denormaliserad `label_spotify` (albumets verkliga Spotify-label) + `label_id`
+  (den följda app-labeln).
 - Spotify-resilience: custom pipeline `TotalTimeout → Retry (ShouldRetryAfterHeader) →
   CircuitBreaker → AttemptTimeout`, token-owning delegating handler med 401 → en refresh + retry.

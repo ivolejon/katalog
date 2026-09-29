@@ -727,6 +727,63 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task UpdateLabel_NoOpRename_SkipsAuditAndSucceedsWhenSpotifyUnreachable()
+    {
+        // Regression (no-op rename): a PUT that does not change the normalized name must not
+        // run the rename-time link audit, so it succeeds even when Spotify is unreachable and
+        // consumes no album-GET quota.
+        const string artistId = "noopartist1";
+        const string albumId = "noopalbum1";
+        const string labelName = "No-Op Label";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "No-Op Artist")));
+
+        spotify.StubLabelSearch(labelName,
+            WireMockSpotify.AlbumItemJson(artistId, albumId, "No-Op Album", 2020, "No-Op Artist"));
+        spotify.StubAlbumGet(albumId, labelName, artistId, "No-Op Album", 2020, "No-Op Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = labelName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(1, before!.ReleaseCount);
+
+        // Clear mappings and make every Spotify album GET fail. A no-op rename must not call it.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/albums/*").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(503));
+
+        var noOpResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = labelName });
+        Assert.Equal(HttpStatusCode.OK, noOpResponse.StatusCode);
+        var unchanged = await noOpResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(unchanged);
+        Assert.Equal(labelName, unchanged!.Name);
+        Assert.Equal(label.Slug, unchanged.Slug);
+
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        Assert.Equal(1, after!.ReleaseCount);
+
+        var albumGets = spotify.Server.FindLogEntries(Request.Create().WithPath("/v1/albums/*").UsingGet());
+        Assert.Empty(albumGets);
+    }
+
+    [Fact]
     public async Task PollPass_WithStalePreRenameName_CannotLinkAlbumWhoseRealLabelIsTheOldName()
     {
         // Regression (stale poll snapshot vs rename): a poll pass that starts before a rename

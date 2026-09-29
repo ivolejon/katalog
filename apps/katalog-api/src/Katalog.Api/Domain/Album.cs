@@ -2,8 +2,9 @@ namespace Katalog.Api.Domain;
 
 /// <summary>
 /// A Spotify album/release. No tracks are stored (captain's decision). <see cref="LabelSpotify"/>
-/// keeps the raw (deprecated) Spotify label field for diagnostics while <see cref="LabelId"/>
-/// is the normalized app-owned label when a match exists.
+/// is the album's real Spotify label (deprecated field, still available on the full album object),
+/// used as the ground truth for exact matching and stored as the release attribution.
+/// <see cref="LabelId"/> is the app-owned label the album was last discovered/verified for.
 /// </summary>
 public sealed class Album
 {
