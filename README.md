@@ -12,8 +12,11 @@ report.md` (arkitekturgranskning) finns i firstmate-datan; de punkterna implemen
 - All Spotify-data hämtas med **app-token (client credentials flow)** - ingen Spotify-OAuth.
 - Labels och artistkopplingar är **app-egna entiteter** (Spotifys `label`-fält är deprecated).
 - **Inga tracks lagras.** MusicBrainz väntar.
-- Release-polling per artist: `BackgroundService` + `PeriodicTimer`, 6-24 h rytm,
-  idempotent upsert (`ON CONFLICT (spotify_id)`), poll-cursor i DB.
+- Release-polling per label via Spotifysökfiltret `label:"<namn>"` (full paginering):
+  `BackgroundService` + `PeriodicTimer`, 6-24 h rytm, idempotent upsert
+  (`ON CONFLICT (spotify_id)`), poll-cursor i DB. Upptäckta releases länkas till labeln via
+  `label_albums`-junctionen (add/confirm-only: en gång upptäckt release stannar kvar även om
+  en senare sökning inte returnerar den).
 
 ## Struktur
 
@@ -69,8 +72,9 @@ dotnet apps/katalog-api/src/Katalog.Api/bin/Debug/net10.0/Katalog.Api.dll --roll
 - Build-time OpenAPI-generering till `contracts/`; alla endpoints har `operationId`.
   `appsettings.OpenApiGeneration.json` med placeholder-förbindelser + `OpenApiDocumentGeneration`-guards
   så `dotnet build` fungerar utan levande Postgres/Spotify.
-- EF Core 10 + Npgsql: junction-tabeller (`album_artists`, `artist_label`), inga JSON-kolumner,
-  enums som `int` med gaps, `Guid.CreateVersion7()`/`uuidv7()`, `spotify_id text unique` +
-  idempotent upsert, raw `label_spotify` + normaliserad `label_id` nullable.
+- EF Core 10 + Npgsql: junction-tabeller (`album_artists`, `artist_label`, `label_albums`
+  – auktoritativ länk label↔release), inga JSON-kolumner, enums som `int` med gaps,
+  `Guid.CreateVersion7()`/`uuidv7()`, `spotify_id text unique` + idempotent upsert,
+  denormaliserad `label_spotify` + `label_id` (attribuering av upptäcktslabeln).
 - Spotify-resilience: custom pipeline `TotalTimeout → Retry (ShouldRetryAfterHeader) →
   CircuitBreaker → AttemptTimeout`, token-owning delegating handler med 401 → en refresh + retry.
