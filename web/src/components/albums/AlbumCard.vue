@@ -21,6 +21,8 @@ const albumTypeLabel = computed(() => {
       return 'Album'
   }
 })
+
+const artistDisplay = computed(() => props.album.artistNames.join(', '))
 </script>
 
 <template>
@@ -48,6 +50,13 @@ const albumTypeLabel = computed(() => {
             <h3 class="text-foreground truncate font-semibold" :title="album.name">
               {{ album.name }}
             </h3>
+            <p
+              v-if="artistDisplay"
+              class="text-muted-foreground truncate text-sm"
+              :title="artistDisplay"
+            >
+              {{ artistDisplay }}
+            </p>
             <div class="flex flex-wrap items-center gap-2">
               <Badge variant="secondary">{{ albumTypeLabel }}</Badge>
               <span

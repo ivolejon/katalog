@@ -67,6 +67,8 @@ export interface AlbumSummary {
   imageUrl: string | null
   externalUrl: string
   totalTracks: number
+  /** Artist names credited on the release, ordered alphabetically. */
+  artistNames: string[]
 }
 
 /** Artist linked to a label, detail form (GET /api/labels/{id}). */
