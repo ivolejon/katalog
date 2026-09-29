@@ -582,6 +582,149 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task UpdateLabel_RenameFailsWith503_KeepingOldNameAndLinks_WhenSpotifyVerificationFails()
+    {
+        // Regression (fail-closed rename audit): if Spotify cannot verify a linked album
+        // during the rename audit, the rename must not complete silently. The request fails
+        // with 503, the transaction rolls back, and the label keeps its old name with all
+        // links intact - so the next poll lists the same, correct releases.
+        const string artistId = "auditfailartist";
+        const string albumAId = "auditfaila";
+        const string albumBId = "auditfailb";
+        const string oldName = "Ninja Tune";
+        const string newName = "Sunset Recordings";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Audit Artist")));
+
+        // Pre-rename: both albums' real label is the followed label, so both are linked.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, albumAId, "Album A", 2020, "Audit Artist"),
+            WireMockSpotify.AlbumItemJson(artistId, albumBId, "Album B", 2021, "Audit Artist"));
+        spotify.StubAlbumGet(albumAId, oldName, artistId, "Album A", 2020, "Audit Artist");
+        spotify.StubAlbumGet(albumBId, oldName, artistId, "Album B", 2021, "Audit Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(oldName, before!.Name);
+        Assert.Equal(2, before.ReleaseCount);
+
+        // The rename audit cannot verify any link: every album GET fails with 500.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/albums/{albumAId}").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(500));
+        spotify.Server.Given(Request.Create().WithPath($"/v1/albums/{albumBId}").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(500));
+
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, renameResponse.StatusCode);
+        var problem = await renameResponse.Content.ReadAsStringAsync();
+        Assert.Contains("was not renamed", problem);
+
+        // The rename rolled back: old name, old slug and all links are intact.
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        Assert.Equal(oldName, after!.Name);
+        Assert.Equal(2, after.ReleaseCount);
+
+        // The next poll under the old name still lists exactly the verified releases.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, albumAId, "Album A", 2020, "Audit Artist"),
+            WireMockSpotify.AlbumItemJson(artistId, albumBId, "Album B", 2021, "Audit Artist"));
+        spotify.StubAlbumGet(albumAId, oldName, artistId, "Album A", 2020, "Audit Artist");
+        spotify.StubAlbumGet(albumBId, oldName, artistId, "Album B", 2021, "Audit Artist");
+
+        await using var pollScope = factory.Services.CreateAsyncScope();
+        var poller = pollScope.ServiceProvider.GetRequiredService<ReleasePoller>();
+        await poller.PollOnceAsync(CancellationToken.None);
+
+        var afterPoll = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(afterPoll);
+        Assert.Equal(oldName, afterPoll!.Name);
+        Assert.Equal(2, afterPoll.ReleaseCount);
+        Assert.Equal(new[] { albumAId, albumBId }, afterPoll.Releases.Select(r => r.SpotifyId).OrderBy(id => id).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateLabel_RenameUnlinks404Album_AndSucceeds()
+    {
+        // Regression: an album GET that returns 404 is a verified upstream fact - the album no
+        // longer exists in Spotify's catalog and can never exactly match the label, so the
+        // rename audit unlinks it and the rename succeeds.
+        const string artistId = "audit404artist";
+        const string goneAlbumId = "audit404gone";
+        const string keptAlbumId = "audit404kept";
+        const string oldName = "Ninja Tune";
+        const string newName = "Sunset Recordings";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Audit 404 Artist")));
+
+        // Pre-rename: both albums report the followed label, so both are linked.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, goneAlbumId, "Gone Album", 2020, "Audit 404 Artist"),
+            WireMockSpotify.AlbumItemJson(artistId, keptAlbumId, "Kept Album", 2021, "Audit 404 Artist"));
+        spotify.StubAlbumGet(goneAlbumId, oldName, artistId, "Gone Album", 2020, "Audit 404 Artist");
+        spotify.StubAlbumGet(keptAlbumId, oldName, artistId, "Kept Album", 2021, "Audit 404 Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(2, before!.ReleaseCount);
+
+        // Post-rename reality: the gone album no longer exists (404); the kept album's real
+        // label exactly matches the new name.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubLabelSearch(newName,
+            WireMockSpotify.AlbumItemJson(artistId, keptAlbumId, "Kept Album", 2021, "Audit 404 Artist"));
+        spotify.StubAlbumGet(keptAlbumId, $" {newName.ToLowerInvariant()} ", artistId, "Kept Album", 2021, "Audit 404 Artist");
+
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.OK, renameResponse.StatusCode);
+        var renamed = await renameResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(renamed);
+        Assert.Equal(newName, renamed!.Name);
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        var release = Assert.Single(after!.Releases);
+        Assert.Equal(keptAlbumId, release.SpotifyId);
+        Assert.Equal(newName.ToLowerInvariant(), release.LabelSpotify);
+    }
+
+    [Fact]
     public async Task CreateLabel_FuzzySearchHitWhoseRealLabelIsAnotherLabel_IsNotLinked()
     {
         // Regression (exact-label verification): an album search returns for label B even

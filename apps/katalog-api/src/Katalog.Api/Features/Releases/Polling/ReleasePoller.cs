@@ -3,6 +3,7 @@ using Katalog.Api.Infrastructure;
 using Katalog.Api.Infrastructure.Spotify;
 using Katalog.Api.Setup;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 
 namespace Katalog.Api.Features.Releases.Polling;
@@ -129,14 +130,17 @@ public sealed class ReleasePoller(
 
     /// <summary>
     /// Audits every existing label_albums link of a label against the label's (possibly new)
-    /// name — used after a rename, which deliberately retargets the label and can invalidate
-    /// links that the discovery search will never re-encounter under the new name. For each
-    /// linked album the real Spotify label is fetched via the same GET /albums/{id}
-    /// verification discovery uses: a positively verified mismatch unlinks the album; an
-    /// exact match re-upserts it, correcting any stale <c>label_spotify</c> attribution. A
-    /// link whose album cannot be verified (album GET fails or reports no label) is kept - only
-    /// a positively verified mismatch ever deletes. One album GET per link; a failing album
-    /// GET does not abort the audit of the remaining links.
+    /// name — used before a rename commits, which deliberately retargets the label and can
+    /// invalidate links that the discovery search will never re-encounter under the new name.
+    /// For each linked album the real Spotify label is fetched via the same GET /albums/{id}
+    /// verification discovery uses: a positively verified mismatch unlinks the album; an exact
+    /// match re-upserts it, correcting any stale <c>label_spotify</c> attribution; a 404 means
+    /// the album no longer exists in Spotify's catalog (a verified upstream fact, never an
+    /// exact-match candidate), so its stale link is removed. Any other unverifiable link -
+    /// album GET failure, 5xx/429, cancellation, or an album reporting no label - aborts the
+    /// audit with <see cref="LabelLinkAuditIncompleteException"/> so the caller can roll back
+    /// instead of silently completing a rename with unverified links. Runs inside the caller's
+    /// transaction when one is active (all its DB writes are raw SQL on the shared connection).
     /// </summary>
     public async Task AuditLabelLinksAsync(Guid labelId, string labelName, CancellationToken cancellationToken)
     {
@@ -151,39 +155,46 @@ public sealed class ReleasePoller(
 
         foreach (var link in links)
         {
+            SpotifyAlbumItem? fullAlbum;
             try
             {
-                var fullAlbum = await spotifyApiClient.GetAlbumAsync(link.SpotifyId, cancellationToken);
-                var realLabel = fullAlbum?.Label?.Trim();
-
-                if (string.IsNullOrWhiteSpace(realLabel))
-                {
-                    logger.LogInformation(
-                        "Link audit keeping album {AlbumId} ({AlbumName}) under label {LabelName}: Spotify reported no label to verify.",
-                        link.SpotifyId, link.Name, labelName);
-                    continue;
-                }
-
-                if (!string.Equals(realLabel, labelName.Trim(), StringComparison.OrdinalIgnoreCase))
-                {
-                    await RemoveVerifiedMismatchedLabelAlbumAsync(link.SpotifyId, labelId, labelName, realLabel,
-                        cancellationToken);
-                    continue;
-                }
-
-                await UpsertAlbumAsync(label, fullAlbum!, realLabel, cancellationToken);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                throw;
+                fullAlbum = await spotifyApiClient.GetAlbumAsync(link.SpotifyId, cancellationToken);
             }
             catch (Exception ex)
             {
-                // One failing album GET must not abort the audit of the remaining links; the
-                // next poll cycle re-verifies re-encountered candidates.
-                logger.LogError(ex, "Link audit failed for album {AlbumId} under label {LabelName} ({LabelId}).",
+                logger.LogError(ex,
+                    "Link audit could not verify album {AlbumId} under label {LabelName} ({LabelId}); the audit must not complete.",
                     link.SpotifyId, labelName, labelId);
+                throw new LabelLinkAuditIncompleteException(labelId, link.SpotifyId, "Spotify verification failed",
+                    ex);
             }
+
+            if (fullAlbum is null)
+            {
+                await DeleteLabelAlbumAsync(link.SpotifyId, labelId, cancellationToken);
+                logger.LogInformation(
+                    "Link audit removed album {AlbumId} ({AlbumName}) under label {LabelName}: Spotify reports the album no longer exists.",
+                    link.SpotifyId, link.Name, labelName);
+                continue;
+            }
+
+            var realLabel = fullAlbum.Label?.Trim();
+            if (string.IsNullOrWhiteSpace(realLabel))
+            {
+                logger.LogInformation(
+                    "Link audit could not verify album {AlbumId} ({AlbumName}) under label {LabelName}: Spotify reported no label to verify.",
+                    link.SpotifyId, link.Name, labelName);
+                throw new LabelLinkAuditIncompleteException(labelId, link.SpotifyId, "Spotify reported no label");
+            }
+
+            if (!string.Equals(realLabel, labelName.Trim(), StringComparison.OrdinalIgnoreCase))
+            {
+                await RemoveVerifiedMismatchedLabelAlbumAsync(link.SpotifyId, labelId, labelName, realLabel,
+                    cancellationToken);
+                continue;
+            }
+
+            await UpsertAlbumAsync(label, fullAlbum, realLabel, cancellationToken);
         }
 
         logger.LogInformation("Link audit completed for label {LabelName} ({LabelId}) over {LinkCount} link(s).",
@@ -236,23 +247,7 @@ public sealed class ReleasePoller(
     private async Task RemoveVerifiedMismatchedLabelAlbumAsync(string spotifyAlbumId, Guid labelId,
         string labelName, string realLabel, CancellationToken cancellationToken)
     {
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
-        command.CommandText = """
-            DELETE FROM label_albums la
-            USING albums a
-            WHERE la.album_id = a.id
-              AND la.label_id = @labelId
-              AND a.spotify_id = @spotifyId
-            """;
-
-        command.Parameters.Add(P("labelId", labelId));
-        command.Parameters.Add(P("spotifyId", spotifyAlbumId));
-
-        var removed = await command.ExecuteNonQueryAsync(cancellationToken);
+        var removed = await DeleteLabelAlbumAsync(spotifyAlbumId, labelId, cancellationToken);
         if (removed > 0)
         {
             logger.LogInformation(
@@ -265,6 +260,46 @@ public sealed class ReleasePoller(
                 "Verified label mismatch for album {AlbumId} against label {LabelName} (real label {RealLabel}); no existing link to remove.",
                 spotifyAlbumId, labelName, realLabel);
         }
+    }
+
+    /// <summary>
+    /// Deletes the junction row for one album-label pair (on the caller's transaction when one
+    /// is active). Returns the number of rows removed.
+    /// </summary>
+    private async Task<int> DeleteLabelAlbumAsync(string spotifyAlbumId, Guid labelId,
+        CancellationToken cancellationToken)
+    {
+        await using var command = await PrepareCommandAsync(cancellationToken);
+        command.CommandText = """
+            DELETE FROM label_albums la
+            USING albums a
+            WHERE la.album_id = a.id
+              AND la.label_id = @labelId
+              AND a.spotify_id = @spotifyId
+            """;
+
+        command.Parameters.Add(P("labelId", labelId));
+        command.Parameters.Add(P("spotifyId", spotifyAlbumId));
+
+        return await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Opens the shared DB connection if needed and creates a command on it, binding the
+    /// active EF transaction so raw-SQL writes commit/roll back together with the callers'
+    /// EF changes.
+    /// </summary>
+    private async Task<System.Data.Common.DbCommand> PrepareCommandAsync(CancellationToken cancellationToken)
+    {
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(cancellationToken);
+
+        var command = connection.CreateCommand();
+        if (context.Database.CurrentTransaction is { } transaction)
+            command.Transaction = transaction.GetDbTransaction();
+
+        return command;
     }
 
     private async Task<PollCursor> GetOrCreateCursorAsync(CancellationToken cancellationToken)
@@ -291,11 +326,7 @@ public sealed class ReleasePoller(
         var albumType = ParseAlbumType(album.AlbumType);
         var (releaseDate, precision) = ParseReleaseDate(album.ReleaseDate, album.ReleaseDatePrecision);
 
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
+        await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
             WITH upserted AS (
                 INSERT INTO albums (
@@ -361,11 +392,7 @@ public sealed class ReleasePoller(
 
     private async Task<Guid> UpsertArtistAsync(SpotifyAlbumArtist artist, CancellationToken cancellationToken)
     {
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
+        await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
             INSERT INTO artists (id, spotify_id, name, created_at_utc, updated_at_utc)
             VALUES (@id, @spotifyId, @name, now(), now())
@@ -386,11 +413,7 @@ public sealed class ReleasePoller(
 
     private async Task UpsertAlbumArtistAsync(Guid albumId, Guid artistId, int position, CancellationToken cancellationToken)
     {
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
+        await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
             INSERT INTO album_artists (album_id, artist_id, position)
             VALUES (@albumId, @artistId, @position)
@@ -413,11 +436,7 @@ public sealed class ReleasePoller(
     /// </summary>
     private async Task UpsertLabelAlbumAsync(Guid albumId, Guid labelId, CancellationToken cancellationToken)
     {
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
+        await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
             INSERT INTO label_albums (label_id, album_id, first_seen_at_utc, last_confirmed_at_utc)
             VALUES (@labelId, @albumId, now(), now())
@@ -434,11 +453,7 @@ public sealed class ReleasePoller(
     private async Task RemoveMissingAlbumArtistsAsync(Guid albumId, IReadOnlyCollection<Guid> artistIds,
         CancellationToken cancellationToken)
     {
-        var connection = context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
-
-        await using var command = connection.CreateCommand();
+        await using var command = await PrepareCommandAsync(cancellationToken);
         command.CommandText = """
             DELETE FROM album_artists
             WHERE album_id = @albumId
