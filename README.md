@@ -1,15 +1,20 @@
 # Katalog
 
-Följ skivbolag (labels) via Spotify. Backend i .NET 10 + Aspire, PostgreSQL. Frontend i Vue +
-TypeScript med shadcn-vue orkestreras tillsammans med API:t via Aspire.
+Följ skivbolag (labels) via Spotify. Logga in med din egen Spotify-konto och spela en
+release på dina egna enheter (Spotify Connect). Backend i .NET 10 + Aspire, PostgreSQL.
+Frontend i Vue + TypeScript med shadcn-vue orkestreras tillsammans med API:t via Aspire.
 
 Arkitekturdesign: `data/katalog-research-q1/report.md` (research) och `data/katalog-arch-ref-q1/
 report.md` (arkitekturgranskning) finns i firstmate-datan; de punkterna implementeras här.
 
 ## Beslut som styr implementationen
 
-- **En användare (single-user-app)**, ingen användarinloggning i MVP.
-- All Spotify-data hämtas med **app-token (client credentials flow)** - ingen Spotify-OAuth.
+- **En användare (single-user-app)**, inga egna app-konton. Inloggningen för Spotify
+  Connect sker med användarens egen Spotify-konto (OAuth).
+- Katalogdata hämtas med **app-token (client credentials flow)**. Spotify Connect
+  (inloggning, enheter, play/pause) använder istället **användarens egen token**
+  (authorization code + PKCE), lagrad server-side i `spotify_user_sessions` - token
+  når aldrig webbläsaren.
 - Labels och artistkopplingar är **app-egna entiteter**. Spotifys `label`-fält (deprecated
   men fortfarande tillgängligt på fulla albumobjekt) används som sanningskälla för att en
   release verkligen tillhör den följda labeln.
@@ -55,6 +60,11 @@ cd apps/katalog-api/src/Katalog.Api
 dotnet user-secrets set "Spotify:ClientId" "<client id>"
 dotnet user-secrets set "Spotify:ClientSecret" "<client secret>"
 ```
+
+För Spotify Connect måste redirect-URI:n vara registrerad i Spotifys app-dashboard. Default
+är `http://localhost:5192/api/spotify/auth/callback` (`Spotify:RedirectUri`) och
+frontend-origin `http://localhost:5173` (`Spotify:WebBaseUrl`); optionsvalideringen kräver
+well-formed URIs, och båda måste ändras för andra deploymenter.
 
 API:ets health-endpoints: `/alive` (liveness) och `/health`. OpenAPI-dokument live på
 `/openapi/v1.json`; kontraktet commitas i `contracts/katalog-api/openapi.json`.

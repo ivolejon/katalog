@@ -13,7 +13,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## Backend (owned by the backend worker)
 
-- Layout and conventions follow the arch report `data/katalog-arch-ref-q1/report.md` (single API project, contracts/ committed OpenAPI, no user auth in MVP).
+- Layout and conventions follow the arch report `data/katalog-arch-ref-q1/report.md` (single API project, contracts/ committed OpenAPI). Spotify Connect signerar in användaren med dess egen Spotify-konto (user OAuth, PKCE) - det finns ingen egen app-användarauth.
 
 ## Katalog (label-följning via Spotify)
 
