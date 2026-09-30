@@ -72,7 +72,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         // The label's immediate poll already discovered the album; PollOnce is idempotent.
         await RunPollerAsync(factory);
-        var releases = await factory.CreateClient().GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{labelId}/releases");
+        var releases = await GetReleasesAsync(factory.CreateClient(), labelId);
         Assert.NotNull(releases);
         var album = Assert.Single(releases);
         Assert.Equal(AlbumId, album.SpotifyId);
@@ -85,7 +85,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         // Second poll is a no-op upsert: same rows, same ids
         await RunPollerAsync(factory);
-        var afterSecond = await factory.CreateClient().GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{labelId}/releases");
+        var afterSecond = await GetReleasesAsync(factory.CreateClient(), labelId);
         Assert.NotNull(afterSecond);
         Assert.Single(afterSecond);
         Assert.Equal(releases[0].Id, afterSecond[0].Id);
@@ -112,7 +112,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         await RunPollerAsync(factory);
 
-        var releases = await factory.CreateClient().GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{labelId}/releases");
+        var releases = await GetReleasesAsync(factory.CreateClient(), labelId);
         Assert.NotNull(releases);
         Assert.Single(releases);
     }
@@ -147,7 +147,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         // The label search failed (500 after all retries) so no album is stored, but the cycle
         // completed and the cursor advanced.
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         Assert.Empty(releases);
 
@@ -190,7 +190,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         // Run scheduled poll: it should still only discover the label-matching album.
         await RunPollerAsync(factory);
 
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         var album = Assert.Single(releases);
         Assert.Equal(AlbumId, album.SpotifyId);
@@ -238,9 +238,9 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(label);
 
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
-        Assert.Equal(11, releases.Length);
+        Assert.Equal(11, releases.Count);
         Assert.Contains(releases, r => r.SpotifyId == page2AlbumId);
     }
 
@@ -275,13 +275,13 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         // The immediate poll on label creation must also verify, so the near-miss album
         // never lands even before the scheduled poll runs.
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         Assert.Empty(releases);
 
         await RunPollerAsync(factory);
 
-        var afterPoll = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var afterPoll = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(afterPoll);
         Assert.Empty(afterPoll);
     }
@@ -318,7 +318,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         await RunPollerAsync(factory);
 
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         var album = Assert.Single(releases);
         Assert.Equal(exactAlbumId, album.SpotifyId);
@@ -355,7 +355,7 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         await RunPollerAsync(factory);
 
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         Assert.Empty(releases);
 
@@ -401,9 +401,9 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
         var label = await labelResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(label);
 
-        var seeded = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var seeded = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(seeded);
-        Assert.Equal(2, seeded.Length);
+        Assert.Equal(2, seeded.Count);
 
         // Flip to the real state: the contaminated album's real label is a near miss; the true
         // album's real label differs only in case/whitespace.
@@ -417,11 +417,22 @@ public sealed class ReleasesPollingIntegrationTests(PostgresFixture postgres, Wi
 
         await RunPollerAsync(factory);
 
-        var releases = await client.GetFromJsonAsync<AlbumResponse[]>($"/api/labels/{label.Id}/releases");
+        var releases = await GetReleasesAsync(client, label.Id);
         Assert.NotNull(releases);
         var album = Assert.Single(releases);
         Assert.Equal(exactAlbumId, album.SpotifyId);
         Assert.Equal(LabelName.ToLowerInvariant(), album.LabelSpotify);
+    }
+
+    /// <summary>
+    /// Fetches the label's releases through the paged endpoint, in a single page large
+    /// enough for the seeded data.
+    /// </summary>
+    private static async Task<IReadOnlyList<AlbumResponse>> GetReleasesAsync(HttpClient client, Guid labelId)
+    {
+        var page = await client.GetFromJsonAsync<LabelReleasesResponse>(
+            $"/api/labels/{labelId}/releases?page=1&pageSize=1000");
+        return page?.Releases ?? [];
     }
 
     private static async Task RunPollerAsync(KatalogApiFactory factory)

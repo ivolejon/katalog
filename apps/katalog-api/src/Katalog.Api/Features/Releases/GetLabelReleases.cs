@@ -56,7 +56,8 @@ public sealed class GetLabelReleases(KatalogContext context)
             .Include(a => a.AlbumArtists)
             .ThenInclude(aa => aa.Artist)
             .Where(a => a.LabelAlbums.Any(la => la.LabelId == labelId))
-            .OrderByDescending(a => a.ReleaseDate ?? DateOnly.MinValue);
+            .OrderByDescending(a => a.ReleaseDate ?? DateOnly.MinValue)
+            .ThenBy(a => a.Id);
     }
 
     private static IReadOnlyList<AlbumResponse> MapRows(IReadOnlyList<Album> rows)

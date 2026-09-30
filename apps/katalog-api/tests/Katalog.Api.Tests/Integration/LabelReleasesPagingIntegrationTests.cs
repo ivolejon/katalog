@@ -65,7 +65,7 @@ public sealed class LabelReleasesPagingIntegrationTests(PostgresFixture postgres
     }
 
     [Fact]
-    public async Task GetLabelReleases_WithoutPagingParams_ReturnsFullList()
+    public async Task GetLabelReleases_WithoutPagingParams_ReturnsDefaultFirstPage()
     {
         spotify.Reset();
         spotify.StubTokenExchange();
@@ -87,10 +87,62 @@ public sealed class LabelReleasesPagingIntegrationTests(PostgresFixture postgres
         var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
         Assert.NotNull(created);
 
-        var releases = await client.GetFromJsonAsync<IReadOnlyList<AlbumResponse>>($"/api/labels/{created!.Id}/releases");
-        Assert.NotNull(releases);
-        Assert.Single(releases!);
-        Assert.Equal("defaultalbum1", releases![0].SpotifyId);
+        var page = await client.GetFromJsonAsync<LabelReleasesResponse>($"/api/labels/{created!.Id}/releases");
+        Assert.NotNull(page);
+        Assert.Equal(1, page!.Page);
+        Assert.Equal(5, page.PageSize);
+        Assert.Equal(1, page.TotalCount);
+        Assert.False(page.HasMore);
+        var release = Assert.Single(page.Releases);
+        Assert.Equal("defaultalbum1", release.SpotifyId);
+    }
+
+    [Fact]
+    public async Task GetLabelReleases_TiedReleaseDates_ReturnsEveryReleaseExactlyOnce()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/tiedartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("tiedartist1", "Tied Artist")));
+        spotify.StubLabelSearch("Tied Label",
+            WireMockSpotify.AlbumItemJson("tiedartist1", "tiedalbum1", "Tied Album 1", 2024, "Tied Artist"));
+        spotify.StubAlbumGet("tiedalbum1", "Tied Label", "tiedartist1", "Tied Album 1", 2024, "Tied Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Tied Label", spotifyIds = new[] { "tiedartist1" } });
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        // Six more releases, all sharing one release date: ORDER BY alone cannot
+        // distinguish them, so paging must rely on the id tiebreaker to avoid
+        // skipping or duplicating rows across pages.
+        await SeedReleasesAsync(factory, created!.Id, "tiedartist1", "Tied Artist", 6,
+            new DateOnly(2024, 6, 1));
+
+        var loaded = new List<Guid>();
+        var pageNumber = 1;
+        var hasMore = true;
+        while (hasMore)
+        {
+            var page = await client.GetFromJsonAsync<LabelReleasesResponse>($"/api/labels/{created.Id}/releases?page={pageNumber}&pageSize=3");
+            Assert.NotNull(page);
+            Assert.Equal(7, page!.TotalCount);
+            Assert.Equal(pageNumber, page.Page);
+            Assert.Equal(3, page.PageSize);
+            loaded.AddRange(page.Releases.Select(r => r.Id));
+            hasMore = page.HasMore;
+            pageNumber++;
+        }
+
+        Assert.Equal(7, loaded.Distinct().Count());
+        Assert.Equal(7, loaded.Count);
     }
 
     [Fact]
@@ -172,7 +224,7 @@ public sealed class LabelReleasesPagingIntegrationTests(PostgresFixture postgres
     }
 
     private static async Task SeedReleasesAsync(KatalogApiFactory factory, Guid labelId,
-        string artistSpotifyId, string artistName, int extraCount)
+        string artistSpotifyId, string artistName, int extraCount, DateOnly? fixedReleaseDate = null)
     {
         using var scope = factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<KatalogContext>();
@@ -189,7 +241,7 @@ public sealed class LabelReleasesPagingIntegrationTests(PostgresFixture postgres
                 SpotifyId = $"seedalbum{i}",
                 Name = $"Seed Album {i}",
                 AlbumType = AlbumType.Album,
-                ReleaseDate = new DateOnly(2020, 1, 1).AddDays(i),
+                ReleaseDate = fixedReleaseDate ?? new DateOnly(2020, 1, 1).AddDays(i),
                 ReleaseDatePrecision = ReleaseDatePrecision.Day,
                 LabelSpotify = label.Name,
                 LabelId = label.Id,
