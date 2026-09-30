@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace Katalog.Api.Infrastructure.Spotify.User;
 
@@ -8,14 +9,19 @@ namespace Katalog.Api.Infrastructure.Spotify.User;
 /// once and retries the same request (the app credentials path does the same for catalog calls,
 /// see <see cref="SpotifyTokenHandler"/>). The request body is buffered up front so the retry
 /// can replay a play request; the bodies involved are tiny JSON documents.
+///
+/// The provider is resolved per request: the HttpClientFactory caches this handler's pipeline,
+/// so a constructor-injected scoped provider (and the EF context under it) would be shared by
+/// every request for the handler's lifetime.
 /// </summary>
 public sealed class SpotifyUserTokenHandler(
-    SpotifyUserTokenProvider tokenProvider,
+    IHttpContextAccessor httpContextAccessor,
     ILogger<SpotifyUserTokenHandler>? logger = null) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        var tokenProvider = RequireTokenProvider();
         var token = await tokenProvider.GetTokenAsync(cancellationToken);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -35,6 +41,14 @@ public sealed class SpotifyUserTokenHandler(
 
         logger?.LogDebug("Spotify answered 401; renewed the user's token and retried {Method}.", request.Method);
         return await base.SendAsync(retry, cancellationToken);
+    }
+
+    private SpotifyUserTokenProvider RequireTokenProvider()
+    {
+        var context = httpContextAccessor.HttpContext;
+        if (context is null)
+            throw new InvalidOperationException("The Spotify user token handler only runs inside a request.");
+        return context.RequestServices.GetRequiredService<SpotifyUserTokenProvider>();
     }
 
     private static HttpRequestMessage CloneRequest(HttpRequestMessage source, byte[]? body)
