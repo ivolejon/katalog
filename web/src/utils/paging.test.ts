@@ -19,6 +19,7 @@ function release(
     externalUrl: `https://open.spotify.com/album/${id}`,
     totalTracks: 10,
     artistNames,
+    artistSpotifyIds: [],
   }
 }
 
@@ -64,22 +65,41 @@ describe('mergeReleasePages', () => {
 })
 
 describe('countUniqueArtists', () => {
-  it('counts two artists who share a name as two', () => {
+  it('counts two albums by the same artist once', () => {
     const releases = [
-      release('a', 'Album A', ['Karin Dreijer']),
-      release('b', 'Album B', ['Karin Dreijer']),
+      { ...release('a', 'Album A', ['Karin Dreijer']), artistSpotifyIds: ['artist-1'] },
+      { ...release('b', 'Album B', ['Karin Dreijer']), artistSpotifyIds: ['artist-1'] },
+    ]
+
+    expect(countUniqueArtists(releases)).toBe(1)
+  })
+
+  it('counts two different artists who share a name as two', () => {
+    const releases = [
+      { ...release('a', 'Album A', ['Karin Dreijer']), artistSpotifyIds: ['artist-1'] },
+      { ...release('b', 'Album B', ['Karin Dreijer']), artistSpotifyIds: ['artist-2'] },
     ]
 
     expect(countUniqueArtists(releases)).toBe(2)
   })
 
-  it('does not double-count a renamed artist', () => {
+  it('does not double-count a repeated artist across pages', () => {
     const releases = [
-      release('a', 'Album A', ['Karin Dreijer']),
-      release('a', 'Album A', ['Fever Ray']),
+      { ...release('a', 'Album A', ['Karin Dreijer']), artistSpotifyIds: ['artist-1'] },
+      { ...release('b', 'Album B', ['Fever Ray']), artistSpotifyIds: ['artist-2'] },
+      { ...release('c', 'Album C', ['Karin Dreijer']), artistSpotifyIds: ['artist-1'] },
     ]
 
-    expect(countUniqueArtists(releases)).toBe(1)
+    expect(countUniqueArtists(releases)).toBe(2)
+  })
+
+  it('falls back to artist names when releases carry no Spotify ids', () => {
+    const releases = [
+      release('a', 'Album A', ['Karin Dreijer']),
+      release('b', 'Album B', ['Fever Ray']),
+    ]
+
+    expect(countUniqueArtists(releases)).toBe(2)
   })
 
   it('returns zero for an empty list', () => {

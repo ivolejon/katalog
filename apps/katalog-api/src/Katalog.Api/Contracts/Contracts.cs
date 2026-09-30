@@ -79,7 +79,8 @@ public sealed record AlbumResponse(
     string? ImageUrl,
     string? ExternalUrl,
     int TotalTracks,
-    IReadOnlyList<string> ArtistNames);
+    IReadOnlyList<string> ArtistNames,
+    IReadOnlyList<string> ArtistSpotifyIds);
 
 /// <summary>Paged releases for a label. The database is the source of truth; no Spotify calls are made per page.</summary>
 public sealed record LabelReleasesResponse(

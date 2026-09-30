@@ -446,7 +446,8 @@
           "imageUrl",
           "externalUrl",
           "totalTracks",
-          "artistNames"
+          "artistNames",
+          "artistSpotifyIds"
         ],
         "type": "object",
         "properties": {
@@ -499,6 +500,12 @@
             "format": "int32"
           },
           "artistNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "artistSpotifyIds": {
             "type": "array",
             "items": {
               "type": "string"

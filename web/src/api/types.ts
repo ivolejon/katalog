@@ -69,6 +69,8 @@ export interface AlbumSummary {
   totalTracks: number
   /** Artist names credited on the release, ordered alphabetically. */
   artistNames: string[]
+  /** Spotify ids of the artists credited on the release. */
+  artistSpotifyIds: string[]
 }
 
 /** Artist linked to a label, detail form (GET /api/labels/{id}). */

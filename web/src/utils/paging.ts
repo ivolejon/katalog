@@ -15,11 +15,17 @@ export function mergeReleasePages(
   return [...existing, ...page.releases.filter((r) => !seen.has(r.id))]
 }
 
-/** Count distinct artists across a set of releases, keyed by Spotify id. */
+/** Count distinct artists across a set of releases. */
 export function countUniqueArtists(releases: AlbumSummary[]): number {
   const ids = new Set<string>()
+  const names = new Set<string>()
   for (const release of releases) {
-    ids.add(release.spotifyId)
+    for (const id of release.artistSpotifyIds) {
+      ids.add(id)
+    }
+    for (const name of release.artistNames) {
+      names.add(name)
+    }
   }
-  return ids.size
+  return ids.size > 0 ? ids.size : names.size
 }

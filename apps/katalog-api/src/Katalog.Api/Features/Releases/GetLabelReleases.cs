@@ -74,7 +74,8 @@ public sealed class GetLabelReleases(KatalogContext context)
                 r.ImageUrl,
                 r.ExternalUrl,
                 r.TotalTracks,
-                r.AlbumArtists.Select(aa => aa.Artist.Name).Distinct().OrderBy(n => n).ToList()))
+                r.AlbumArtists.Select(aa => aa.Artist.Name).Distinct().OrderBy(n => n).ToList(),
+                r.AlbumArtists.Select(aa => aa.Artist.SpotifyId).ToList()))
             .ToList();
     }
 

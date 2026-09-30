@@ -43,10 +43,7 @@ const removing = ref(false)
 const loadedReleases = ref<AlbumSummary[]>([])
 const currentPage = ref(1)
 const hasMore = ref(false)
-const totalCount = ref(0)
-const initialTotalCount = ref(0)
 const loadingMore = ref(false)
-const newReleasesCount = ref(0)
 
 let loadRequest = 0
 let loadMoreRequest = 0
@@ -62,10 +59,6 @@ const sortedReleases = computed(() => {
 const displayedReleaseCount = computed(() => loadedReleases.value.length)
 const displayedArtistCount = computed(() => countUniqueArtists(loadedReleases.value))
 
-const newReleasesAvailable = computed(
-  () => newReleasesCount.value > 0 && loadedReleases.value.length < totalCount.value,
-)
-
 const isFollowing = computed(() => {
   if (!detail.value) {
     return false
@@ -77,24 +70,15 @@ function resetPaging() {
   loadedReleases.value = []
   currentPage.value = 1
   hasMore.value = false
-  totalCount.value = 0
-  initialTotalCount.value = 0
-  newReleasesCount.value = 0
 }
 
 function applyPage(page: LabelReleasesPage, isFirstPage: boolean) {
   if (isFirstPage) {
     loadedReleases.value = page.releases
-    initialTotalCount.value = page.totalCount
-    newReleasesCount.value = 0
   } else {
     loadedReleases.value = mergeReleasePages(loadedReleases.value, page)
-    if (page.totalCount > initialTotalCount.value) {
-      newReleasesCount.value = page.totalCount - initialTotalCount.value
-    }
   }
   currentPage.value = page.page
-  totalCount.value = page.totalCount
   hasMore.value = page.hasMore
 }
 
@@ -164,11 +148,6 @@ async function loadMore() {
       loadingMore.value = false
     }
   }
-}
-
-async function reloadForNewReleases() {
-  resetPaging()
-  await load()
 }
 
 watch(() => props.id, load, { immediate: true })
@@ -264,14 +243,6 @@ async function unfollow() {
                 {{ displayedReleaseCount }}
                 {{ displayedReleaseCount === 1 ? 'release' : 'releases' }}
               </span>
-              <Badge
-                v-if="newReleasesAvailable"
-                variant="outline"
-                class="cursor-pointer"
-                @click="reloadForNewReleases"
-              >
-                {{ newReleasesCount }} new since you started
-              </Badge>
             </div>
           </div>
           <div class="flex shrink-0 items-center gap-2">
