@@ -100,6 +100,7 @@ function applyPage(page: LabelReleasesPage, isFirstPage: boolean) {
 
 async function load() {
   const request = ++loadRequest
+  ++loadMoreRequest
   const id = props.id
   loading.value = true
   loadingMore.value = false
