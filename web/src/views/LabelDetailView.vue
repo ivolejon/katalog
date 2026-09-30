@@ -44,6 +44,7 @@ const loadedReleases = ref<AlbumSummary[]>([])
 const currentPage = ref(1)
 const hasMore = ref(false)
 const loadingMore = ref(false)
+const snapshotBoundary = ref<string | null>(null)
 
 let loadRequest = 0
 let loadMoreRequest = 0
@@ -70,11 +71,13 @@ function resetPaging() {
   loadedReleases.value = []
   currentPage.value = 1
   hasMore.value = false
+  snapshotBoundary.value = null
 }
 
 function applyPage(page: LabelReleasesPage, isFirstPage: boolean) {
   if (isFirstPage) {
     loadedReleases.value = page.releases
+    snapshotBoundary.value = page.snapshotBoundary
   } else {
     loadedReleases.value = mergeReleasePages(loadedReleases.value, page)
   }
@@ -131,7 +134,7 @@ async function loadMore() {
   const nextPage = currentPage.value + 1
 
   try {
-    const page = await api.getLabelReleases(props.id, nextPage, PAGE_SIZE)
+    const page = await api.getLabelReleases(props.id, nextPage, PAGE_SIZE, snapshotBoundary.value)
     if (request !== loadMoreRequest) {
       return
     }

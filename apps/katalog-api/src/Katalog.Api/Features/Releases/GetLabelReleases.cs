@@ -25,12 +25,14 @@ public sealed class GetLabelReleases(KatalogContext context)
     }
 
     /// <summary>
-    /// Returns a single page of releases for a label, plus the total count and a flag that
-    /// indicates whether more pages exist. Paging is performed in the database; no Spotify
-    /// calls are made per click.
+    /// Returns a single page of releases for a label, plus the total count, a flag that
+    /// indicates whether more pages exist, and a snapshot boundary. Paging is performed in
+    /// the database; no Spotify calls are made per click. When snapshotBoundary is provided
+    /// (echoed from a previous page), only albums with an id at or below the boundary are
+    /// returned, so a release discovered between clicks cannot shift the window.
     /// </summary>
     public async Task<LabelReleasesResponse?> GetPageAsync(Guid labelId, int page, int pageSize,
-        CancellationToken cancellationToken)
+        Guid? snapshotBoundary, CancellationToken cancellationToken)
     {
         var labelExists = await context.Labels.AnyAsync(l => l.Id == labelId, cancellationToken);
         if (!labelExists)
@@ -39,7 +41,13 @@ public sealed class GetLabelReleases(KatalogContext context)
         var totalCount = await context.LabelAlbums
             .CountAsync(la => la.LabelId == labelId, cancellationToken);
 
-        var rows = await ReleasesQuery(labelId)
+        var query = ReleasesQuery(labelId);
+        if (snapshotBoundary.HasValue)
+        {
+            query = query.Where(a => a.Id <= snapshotBoundary.Value);
+        }
+
+        var rows = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
@@ -47,7 +55,18 @@ public sealed class GetLabelReleases(KatalogContext context)
         var releases = MapRows(rows);
         var hasMore = page * pageSize < totalCount;
 
-        return new LabelReleasesResponse(page, pageSize, totalCount, hasMore, releases);
+        // On the first page, compute the snapshot boundary (max album id for the label).
+        Guid? boundary = snapshotBoundary;
+        if (!boundary.HasValue)
+        {
+            boundary = await context.Albums
+                .Where(a => a.LabelAlbums.Any(la => la.LabelId == labelId))
+                .OrderByDescending(a => a.Id)
+                .Select(a => a.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        return new LabelReleasesResponse(page, pageSize, totalCount, hasMore, boundary, releases);
     }
 
     private IQueryable<Album> ReleasesQuery(Guid labelId)

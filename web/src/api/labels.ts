@@ -46,12 +46,16 @@ export const api = {
     return http.get<LabelDetail>(`/labels/${id}${suffix}`)
   },
 
-  /** Paged releases for a label. No Spotify calls are made per page. */
-  getLabelReleases(id: string, page: number, pageSize: number): Promise<LabelReleasesPage> {
+  /** Paged releases for a label. No Spotify calls are made per page.
+   * Pass snapshotBoundary (from a previous page) to keep the paging window stable. */
+  getLabelReleases(id: string, page: number, pageSize: number, snapshotBoundary?: string | null): Promise<LabelReleasesPage> {
     const query = new URLSearchParams({
       page: String(page),
       pageSize: String(pageSize),
     })
+    if (snapshotBoundary) {
+      query.set('snapshotBoundary', snapshotBoundary)
+    }
     return http.get<LabelReleasesPage>(`/labels/${id}/releases?${query.toString()}`)
   },
 

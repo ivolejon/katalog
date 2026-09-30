@@ -398,6 +398,14 @@
               ],
               "format": "int32"
             }
+          },
+          {
+            "name": "snapshotBoundary",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -706,6 +714,7 @@
           "pageSize",
           "totalCount",
           "hasMore",
+          "snapshotBoundary",
           "releases"
         ],
         "type": "object",
@@ -736,6 +745,13 @@
           },
           "hasMore": {
             "type": "boolean"
+          },
+          "snapshotBoundary": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           },
           "releases": {
             "type": "array",

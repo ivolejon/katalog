@@ -223,6 +223,96 @@ public sealed class LabelReleasesPagingIntegrationTests(PostgresFixture postgres
         Assert.Equal("backcompatalbum1", detail.Releases[0].SpotifyId);
     }
 
+    [Fact]
+    public async Task GetLabelReleases_SnapshotBoundary_PreventsMidPagingInserts()
+    {
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/snapshotartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("snapshotartist1", "Snapshot Artist")));
+        spotify.StubLabelSearch("Snapshot Label",
+            WireMockSpotify.AlbumItemJson("snapshotartist1", "snapshotalbum1", "Snapshot Album 1", 2024, "Snapshot Artist"));
+        spotify.StubAlbumGet("snapshotalbum1", "Snapshot Label", "snapshotartist1", "Snapshot Album 1", 2024, "Snapshot Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Snapshot Label", spotifyIds = new[] { "snapshotartist1" } });
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        // Seed 4 additional releases (5 total with the discovered one).
+        await SeedReleasesAsync(factory, created!.Id, "snapshotartist1", "Snapshot Artist", 4);
+
+        // Page 1: 3 releases, with snapshot boundary.
+        var page1 = await client.GetFromJsonAsync<LabelReleasesResponse>(
+            $"/api/labels/{created.Id}/releases?page=1&pageSize=3");
+        Assert.NotNull(page1);
+        Assert.Equal(3, page1!.Releases.Count);
+        Assert.NotNull(page1.SnapshotBoundary);
+        Assert.True(page1.HasMore);
+
+        // Insert a newer album between page 1 and page 2 (simulating background discovery).
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<KatalogContext>();
+            var artist = await context.Artists.SingleAsync(a => a.SpotifyId == "snapshotartist1");
+            var label = await context.Labels.SingleAsync(l => l.Id == created.Id);
+            var now = DateTimeOffset.UtcNow;
+            var newAlbumId = Guid.CreateVersion7();
+            var newAlbum = new Album
+            {
+                Id = newAlbumId,
+                SpotifyId = "newalbum1",
+                Name = "New Album",
+                AlbumType = AlbumType.Album,
+                ReleaseDate = new DateOnly(2025, 6, 1),
+                ReleaseDatePrecision = ReleaseDatePrecision.Day,
+                LabelSpotify = label.Name,
+                LabelId = label.Id,
+                ExternalUrl = "https://open.spotify.com/album/newalbum1",
+                TotalTracks = 10,
+                CreatedAtUtc = now,
+                UpdatedAtUtc = now,
+            };
+            context.Albums.Add(newAlbum);
+            context.LabelAlbums.Add(new LabelAlbum
+            {
+                LabelId = label.Id,
+                AlbumId = newAlbum.Id,
+                FirstSeenAtUtc = now,
+                LastConfirmedAtUtc = now,
+            });
+            context.AlbumArtists.Add(new AlbumArtist
+            {
+                AlbumId = newAlbum.Id,
+                ArtistId = artist.Id,
+                Position = 0,
+            });
+            await context.SaveChangesAsync();
+        }
+
+        // Page 2: with snapshot boundary, the new album must not appear.
+        var page2 = await client.GetFromJsonAsync<LabelReleasesResponse>(
+            $"/api/labels/{created.Id}/releases?page=2&pageSize=3&snapshotBoundary={page1.SnapshotBoundary}");
+        Assert.NotNull(page2);
+        Assert.Equal(2, page2!.Releases.Count);
+        Assert.False(page2.HasMore);
+
+        // The union of pages 1 and 2 equals exactly the original 5 releases.
+        var allLoaded = page1.Releases.Concat(page2.Releases).ToList();
+        Assert.Equal(5, allLoaded.Count);
+        Assert.Equal(5, allLoaded.Select(r => r.Id).Distinct().Count());
+
+        // The new album is not listed in this session.
+        Assert.DoesNotContain(allLoaded, r => r.Name == "New Album");
+    }
+
     private static async Task SeedReleasesAsync(KatalogApiFactory factory, Guid labelId,
         string artistSpotifyId, string artistName, int extraCount, DateOnly? fixedReleaseDate = null)
     {

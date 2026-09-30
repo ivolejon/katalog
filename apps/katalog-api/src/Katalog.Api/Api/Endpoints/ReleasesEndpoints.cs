@@ -29,7 +29,7 @@ public static class ReleasesEndpoints
     }
 
     private static async Task<IResult> GetLabelReleases(Guid labelId, int? page, int? pageSize,
-        GetLabelReleases getLabelReleases, CancellationToken cancellationToken)
+        Guid? snapshotBoundary, GetLabelReleases getLabelReleases, CancellationToken cancellationToken)
     {
         var pageNumber = page ?? DefaultPage;
         var pageSizeValue = pageSize ?? DefaultPageSize;
@@ -43,7 +43,7 @@ public static class ReleasesEndpoints
             });
         }
 
-        var paged = await getLabelReleases.GetPageAsync(labelId, pageNumber, pageSizeValue, cancellationToken);
+        var paged = await getLabelReleases.GetPageAsync(labelId, pageNumber, pageSizeValue, snapshotBoundary, cancellationToken);
         return paged is null ? TypedResults.NotFound() : TypedResults.Ok(paged);
     }
 }

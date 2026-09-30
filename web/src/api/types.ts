@@ -102,5 +102,6 @@ export interface LabelReleasesPage {
   pageSize: number
   totalCount: number
   hasMore: boolean
+  snapshotBoundary: string | null
   releases: AlbumSummary[]
 }
