@@ -1,4 +1,5 @@
 using Katalog.Api.Infrastructure.Spotify;
+using Katalog.Api.Infrastructure.Spotify.User;
 using Katalog.Api.Setup;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,8 @@ public static class SpotifySetup
             var options = sp.GetRequiredService<IOptions<SpotifyOptions>>().Value;
             client.BaseAddress = new Uri(options.AccountsBaseUrl);
         });
+
+        AddSpotifyUserConnect(services);
 
         services.AddHttpClient<ISpotifyApiClient, SpotifyApiClient>((sp, client) =>
         {
@@ -76,6 +79,61 @@ public static class SpotifySetup
         });
 
         return services;
+    }
+
+    /// <summary>
+    /// Spotify Connect: the sign-in round trip and the per-user player calls. These run with the
+    /// signed-in user's own token (<see cref="SpotifyUserTokenHandler"/>, one refresh + retry on
+    /// 401), kept server-side in the spotify_user_sessions table - never with the app's client
+    /// credentials, and never in the browser. Resilience matches the catalog pipeline but with a
+    /// shorter total timeout: a player command is a fast call the user is waiting on.
+    /// </summary>
+    private static void AddSpotifyUserConnect(IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<BrowserSession>();
+        services.AddScoped<SpotifyUserSessionStore>();
+        services.AddScoped<SpotifyUserTokenProvider>();
+        services.AddTransient<SpotifyUserTokenHandler>();
+        services.AddScoped<ISpotifyUserOAuthService, SpotifyUserOAuthService>();
+
+        // The profile lookup (GET /v1/me) during the callback: the fresh token is set on the
+        // request explicitly, so this client must not carry the user token handler.
+        services.AddHttpClient(SpotifyClientNames.Profile, (sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<SpotifyOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl);
+        });
+
+        services.AddHttpClient(SpotifyClientNames.UserPlayback, (sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<SpotifyOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl);
+        })
+        .AddHttpMessageHandler<SpotifyUserTokenHandler>()
+        .RedactLoggedHeaders(["Authorization"])
+        .AddResilienceHandler("spotify-user-connect-resilience", static (pipeline, _) =>
+        {
+            pipeline.AddTimeout(new TimeoutStrategyOptions { Timeout = TimeSpan.FromSeconds(30) });
+
+            pipeline.AddRetry(new HttpRetryStrategyOptions
+            {
+                MaxRetryAttempts = 2,
+                BackoffType = DelayBackoffType.Exponential,
+                Delay = TimeSpan.FromSeconds(1),
+                UseJitter = true,
+                ShouldRetryAfterHeader = true,
+                ShouldHandle = static args => ValueTask.FromResult(IsTransientRetry(args)),
+            });
+
+            pipeline.AddTimeout(new TimeoutStrategyOptions { Timeout = TimeSpan.FromSeconds(10) });
+        });
+
+        // Scoped, not the transient typed-client default: one client per request, the scope
+        // the token handler resolves its provider from so both share the session and EF context.
+        services.AddScoped<ISpotifyPlaybackClient>(sp =>
+            new SpotifyPlaybackClient(sp.GetRequiredService<IHttpClientFactory>()
+                .CreateClient(SpotifyClientNames.UserPlayback)));
     }
 
     /// <summary>Transient iff 429/5xx/408, transport exceptions or timeouts; user-driven cancellation is not retried.</summary>

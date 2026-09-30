@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatReleaseDate } from '@/utils/dates'
+import ReleasePlayButton from '@/components/spotify/ReleasePlayButton.vue'
 import { Album01Icon, Clock01Icon, SpotifyIcon } from '@/lib/icons'
 
 const props = defineProps<{
@@ -67,17 +68,24 @@ const artistDisplay = computed(() => props.album.artistNames.join(', '))
               </span>
             </div>
           </div>
-          <a
-            v-if="album.externalUrl"
-            :href="album.externalUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline" size="sm" class="shrink-0">
-              <SpotifyIcon class="text-[#1DB954]!" data-icon="inline-start" />
-              Open in Spotify
-            </Button>
-          </a>
+          <div class="flex shrink-0 flex-col items-end gap-2">
+            <a
+              v-if="album.externalUrl"
+              :href="album.externalUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="sm" class="shrink-0">
+                <SpotifyIcon class="text-[#1DB954]!" data-icon="inline-start" />
+                Open in Spotify
+              </Button>
+            </a>
+            <ReleasePlayButton
+              :spotify-album-id="album.spotifyId"
+              :album-name="album.name"
+              variant="default"
+            />
+          </div>
         </div>
       </div>
     </CardContent>

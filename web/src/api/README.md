@@ -14,6 +14,30 @@ matching the contract's endpoint surface (arch report 3.6):
 | `GET /api/labels/{id}` | `api.getLabel(id, includeReleases?)` |
 | `GET /api/labels/{id}/releases` | `api.getLabelReleases(id, page, pageSize)` |
 | `GET /api/labels/search` | `api.searchLabels({ q })` |
+| `GET /api/labels/{id}/releases` | (label detail already embeds releases) |
+
+## Spotify Connect (`src/api/spotify.ts`, exported as `spotifyApi`)
+
+Sign-in with the user's own Spotify account, then play a release on one of *their*
+devices. These calls use the signed-in user's Spotify token, which the backend
+keeps server-side - the browser never receives a token, and the Spotify app's
+client id/secret never reach this app.
+
+| Endpoint | Client function |
+|---|---|
+| `GET /api/spotify/me` | `spotifyApi.session()` |
+| `GET /api/spotify/devices` | `spotifyApi.devices()` |
+| `GET /api/spotify/playback` | `spotifyApi.playbackState()` |
+| `PUT /api/spotify/playback/play` | `spotifyApi.play(spotifyAlbumId, deviceId)` |
+| `PUT /api/spotify/playback/pause` | `spotifyApi.pause(deviceId)` |
+| `POST /api/spotify/auth/logout` | `spotifyApi.logout()` |
+
+`GET /api/spotify/auth/login` is a redirect the *browser* follows (a plain
+`window.location.assign('/api/spotify/auth/login')`), not a fetch: the backend
+redirects to Spotify's consent screen and calls back to
+`/api/spotify/auth/callback`, which sends the browser back to the app with
+`?spotify=connected` or `?spotify=failed&reason=...`. `src/stores/spotify.ts`
+reads and cleans that query parameter on start.
 
 ## Switching to the generated client
 

@@ -427,6 +427,201 @@
           }
         }
       }
+    },
+    "/api/spotify/me": {
+      "get": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "GetSpotifySession",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpotifySessionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/spotify/auth/login": {
+      "get": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "StartSpotifyLogin",
+        "responses": {
+          "302": {
+            "description": "Found"
+          }
+        }
+      }
+    },
+    "/api/spotify/auth/callback": {
+      "get": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "CompleteSpotifyLogin",
+        "parameters": [
+          {
+            "name": "Code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Error",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          }
+        }
+      }
+    },
+    "/api/spotify/auth/logout": {
+      "post": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "LogoutSpotify",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/spotify/devices": {
+      "get": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "GetSpotifyDevices",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpotifyDevicesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/spotify/playback": {
+      "get": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "GetSpotifyPlaybackState",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpotifyPlaybackStateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/spotify/playback/play": {
+      "put": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "PlayReleaseOnDevice",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayReleaseOnDeviceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spotify/playback/pause": {
+      "put": {
+        "tags": [
+          "SpotifyEndpoints"
+        ],
+        "operationId": "PausePlaybackOnDevice",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PausePlaybackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -901,6 +1096,150 @@
           }
         }
       },
+      "PausePlaybackRequest": {
+        "required": [
+          "deviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PlayReleaseOnDeviceRequest": {
+        "required": [
+          "spotifyAlbumId",
+          "deviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "spotifyAlbumId": {
+            "type": "string"
+          },
+          "deviceId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SpotifyDeviceResponse": {
+        "required": [
+          "id",
+          "name",
+          "type",
+          "isActive",
+          "isRestricted"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isRestricted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpotifyDevicesResponse": {
+        "required": [
+          "devices",
+          "activeDeviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "devices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotifyDeviceResponse"
+            }
+          },
+          "activeDeviceId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SpotifyPlaybackStateResponse": {
+        "required": [
+          "isPlaying",
+          "contextUri",
+          "contextType",
+          "deviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "isPlaying": {
+            "type": "boolean"
+          },
+          "contextUri": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contextType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "deviceId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SpotifySessionResponse": {
+        "required": [
+          "isConnected",
+          "spotifyUserId",
+          "displayName",
+          "product"
+        ],
+        "type": "object",
+        "properties": {
+          "isConnected": {
+            "type": "boolean"
+          },
+          "spotifyUserId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "displayName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "product": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "UpdateLabelRequest": {
         "required": [
           "name"
@@ -923,6 +1262,9 @@
     },
     {
       "name": "ReleasesEndpoints"
+    },
+    {
+      "name": "SpotifyEndpoints"
     }
   ]
 }

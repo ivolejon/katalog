@@ -4,8 +4,9 @@ Vue 3 + TypeScript SPA built with [shadcn-vue](https://shadcn-vue.com/) using
 the **a1AhVxI** preset (reka-ui base, Hugeicons, Figtree, neutral base color,
 Tailwind CSS 4, "maia" visual style).
 
-Tracks record labels through the Spotify catalog for a single user - no login
-in the MVP (arch report 3.3).
+Tracks record labels through the Spotify catalog for a single user. Sign-in with the
+user's own Spotify account enables Spotify Connect playback control on their devices
+(arch report 3.3).
 
 ## Stack
 

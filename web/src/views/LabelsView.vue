@@ -7,6 +7,7 @@ import LabelRow from '@/components/labels/LabelRow.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import { useLabelsStore } from '@/stores/labels'
+import SpotifyConnectCard from '@/components/spotify/SpotifyConnectCard.vue'
 import { MusicNote01Icon } from '@/lib/icons'
 
 const store = useLabelsStore()
@@ -39,6 +40,9 @@ function retry() {
         <AddLabelDialog @added="store.fetchLabels(true)" />
       </div>
     </div>
+
+    <!-- Spotify Connect: sign in and choose the device releases play on. -->
+    <SpotifyConnectCard />
 
     <!-- First load -->
     <div v-if="!store.initialized" class="flex flex-col gap-3">

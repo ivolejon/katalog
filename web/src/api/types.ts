@@ -105,3 +105,40 @@ export interface LabelReleasesPage {
   snapshotBoundary: string | null
   releases: AlbumSummary[]
 }
+
+/* Spotify Connect (sign-in with the user's own Spotify account, then control one of
+   their devices). Tokens never reach the browser: the backend keeps them. */
+
+/** Sign-in status for this browser (GET /api/spotify/me). */
+export interface SpotifySession {
+  isConnected: boolean
+  spotifyUserId: string | null
+  displayName: string | null
+  /** 'premium' or 'free'; controlling playback needs Premium. */
+  product: string | null
+}
+
+/** A device the signed-in account can play on (GET /api/spotify/devices). */
+export interface SpotifyDevice {
+  id: string
+  name: string
+  type: string
+  isActive: boolean
+  /** Spotify refuses Web API commands on a restricted device. */
+  isRestricted: boolean
+}
+
+/** The device list plus the device Spotify currently considers active. */
+export interface SpotifyDevices {
+  devices: SpotifyDevice[]
+  activeDeviceId: string | null
+}
+
+/** What is playing right now, for the play/pause toggle (GET /api/spotify/playback). */
+export interface SpotifyPlaybackState {
+  isPlaying: boolean
+  /** e.g. 'spotify:album:<id>'; null when playback is not album/playlist based. */
+  contextUri: string | null
+  contextType: string | null
+  deviceId: string | null
+}
