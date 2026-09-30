@@ -104,6 +104,7 @@ export interface LabelReleasesPage {
   hasMore: boolean
   snapshotBoundary: string | null
   releases: AlbumSummary[]
+}
 
 /* Spotify Connect (sign-in with the user's own Spotify account, then control one of
    their devices). Tokens never reach the browser: the backend keeps them. */
