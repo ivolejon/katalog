@@ -415,6 +415,139 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
     }
 
     [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenSpotifyOmitsAlbumLabelField()
+    {
+        // Regression: Spotify's full album object no longer includes the top-level "label"
+        // field for many albums; the real label is instead embedded in the "copyrights" text
+        // (e.g. "2025 Globuli"). Discovery must still link exact-matching albums when the
+        // label field is absent but a copyright line parses to the followed label name.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/copyrightartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("copyrightartist1", "Copyright Artist")));
+        spotify.StubLabelSearch("Copyright Label",
+            WireMockSpotify.AlbumItemJson("copyrightartist1", "copyrightalbum1", "Copyright Album 1", 2020, "Copyright Artist"),
+            WireMockSpotify.AlbumItemJson("copyrightartist1", "copyrightalbum2", "Copyright Album 2", 2021, "Copyright Artist"));
+        spotify.StubAlbumGetByCopyright("copyrightalbum1", "Copyright Label", "copyrightartist1", "Copyright Album 1", 2020, "Copyright Artist");
+        spotify.StubAlbumGetByCopyright("copyrightalbum2", "Copyright Label", "copyrightartist1", "Copyright Album 2", 2021, "Copyright Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Copyright Label", spotifyIds = new[] { "copyrightartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(2, detail!.ReleaseCount);
+        Assert.Equal(new[] { "copyrightalbum1", "copyrightalbum2" },
+            detail.Releases.Select(r => r.SpotifyId).OrderBy(id => id).ToArray());
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightContainsTrailingLegalText()
+    {
+        // Regression: Spotify's copyright line may carry trailing legal text such as
+        // "under exclusive license to X" after the real label name. Extraction must stop at
+        // that suffix so the album is still verified as an exact match for the followed label.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/suffixartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("suffixartist1", "Suffix Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("suffixartist1", "globulialbum1", "Globuli Album 1", 2025, "Suffix Artist"));
+        spotify.StubAlbumGetByCopyright("globulialbum1", "Globuli", "suffixartist1", "Globuli Album 1", 2025, "Suffix Artist", " under exclusive license to Sony Music");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "suffixartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        var release = Assert.Single(detail.Releases);
+        Assert.Equal("globulialbum1", release.SpotifyId);
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightEndsWithTerminalPunctuation()
+    {
+        // Regression: a standalone copyright line ending in terminal punctuation
+        // (e.g. "2025 Globuli.") must not capture the punctuation as part of the label.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/terminalartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("terminalartist1", "Terminal Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("terminalartist1", "terminalalbum1", "Terminal Album 1", 2025, "Terminal Artist"));
+        spotify.StubAlbumGetByCopyright("terminalalbum1", "Globuli", "terminalartist1", "Terminal Album 1", 2025, "Terminal Artist", ".");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "terminalartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("terminalalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
+    public async Task CreateLabel_DiscoversReleasesImmediately_WhenCopyrightLineMatchesExpectedLabel()
+    {
+        // Regression: when Spotify returns multiple copyright lines and the first one names a
+        // different rights holder, extraction must consider the followed label and pick the
+        // line that actually matches it instead of returning the first parsed line.
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath("/v1/artists/multicopyrightartist1").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson("multicopyrightartist1", "Multi Copyright Artist")));
+        spotify.StubLabelSearch("Globuli",
+            WireMockSpotify.AlbumItemJson("multicopyrightartist1", "multicopyrightalbum1", "Multi Copyright Album 1", 2025, "Multi Copyright Artist"));
+        spotify.StubAlbumGetWithCopyrights("multicopyrightalbum1", null,
+            ["2025 Sony Music", "2025 Globuli"], "multicopyrightartist1", "Multi Copyright Album 1", 2025, "Multi Copyright Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = "Globuli", spotifyIds = new[] { "multicopyrightartist1" } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var created = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(created);
+
+        var detail = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{created.Id}");
+        Assert.Equal(1, detail!.ReleaseCount);
+        Assert.Equal("multicopyrightalbum1", Assert.Single(detail.Releases).SpotifyId);
+    }
+
+    [Fact]
     public async Task CreateLabel_WhenAlbumPollingFails_StillCreatesLabel()
     {
         spotify.Reset();
@@ -580,6 +713,63 @@ public sealed class LabelsApiIntegrationTests(PostgresFixture postgres, WireMock
         var afterPoll = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
         Assert.NotNull(afterPoll);
         Assert.Equal(exactAlbumId, Assert.Single(afterPoll!.Releases).SpotifyId);
+    }
+
+    [Fact]
+    public async Task UpdateLabel_RenameAuditsCopyrightLinkedAlbum_UnlinksWhenCopyrightSaysOldName()
+    {
+        // Regression (copyright-linked rename audit): an album linked through copyright
+        // extraction (top-level label absent, copyright "2025 Globuli") is audited on rename.
+        // The copyright still reports the old name, a verified mismatch, so the audit unlinks
+        // it and the rename succeeds instead of aborting as unverifiable.
+        const string artistId = "copyrightrenameartist";
+        const string albumId = "copyrightrenamealbum";
+        const string oldName = "Globuli";
+        const string newName = "Globuli Records";
+
+        spotify.Reset();
+        spotify.StubTokenExchange();
+        spotify.Server.Given(Request.Create().WithPath($"/v1/artists/{artistId}").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(WireMockSpotify.ArtistJson(artistId, "Copyright Rename Artist")));
+
+        // Pre-rename: the album's real label only appears in the copyrights array and matches
+        // the followed label, so discovery links it.
+        spotify.StubLabelSearch(oldName,
+            WireMockSpotify.AlbumItemJson(artistId, albumId, "Copyright Rename Album", 2025, "Copyright Rename Artist"));
+        spotify.StubAlbumGetByCopyright(albumId, oldName, artistId, "Copyright Rename Album", 2025, "Copyright Rename Artist");
+
+        await using var factory = new KatalogApiFactory(postgres, spotify);
+        await factory.ResetDatabaseAsync();
+        var client = factory.CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("/api/labels",
+            new { name = oldName, spotifyIds = new[] { artistId } });
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var label = await createResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(label);
+
+        var before = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(before);
+        Assert.Equal(1, before!.ReleaseCount);
+
+        // Post-rename reality: the album's copyright still reports the old name, so the audit
+        // must treat it as a verified mismatch and unlink it, letting the rename succeed.
+        spotify.Server.Reset();
+        spotify.StubTokenExchange();
+        spotify.StubAlbumGetByCopyright(albumId, oldName, artistId, "Copyright Rename Album", 2025, "Copyright Rename Artist");
+
+        var renameResponse = await client.PutAsJsonAsync($"/api/labels/{label.Id}", new { name = newName });
+        Assert.Equal(HttpStatusCode.OK, renameResponse.StatusCode);
+        var renamed = await renameResponse.Content.ReadFromJsonAsync<LabelSummaryResponse>();
+        Assert.NotNull(renamed);
+        Assert.Equal(newName, renamed!.Name);
+
+        var after = await client.GetFromJsonAsync<LabelDetailResponse>($"/api/labels/{label.Id}");
+        Assert.NotNull(after);
+        Assert.Equal(0, after!.ReleaseCount);
     }
 
     [Fact]

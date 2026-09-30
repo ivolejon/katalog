@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:8f5aecffd7c4e754776239a88b7c7ea7df64c6a89c4a598d06a3572eef1bef3d",
+  "pageVersion": "sha256:634909a8e76e8b6f23b7f40c8a4ce3f4b38279286530b95fc3b5cfc5bc413b1f",
   "claims": [
     {
       "id": "claim_ac4658ae04d84041a93fa4c2f757d121",
@@ -8,15 +8,15 @@
       "evidence": [
         {
           "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/AppHost/AppHostSmokeTests.cs#L1-L20",
-          "version": "repo-lines-v1:sha256:28ace5055a2f47b343860bf91f581d1216dee5de0cbe63546f3e98e9c52aacf5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2MzliZjE4MjJjMWNjYmVlNWZjNWE1ZDU3ZDVlODRkNWUzMzE5MzkzNGRlNWQzNzM3NWNjOTVlODlkYTY0ZWYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEwOTA0OTBkMTY3YWRiOTEyNWM2NzNkOGUwODE2NDFjYWJmN2U4MzVjOGQ1ZTg2NjJhNjVhMDM4NjU4MzEwODMifQ"
+          "version": "repo-lines-v1:sha256:c4db9ae84da76652b7df5c77fe479d8d53cb935596ec75d74d8d760a87eebd32:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhYjcwM2QxZTY3YTYxNWY4ZDcxNGY5NmNmYzU5NDNkNzk4MDc4NzU1NDU5NzBkMDk5ZTlhNzRmYTE3MmEzNTIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgyNDIzNDRhZDgyNTJiMGNiY2RiOTVmZmM4NmFjNTI3MGY2N2Q2YTdkZjAzY2U2YjJjZDJlMGZhMzY1YWU4MzIifQ"
         },
         {
-          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L1-L20",
-          "version": "repo-lines-v1:sha256:df22cec41beb33236b4741606de776341600c103422167ea92b81167fd29441d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmYzQzZjA5Yjg1OWRiZTgxOTVkYzk4NDQxYmE0ZDZiNjZkYzNhZjc5NGVlYTViMmIxOGRhNjExYTU4OTE4ODUifQ"
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L1-L70",
+          "version": "repo-lines-v1:sha256:62be7993738cffa9e1a6cdf343075b35dcf2350af6eb9be5807f5127a0aa2d98:eyJzZWxlY3RlZExpbmVDb3VudCI6NzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYjcwN2M0ZjI1ODg3ODBhZGYwNWNhMTViM2VmMGM0NzgyNDYzMjQxZDRhNzlmYTdmZGM5ODg2YTdjY2Y0OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkMmMxOGUzNTg2ZTcyMzNmYzQ4NzBhMGVkNmIxODg4MWY1ZDAxZjdmOTAwYzJiMTVhZWE0NDM2MGU0YjQ5YjEifQ"
         },
         {
           "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Katalog.Api.Tests.csproj#L7-L25",
-          "version": "repo-lines-v1:sha256:cc84cf1f6466f5a5bdeec0eb69a1505af1d936f6f8fb91b15fc5ea4463a6ba1b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjYmViZmI0NmYxMjk5MWFlNDg4ZWVkYjM0MTQwMjlhYjFmOTgwN2NkYzA5ZWYwNmYzZDEwYWM5NmIyODZiZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkZGMxNTliYjU5NzQ5OGY1MjJlNzkzNWM4MTIxN2JlZTI3OTcyODZlMDNkNmRlYWQ2YWUxZDUyNjI1ZTdlNjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxNzY1MjYwY2YzMTA5ZDA4OTEzNjBkZWYxNGE3ZTRhMTRlNDIxOTNjMzgwMGUwOGIxN2U1OTc4MWZjZjA4N2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5NGI0NWE0NDJlZDY0MDllODBiMjQ2YWEyNWExZWJiMTYxZDQ0MDQ1MDUwMzY4MTFmMDdjMjAzOTU4MDgyZTEifQ"
+          "version": "repo-lines-v1:sha256:06adc7f862aadafc338ef6b6f32d822bfb64c6a43379c66e941f2a670c9ee84e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjYmViZmI0NmYxMjk5MWFlNDg4ZWVkYjM0MTQwMjlhYjFmOTgwN2NkYzA5ZWYwNmYzZDEwYWM5NmIyODZiZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxNzY1MjYwY2YzMTA5ZDA4OTEzNjBkZWYxNGE3ZTRhMTRlNDIxOTNjMzgwMGUwOGIxN2U1OTc4MWZjZjA4N2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5OWUwYjc2MzgxYjAzODg0ZTJiMjhlZGRhM2RlMWYyOTU4MzIxNzY1MmRiYWRhZWI3OWFlNTNiOTA4ZDNlM2EifQ"
         }
       ]
     },
@@ -33,10 +33,168 @@
           "version": "repo-lines-v1:sha256:cf67dd4fce6cdeba2126837cfe8491e3047e9d8c25aa98e913507de26c40a748:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjNzc1ODNjNjI2YTEwODdhNGYwZmE2NDc4ODAwNTU1OWFiMzA5MTc5OWY3YzMxZjZiMzllZWUxZjI0M2I3MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2MzYwYzgwNjE4MWI4YzY2YjRmMzhjY2UxMWZhMDRiY2Q2NjhlOTg3MDBhOGMzYjIzYzEzZTM1ODk1NjkzMjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
+    },
+    {
+      "id": "claim_d60e8a293b204e5bbaff70a7b0134763",
+      "statement": "KatalogApiFactory points the app under test at the Testcontainers PostgreSQL database and the WireMock Spotify server via configuration overrides, so placeholder credentials win over real user secrets and tests never call the real Spotify API.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/KatalogApiFactory.cs#L12-L31",
+          "version": "repo-lines-v1:sha256:2bb2a8f9f9d54710c1d709b435485e547513cc8af276fc74fa54477b99ffd60c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljMTk3YjE5MDQ4M2YxYjcwZDQxNDEwNmFlNjEyYzk5ODdlMjczMjY3MDE1MGJjYTBjMmM5NzRmNzkzYzBhMGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZkNGZlMDhhZmFjYzQ0YzQyZmEwY2VhMzdiMmM2N2NmZWY0NDY4ZWFhZGE4NGUwZDJhMDk0OWNkOThkNzkyMmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjliMjk4MmY0NjQ2Y2ZkMmNiNzllNDU1ZTlhM2YxYjRkNmRmMzI0YmM5MWI3NTNkOWEwYjNhNjEyMWI3ODcwZDAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3c87f1c30f644b418f41448ad7389a36",
+      "statement": "KatalogApiFactory keeps integration tests deterministic by setting Polling:Interval to 12 hours (within the app's validated 6-24 h range, since TimeSpan.Parse(\"24:00:00\") would mean 24 days) and removing all IHostedService registrations so the suite drives ReleasePoller.PollOnceAsync itself instead of racing a background poll.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/KatalogApiFactory.cs#L32-L41",
+          "version": "repo-lines-v1:sha256:8ba7e86a01df2ef734f859b666e941c00c33d99dc2e28610ec95d48b1c1b95e3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyMWRhYTBhMjE2MzU3YzE1ZGI2OTM5MWI2MzVlZWM4N2I3MTIxMGU2ZmI0MTZmNTEzNmIyOTNhZDg5Y2ZkYzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVkZDRiZDc1YjdjZjEwNTRmYWY0MzE2OTVkYjNlYjE3YzlhNWYzYWViNGU3ZTg4OWJjM2Q3NWIxZmI5ZDUzOTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1MGFhZmVlY2U4MjRjNDQwZmQ4ODQzMjc1ZTM0MmUxMDkyNzEwZWVmMWMwOWUwYTRkZWViMzI4OGQyMjM1NmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMxMzU1MWJmZDYxMzc4NTNjODU4NTMyNWY0MjhiZGI2MmJmYjRmYjEzMmI1NWY0MjE3ODFkMTJmMmMxNTAwNjEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/ReleasesPollingIntegrationTests.cs#L427-L432",
+          "version": "repo-lines-v1:sha256:cd43d415a6ceb696f704cb1fceec74e6917ccf812d4d0f5ff125d052231e85d3:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWNiYzU0NjdlZmU3Zjk5MDlkNGQyZDgwNmIxMzFhYzY3NDgxOGJhYWFhZTYwYTE5MTZkNGQzZjYwOTIxZTRiMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDRiMzZjZDhkZjUzMTZjYWJlNTI5YzJkNDM3Zjk3NmMyMWEwNzNhOGMwMjU3MTQ3YjNhNGQ3NjE5NTBkM2FiMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_09f3ae0fe83d4e3ba79f1afda1cc21cf",
+      "statement": "PostgresFixture starts one postgres:18.3 Testcontainers container per test class with a dedicated catalog database, and each test resets state via WireMock Reset plus truncation of all tables (album_artists, label_albums, artist_label, albums, artists, labels, poll_cursors).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/KatalogApiFactory.cs#L44-L56",
+          "version": "repo-lines-v1:sha256:7edc99439f05916e23746903e5644199155784b58a087c5e0e9ca06cde86c334:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ2NWJjY2U3MGM1NzA1MzgzNzY4ZWVmMzM2ZTE5Y2FiNzIxZTMwZDNjZWRjNGQzODg2Nzk4MDI1YWYxMTk3MmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjODQxZmQzNWM3YTZlYWQ2YzE3ZjkyOWM0ZDJkY2IzZDRkZDI3NGYzOGE5YWFjNTE2MzY0ZDQ1M2VmMDE3MGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/PostgresFixture.cs#L10-L34",
+          "version": "repo-lines-v1:sha256:cfefc90a64de0d87f2617867781e9aaa1eef7dd0fd85b444297bd980f8acc941:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyYThlYzhhNjRmMTRiODBhMTFmYmIwMTVhZTA5ZWUxYjg2YjkzMmIxZTc5NzYyZGMxMjA3MzVmYTVmNTQzMDAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZiYzZhMmVlNmEzNDEzMWRjOTYwMDcxOTBlOWE1M2I3NzRiMTg4NTgxNTY4OGE5Yzc4YmFmYjY0NTVjYWMxZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgzOTJhZGRmZmJhNTg1NGEwM2NiNGY0Nzg5NmE1NGEwYmUxMjgzOWQ2N2JlNTkzMWZlODQxMmJjZTNjODJiNTUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/WireMockSpotify.cs#L17-L18",
+          "version": "repo-lines-v1:sha256:5ba87f9f1662c31f315c4a1e6a21d7343df463bd1fbf3cc6746b40c0b0bbaec6:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTc5NjcxN2NiYzcxY2IwYjJjMzYxYjcwMjk2ZmYzZTY3OTc3OGNmOGYyN2M4YzkxYWRhN2Q2M2FiNTAxNmM5NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzBjOGQyNjI4OGY5Yjc1NTgwNjAyNjZlZWU2NDE4NGQ3YTNiYWRlMjViOGMyNDU5M2FmN2Y1MTA3ZTQzNWMxNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmE4MDZhODJlOWU5MjU3MmNkN2MwNGE1YTk4NDYyOTA1MDFiODBlM2EzNDc1ODAwZmE3ZmQwYmJhNjVmN2VmZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYmU3YTRjMGM5YTAwZDE1YWY3YzVlZTAwZGY5MzZjNmYyNDcxNDNmMDg4OGVlMzk2N2YzMmU3MGEyYmE0ZjcyZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a92c834fdeda4ffe848fb9ecaedac219",
+      "statement": "WireMockSpotify stubs the two shapes Spotify returns for an album's real label: StubAlbumGet emits the full album object with the top-level label field, while StubAlbumGetByCopyright emits the copyrights-only shape (no label field, real label embedded in the copyrights text, optionally with trailing legal text such as \"under exclusive license to ...\").",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/WireMockSpotify.cs#L152-L176",
+          "version": "repo-lines-v1:sha256:5bb35d76ba34e78b6f2598b76aa863b8ad4e7f4d2655f188c28f6bdee5cfcf2a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYyZmNkYTQ1ZmNiMTFmMmQ4Y2ZmN2ExNzNmZjZlMDYyMjUxOTRlYzdkNzEwNzcxYWJhMTQyNzljN2FmZWMyMjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlMjdjNGIxM2QzMDQzMzE2MWU4NWVmNmIxN2UzYzdmMWYxNmZhNGY1NDc0ODQ4NzBlZWRkYjFhY2NmZTFlNDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4MzE4NTIyMGU0YjM0YjE3ZjJjMmE5ZDYyZGNmZjNmZDRiNmUzZTUzZjEwYTM0MzliOWI4MmZkODExZjNmYzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU4MGY4MDJjZDg2YTEwN2IwY2FiYTQ4NzI2Njg5Nzc5ZTAxMGNmZjUwMzVlODAyNzNkNTVmZWU3MTM3Y2Y5Y2IifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/WireMockSpotify.cs#L64-L92",
+          "version": "repo-lines-v1:sha256:f088b08632100070c4867a597414d7172ef48acac350201fb4e6f23628f92c2f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxYjU2MTE3ZDg0ZDViZTY1NTljMjVmNDE2NmY5YjNlOWQwZDZjY2RjYjU1N2I2MDczMjMxYzQ1YWQ0MTU1YmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiZjk3MThhNDg0MzUwMWExOTA1ZDZhNzVkOTJlMDEwYWQ4OWQyZjdiZTQ3ODcwYjUwZTljZDdhNDMxZWRhMDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_81b3295690f14c368182bec511c615a3",
+      "statement": "LabelsApiIntegrationTests covers label search proxying with the label:\"<name>\" filter surviving URI encoding, quote-escaping inside the filter, pagination that stops once the requested limit is reached, and a 400 rejection of limits above Spotify's cap of 10 before forwarding.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L215-L340",
+          "version": "repo-lines-v1:sha256:3139873c48a7560b75c6abaf627daf244d09e93a6f0731442d51540f7a1c71fc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTI2LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIzMDNkNjZiYzdlYzM4MzVlMWIzZmM0YWVmN2QzMWFlYTY0MWQ5MzgwYmVhNjQ1NjQ4MGJlZjI3MDllMDY1ZmRkIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI2MmMxYjI2ZWFkYzMwOWRmMTg0NzkwMDg5YTEzYzJjYmUyNTJiMzk3ZjRkYWJiNjY1Njc2YjBhNDIyZjY1YzkyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3ODEwYjYwYzFlOTk5YjEwYmJlM2YyZDExNjQyNGRjNTE3YzM0NGVjODEzMDQ1YTVlMTJmMGRjMGFkOTcxOTg2In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_c7720759e0b84709a0b09a0efe76f114",
+      "statement": "Creating a label synchronously discovers its releases (without advancing the scheduled poll cursor), still succeeds when discovery fails, and rolls back with 404 when a Spotify artist id is unknown; regression tests cover discovery when Spotify omits the album label field and when the copyright line carries trailing legal text.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L380-L539",
+          "version": "repo-lines-v1:sha256:2ce4771c9f0c55772a8189d3d2ce4291aa161114038b447572d7ee088f1f0b11:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI4MTAyZTIxZDA4NTE3MWE3Y2NjNTNiMTJkOTg5Yjc2YzIwNmJmYjljNDE5Y2Q3NThiYmFmOTI5Nzc3ZjA1OWViIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI2MmMxYjI2ZWFkYzMwOWRmMTg0NzkwMDg5YTEzYzJjYmUyNTJiMzk3ZjRkYWJiNjY1Njc2YjBhNDIyZjY1YzkyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJmODFmMWZkY2NmODM1ZDBhY2M5MzAzNjhmYTQ5YmRiYmI3MDIxZGVhYjk4NGM3YTU2M2M4ZDA1Y2Q4NzAxNjkxIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_e5e9cce69c7349a8a81ef99ac544e33f",
+      "statement": "Because Spotify's label search filter matches fuzzily, discovery verifies each candidate's real label via GET /albums/{id} and links only exact matches, so a fuzzy hit whose real label is another label is never linked under the searched label.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L930-L982",
+          "version": "repo-lines-v1:sha256:f3fe5f47dc0ebf94bd191089acb75517b02b59df1e6ea07136283cc3c68c865f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3YzBhMGIyY2Y1NmM2ZmFlYzI0NjgxMzRjMzk2MGI4NDQ1YTkwMjk1NDExYTJjNmYwZWRiMGU3NGE5YzllYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMwOTc3MWVmYWIxOTdjZTIwZWJmNTQ0ODQ2MTI5NGVhNDJlMmE5NmRjYTc1NTk2YjA4NDdkNjM0OGIzNmE4MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/ReleasesPollingIntegrationTests.cs#L247-L287",
+          "version": "repo-lines-v1:sha256:d97a25398e86a561351ceb8efbdfae52c799daad37fae9713deec570de5728d9:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3YzBhMGIyY2Y1NmM2ZmFlYzI0NjgxMzRjMzk2MGI4NDQ1YTkwMjk1NDExYTJjNmYwZWRiMGU3NGE5YzllYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc0NzQ4OGRiYmI4MjY2OTJiOGNhZDU4NGY1ZGRlMDY3YzY5NDQwNGUxZjk1ODlmMWFmZWJmZjU5ZDJmNzg5YWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY1OTllNWQ5Yjc4ZDNiZTY0MmQwNmQ0NDQwMWE1ZTk3ZmY0MWUwODRjMmM0ODcwMTJlY2RjNmJiOTA4ZDZhNjEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1411c12bc60d4acd99d52cd0acda34cd",
+      "statement": "Renaming a label audits every existing link once against the new name: verified mismatches are unlinked, exact matches keep their link with labelSpotify corrected to the real label, a 404 album GET unlinks the album while the rename succeeds, unverifiable links fail the rename closed with 503 and roll back the transaction, and a no-op rename skips the audit entirely (succeeding even when Spotify is unreachable).",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L579-L853",
+          "version": "repo-lines-v1:sha256:19a2da2819a892e9557051555d1b4db9fa6dde388ce380367106895014cab7f0:eyJzZWxlY3RlZExpbmVDb3VudCI6Mjc1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI1ZjI5YTQxMjJmZDljZDRhNjU0ZDA0OWI3MDc1NDBhOTNhYzk1NzVkN2UwMTQ4MmM1NjMyMTY4OWRkMDI1OTdlIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI2MmMxYjI2ZWFkYzMwOWRmMTg0NzkwMDg5YTEzYzJjYmUyNTJiMzk3ZjRkYWJiNjY1Njc2YjBhNDIyZjY1YzkyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI5OTA0ZDk4YjA2NzI5ZWFiMGFmOWNkYmEzMGZmMzk4MDYxNGU3MjQzMWUyYmQ3YjQ4M2Q2Y2IxN2E4MWFjODQ5In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_9a33effb8b3d446087809e6f1c770ac3",
+      "statement": "A poll pass that snapshots the pre-rename label name and runs concurrently with a rename re-verifies against the label's committed current name, so it cannot link or resurrect an album whose real label is the old name.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/LabelsApiIntegrationTests.cs#L855-L928",
+          "version": "repo-lines-v1:sha256:04448eed85e5aaeedd0268a436a2fb681fa536c64a2b3b71813a2186d96e6b1b:eyJzZWxlY3RlZExpbmVDb3VudCI6NzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3YzBhMGIyY2Y1NmM2ZmFlYzI0NjgxMzRjMzk2MGI4NDQ1YTkwMjk1NDExYTJjNmYwZWRiMGU3NGE5YzllYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIyZTEzZDI3MmUyYWUxZDVkZTk3NDI5ZmE0ZjJmYTE3NjUwMzY1Mzc2NzJjMjY1NzFhZjMyYTkxMjA2MzQxMmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE3NzQ1NTAzMmUyZWU2ODdkN2ZlZGNkNmY4NmNjYjM3OGNlZjNiMzRkMzgyMWNjM2NiM2I4YTIzN2UwMTY0NmYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d48d9fe17e1140ac909ed7e7ccdd144c",
+      "statement": "ReleasesPollingIntegrationTests verifies that scheduled polls upsert albums idempotently with stable ids, honor 429/Retry-After via the resilience pipeline, isolate per-label search failures while still advancing the cursor to completed, and paginate the label search until exhausted.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/ReleasesPollingIntegrationTests.cs#L63-L245",
+          "version": "repo-lines-v1:sha256:f26dc1a0f4af8d2f7d8ba3cfd4627d63e0943e6ea3f08dc6246240bc080bef9f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgzLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI2N2MwYTBiMmNmNTZjNmZhZWMyNDY4MTM0YzM5NjBiODQ0NWE5MDI5NTQxMWEyYzZmMGVkYjBlNzRhOWM5ZWE5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI3NDYzZjhmM2EyY2IwMDdkNWNlNDA3YjBjN2E5ODFjYTY3OGQyMWE3YzBiOWEwZjFmMjNkYTg4Nzk5YTI4ZmQwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIwMDk4ZmUwZjdiYzJiZThhMWIxZWRlNzYwOWY2NmNjM2ZlZjZmMzU3ZTQ3NzY4ODhhYzEyZmY3NzAxMjdkN2U0In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_661dc6f42f9249cb81831930794ed467",
+      "statement": "Poll verification stores the album's real Spotify label casing for exact case-insensitive matches, skips unverifiable candidates (album GET 404 or label-less album) while the cursor still advances, and self-heals by unlinking pre-existing contaminated label_albums links on a verified real-label mismatch.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Integration/ReleasesPollingIntegrationTests.cs#L289-L425",
+          "version": "repo-lines-v1:sha256:a76a563886f97c95ae8061c3c129d8f282201861902c854ec6bf972bbf8bdfce:eyJzZWxlY3RlZExpbmVDb3VudCI6MTM3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI2N2MwYTBiMmNmNTZjNmZhZWMyNDY4MTM0YzM5NjBiODQ0NWE5MDI5NTQxMWEyYzZmMGVkYjBlNzRhOWM5ZWE5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIyZTljMDRjM2JiYzFlYTU0YjRiNzgzNzQwYzM5MTllNmRhNDk1MDQxYjFhYzZmYjY5YTNhOWI3MjVjNmJlMDU3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJjYTEzMjVlZTI3MTVkOWM4MDY2MWVmMDA4MGExZDJiZTY3NjA1M2JkZjUwMjhjOGQ5MjA5Mzc3MWZhZDYwNjJmIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_107d3bdccdb14a2abc2b15def4a50fae",
+      "statement": "AppHost smoke tests assert the distributed application model contains the postgres, catalog, and api resources, that the catalog database exposes the \"Reset Database\" dashboard command, and that the API serves /alive once the stack starts; StablePortTests pins api to port 5192, web to 5173, and the dashboard to https://localhost:15000.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/AppHost/AppHostSmokeTests.cs#L14-L44",
+          "version": "repo-lines-v1:sha256:eb1373557a421785c0a0964ffc0082f9efe1b409eab9c52e6299353a89f5237b:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3YzBhMGIyY2Y1NmM2ZmFlYzI0NjgxMzRjMzk2MGI4NDQ1YTkwMjk1NDExYTJjNmYwZWRiMGU3NGE5YzllYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ0NzgxYTQ5MDNjN2IwNmIwZDE5NDRiYzA3NWVjZWZkOGUwNDQ1ZWE4NzBmMzU1NzJhYTIzYThmNTE1NjEwYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/AppHost/StablePortTests.cs#L14-L51",
+          "version": "repo-lines-v1:sha256:3d1724aee9dbdd23ebabee2dfe57c103a262b9a42700e812ec1e44f24662d321:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmMzczMGU5MTk2MjIwYTZiZjNiYjgwMDk4YWIxNzY0ZmI3MDIwZjI3ZTEyYWY2ODY0YTgzNDUxZjI4NGU5YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2NjA0M2M2N2YwNzY3ZWVjNDg5ZTJmMDZkZmYzNzZkMDNkMTdhYTVjMjBmZDIzZTA5Y2VjZGYyOTQyNzNiZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQxMGIzNmFhNzRhNTliY2Y0YTg4MTg1ODM3ZjY1OGFmYWYzNjQ2ZWZmMmJiMTZjMzkyOGQwZTkzMzVlOTQ1ZDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4cd4748db6f0492c824ae24434f970ea",
+      "statement": "Unit tests cover LabelSlug.From normalization, ReleasePoller album-type and release-date parsing (month/year precision normalized to the first of the period, null date for missing values), and the SpotifyTokenProvider cache semantics (fetch-once caching, expiry refresh, ForceRefresh invalidation, single fetch for concurrent callers) using FakeTimeProvider.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Unit/SlugAndPollingParsingTests.cs#L7-L68",
+          "version": "repo-lines-v1:sha256:ec9847cf60373bb0b14702e775972d805d2cf740925843ab7567b5d761a0d372:eyJzZWxlY3RlZExpbmVDb3VudCI6NjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2YTRiZTA5MzAyMzNmMWNiMDNiZDY3MDkwM2M5MmFhNjVhNzY2YjhmMjUzMWU0ZWRmZTBhMDQyZDZhNDBmMGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjgyNzU5ZDIwY2E2YjhhZTg5ZjJjYTFkYjZjZjcyYzM3NTg3YjFkYjA4Yzg4M2RlYjQzYzlhZDc0NGRlMTc1N2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Unit/SpotifyTokenProviderTests.cs#L27-L100",
+          "version": "repo-lines-v1:sha256:96bc13d0d9f7094a36ed7be70e348436a3dafd486a9cf24ae499f600f5ccec74:eyJzZWxlY3RlZExpbmVDb3VudCI6NzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3YzBhMGIyY2Y1NmM2ZmFlYzI0NjgxMzRjMzk2MGI4NDQ1YTkwMjk1NDExYTJjNmYwZWRiMGU3NGE5YzllYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5M2ZjOTc4OTQxNDA2MjMwOTZjYTlkYjcxNTQ0MjJkNDA0NGNkZGJmYzk1YWQ0MGRhYTc4NWY5YjkzNDJjZmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJlZDcwOGRhMmIzMGFkZjcyMjM0OWI3MjBmYzU0ZTdhOWMyMzQyOGRiMmFlOGUyZGM3NDMyYjY0N2U5ZmQ3MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU1YjQ0N2QyMDJhYTk2ZmQ0MzIyY2E5MWQzMTkzMTkzZTViNjU0ODg3OWEwYmJhZDFlNzFmMmQwODAzYTQ0N2MifQ"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.5.2",
-    "at": "2026-09-22T17:28:24.726Z"
+    "by": "openwiki/0.6.0",
+    "at": "2026-09-29T18:32:14.763Z"
   }
 }
