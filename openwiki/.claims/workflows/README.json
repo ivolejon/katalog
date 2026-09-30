@@ -1,36 +1,228 @@
 {
   "schemaVersion": 1,
+<<<<<<< HEAD
   "pageVersion": "sha256:94c7af5221be076051378464553538859398a47e1aeff006a937d230e9f0defe",
+=======
+  "pageVersion": "sha256:735cbd8d556658a0524b3bbd2a6df2ee19b158336c1aa8c27159b67ef6578fff",
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   "claims": [
     {
       "id": "claim_0676b47f82ee48038fcd4c7c6754e446",
       "statement": "The local workflow builds and tests the solution, and `aspire run` orchestrates PostgreSQL (via SetupPostgres with a reset-db command on the catalog database), the API (via SetupKatalogApi), and the Vite web app (via AddViteApp) from Katalog.AppHost/Program.cs, all on stable committed ports; the OpenAPI client can be regenerated from the committed contract.",
       "evidence": [
         {
+<<<<<<< HEAD
           "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
           "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+=======
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
+          "version": "repo-lines-v1:sha256:cc571fdf1dd2c30fb2f2ddd790148529834d3abda5a9422f44b231b34f8024a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         },
         {
           "resource": "repo://README.md#L40-L49",
           "version": "repo-lines-v1:sha256:7596e127b28755b273e40fad425371feb57c53f63dc20210c4665e80ce6af195:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3YzA2YzU2MWQ1YzMyNzM0MzY4NTI2OGE0NmIzMzkxZjM5OThlZWU4OTBkMmJlNTFmMGQyMWNjNGE1M2FlNmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJkZjgyOTgyYmQxMGRmZjZjMmI2MmMwMzU4ODA3OTVjM2RlZmU0OGE3OWMyNjIyMjc3OGExZTU3YTk5YmFkZjAifQ"
         },
         {
+<<<<<<< HEAD
           "resource": "repo://web/package.json#L6-L12",
           "version": "repo-lines-v1:sha256:543eeca9ec9af3471402550997410ccf3bb19ca6a870b40f24c0b3cda6722cbc:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ4MzNkNTk0OWMwM2E0MGNhOTUyNDkxNjEwYTY2NTk2NDRiM2FhNDY2MzYyZjc5OTAyMGRiZjE5ODE1NDdkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDlkNWJkODk5YzM5ZDA0MDRjZWE1NTFkOTliYTE3MDU5ZjU3MjZjZmJiMWViNjNmYTY3ZThiMjQ3ODVlZjhjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
+=======
+          "resource": "repo://web/package.json#L1-L30",
+          "version": "repo-lines-v1:sha256:ab7d7a30e0c4b500443c944494416ce7b0099ba3805d597a481ed6df464703f3:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjczYTc5YTFlMTJlM2M0MmIxZmQ4YzZjMTdkZmQ1ZmNmYTdlMWViNmQ0OTkyN2YyYjIzNzViZTEyNmMzZjZmYzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI1ODU5NzFhN2NlZjE0MGM2NWQ1N2IwNGZkZDlmYTA2MTEwOTE5Y2M4MDE2YWFlMmVhYTBiNWFhZjAwOWRhZjMifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
     {
       "id": "claim_eee18dedc297475897e14a3b03271793",
-      "statement": "CI runs solution build/tests and a separate OpenAPI contract-drift check, while the web workflow builds and typechecks the frontend.",
+      "statement": "CI is defined in two workflows with different triggers: ci.yml runs on all pull requests and on pushes to main with per-ref concurrency that cancels in progress, while web.yml runs only on pull requests targeting main; ci.yml also declares read-only contents permission.",
       "evidence": [
         {
-          "resource": "repo://.github/workflows/ci.yml#L22-L76",
-          "version": "repo-lines-v1:sha256:1709660991843b118125ad77d7cd10120cec39929855dbcc26663265b58861d6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMmFhZTkzYTQ0ZDhiMGZhMGU3NzY0NjU2NWZiNzM1YTQxZGI0N2I5M2U5MzkxM2Q2NDg0Y2M5M2ViN2UwZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmNmU2MmEwMjkxZmE5NWI2N2VmZWJjNzBhMTYxMDlhZTVkODMzYThiYjQ4MGI5Mzg0NWM3ZmUwMTFkMmZlYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+          "resource": "repo://.github/workflows/ci.yml#L32-L43",
+          "version": "repo-lines-v1:sha256:ab2632dc49d4636bcc61cbeac0006401ee97843351ceb5896145c4c5164566e2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4NzdjYjQ2NDQ0OTc3Y2MzZTU3MGQwZDY3NTA2MWIwNjY1MGE3MGEyZjg0NTEwNTllNWRiZjU4ZGY1NWVmMGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwMDk5MTRiZjNlMDI1OGIwZmIzMzIxZjAxNTMwNzkxMmE4YWYwOGQ2M2Q5NmMyNGNmZGU0MTUzMThhMDkwOWIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI5ZGI1MmVjZGQxNGFhNDllMDc3MjZlYmFmMzU3OWI1MzE4YWE0N2UzOGVlMDJkNDE4Nzc5MzBhYWIzZDUyZmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY0MWY0Y2I3NzcxM2ViYjA2NDQxNjdjM2YwMjA1YjYxZTFiODc2NzBlMjc1M2RhOGJhYzg0MTI5NDc2N2Q0NzEifQ"
         },
         {
-          "resource": "repo://.github/workflows/web.yml#L1-L29",
-          "version": "repo-lines-v1:sha256:4a914e1ea6b834c8eba5c7ae686510a8a700c345a858748e1eadadb5433787aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkOWY0ZDljYzI3YjE1ZDNjNTgwMWEzZGMyMzJiODQyMjYwMzZjYWNkNDAyNWU0YTdiNjE1Y2U3OGU3ZWM0NGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MWFhNTAyMzdjNTIwNjlkYzY3OTBlNDcwZWM4YWUzMWNmMWM3YTljM2UxYjVhM2EzNmZlMGE0Y2Q0OGZmYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+          "resource": "repo://Katalog.AppHost/Katalog.AppHost.csproj#L1-L6",
+          "version": "repo-lines-v1:sha256:08372e2f036fe2be7474822704b8c844d35f612bb78b3be79238273ce8eb80ea:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2M2ZTQ3YmM1NzYyNjAyMzZmZmUzNTEyZGEzYzhhZjQyY2QwZDdmYzQxODUzNTVkOGM1ZmNlYTUyYTY0MGZmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdhZTUyMDU5MWQ1MmM4ZTgyMTkzNWY0MDUyYmRmNjQ5NWE1NzMzNDc3OTI2ZTRmNTRjNWUzMWJlODI0MmJhMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b84c4f07aab04098a07b5d587c73fa2f",
+      "statement": "ci.yml defines three jobs - build-test (full solution build and test in Release, after installing Aspire CLI 13.5.4), web-test (npm test, vitest, in web/), and contract-drift (forced contract regeneration plus a git diff that fails on drift) - while web.yml separately typechecks and builds the frontend, so frontend verification is split across two workflows that pin different Node majors (24 and 22) even though web/ pins no Node version of its own.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L18-L70",
+          "version": "repo-lines-v1:sha256:fbe9bf9273bf398592c450538384c05a170fb160b7978646916400b38762dd8d:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU5ZDgwMTU0ZWQ0MmZjNWM3NzliMTMzMTU3OGI1OGI4OWM4MDFlYWNlNzRmMjRjZDQ4ZWI0YTIzNTc5NDBhOTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2MjFiOTgzMmU5Mzc1YzljYmE5MzcwMDk3MDk3NGI0MTk0ZjRiMDQ1ZmQ4NzQ1MzIyYzg5MjQ3YWU2N2M3OTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjYWNlMDY0M2IzOTk0MmJjMWJlYWYyYTQ0MDJlNjcwOTI3NmI1ZWNiYTQ3ODZmYmI1ODI1MjY0NDkxMWU0NTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQwYWQyZTBlNTUxMGQxMDU2ZGY4NDUzMTE4NWYyMjM0YTllM2U5NjAwNmQyMmM4YWQ4NTEyMjAzZjQ3MmQ3ZmUifQ"
+        },
+        {
+          "resource": "repo://.github/workflows/web.yml#L7-L29",
+          "version": "repo-lines-v1:sha256:9b79a4661870f586fbc8251df0e06408e00f884741119cc807ebe5c21d893c28:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU5ZDgwMTU0ZWQ0MmZjNWM3NzliMTMzMTU3OGI1OGI4OWM4MDFlYWNlNzRmMjRjZDQ4ZWI0YTIzNTc5NDBhOTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MWFhNTAyMzdjNTIwNjlkYzY3OTBlNDcwZWM4YWUzMWNmMWM3YTljM2UxYjVhM2EzNmZlMGE0Y2Q0OGZmYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMmM3MjFiM2RjMjBmZjczNGQ5N2NmNWI5OWU1NWU4ZDRjNzJmOThiZWYzYjk5ZjkwM2NjMWYyYzRjZGM2ZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/package.json#L6-L13",
+          "version": "repo-lines-v1:sha256:a78ce3ddaa1210282c3ef2d23a7486174345e1941b4db608fc75c48e9e5c6768:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ4MzNkNTk0OWMwM2E0MGNhOTUyNDkxNjEwYTY2NTk2NDRiM2FhNDY2MzYyZjc5OTAyMGRiZjE5ODE1NDdkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDlkNWJkODk5YzM5ZDA0MDRjZWE1NTFkOTliYTE3MDU5ZjU3MjZjZmJiMWViNjNmYTY3ZThiMjQ3ODVlZjhjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_583adfe683454956b0648e84b624f193",
+      "statement": "Both .NET CI jobs install Aspire CLI 13.5.4 globally before building because the AppHost project uses the Aspire AppHost SDK and the build otherwise fails with ASPIRE009; the build runs with TreatWarningsAsErrors globally, so a warning outside the documented exception list fails the job.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L32-L43",
+          "version": "repo-lines-v1:sha256:ab2632dc49d4636bcc61cbeac0006401ee97843351ceb5896145c4c5164566e2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4NzdjYjQ2NDQ0OTc3Y2MzZTU3MGQwZDY3NTA2MWIwNjY1MGE3MGEyZjg0NTEwNTllNWRiZjU4ZGY1NWVmMGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwMDk5MTRiZjNlMDI1OGIwZmIzMzIxZjAxNTMwNzkxMmE4YWYwOGQ2M2Q5NmMyNGNmZGU0MTUzMThhMDkwOWIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI5ZGI1MmVjZGQxNGFhNDllMDc3MjZlYmFmMzU3OWI1MzE4YWE0N2UzOGVlMDJkNDE4Nzc5MzBhYWIzZDUyZmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY0MWY0Y2I3NzcxM2ViYjA2NDQxNjdjM2YwMjA1YjYxZTFiODc2NzBlMjc1M2RhOGJhYzg0MTI5NDc2N2Q0NzEifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Katalog.AppHost.csproj#L1-L6",
+          "version": "repo-lines-v1:sha256:08372e2f036fe2be7474822704b8c844d35f612bb78b3be79238273ce8eb80ea:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2M2ZTQ3YmM1NzYyNjAyMzZmZmUzNTEyZGEzYzhhZjQyY2QwZDdmYzQxODUzNTVkOGM1ZmNlYTUyYTY0MGZmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdhZTUyMDU5MWQ1MmM4ZTgyMTkzNWY0MDUyYmRmNjQ5NWE1NzMzNDc3OTI2ZTRmNTRjNWUzMWJlODI0MmJhMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_2778616bb2004a0c89a06adcaaf8f86e",
+      "statement": "The contract-drift job forces OpenAPI regeneration with /p:OpenApiGenerateDocuments=true (a property Directory.Build.props otherwise turns off under CI=true) and then fails the build on any diff under contracts/.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L72-L98",
+          "version": "repo-lines-v1:sha256:cf67dd4fce6cdeba2126837cfe8491e3047e9d8c25aa98e913507de26c40a748:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjNzc1ODNjNjI2YTEwODdhNGYwZmE2NDc4ODAwNTU1OWFiMzA5MTc5OWY3YzMxZjZiMzllZWUxZjI0M2I3MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNmZThiMDgxNGRmNTgyMTdkMGVmZTYxNWIyYTA0ZjRhNTdiZDU4MWRhYTY2ODY3YjkxNTc4MWIyMDc2MDg4NjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://Directory.Build.props#L18-L22",
+          "version": "repo-lines-v1:sha256:e69c4ae9a92894e122db90ab109dfb64388ead404d70d0c67ef12f0f44d626d2:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1MTE1NzM5ZDAyODU0MWNmZDM5OWIwNTlhNDlhMzRhYTdhODg1YWU4MmE4YmFlMDdiYTU5MzU3YTQ0NTczMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzU3ZTZjZTg5ODNlOGYxYzg5NmVkYjg1NzVhZDNiY2ZhZGI1ODFjY2Y1NTIzNmRjYjYxNDNjY2I1ZDQ1YmJmNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTRhMzRhY2I0NmI4ZTZhMjMwNDFjZGUwYTQ3YTU1YjBjZjk2NDkwYWJjOWViNTY0MTQ1M2FiMWM1MzhmYWIzMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5ffcdc64a5d54c77a880c15a93b80c64",
+      "statement": "The committed OpenAPI contract is regenerated into contracts/katalog-api as an OpenAPI 3.1 document by the build; the generation host is detected by its GetDocument.Insider entry assembly so setups that would need live infrastructure are skipped, letting the build succeed without a live Postgres or Spotify.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/OpenApiDocumentGeneration.cs#L12-L20",
+          "version": "repo-lines-v1:sha256:72d220c519fb04a2f38fff2cfa00c77a50adb1b6c191497c2291ab5dabc0b141:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFhODI0N2MxZDE4YmEzZjNiMDJlZDY5M2IxMDExMzM4MDAzODY2YjUyN2I5ODc5OGMzZDJhOWIyYmY0NDdhNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTEzY2M1MDY4YzJjZWEzNWJhMDJiZTQ1ODlhODE1ZWEwMjEyMDgwYzljZDkwN2MwNWUzMTVkZTU3YjI1ZWQyMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODk3Y2U1MmU4MzVhNWIyM2I5ZTcwYjRhNWIxM2JiMTNiOTI5MmY4YzgzZmFlYWQyMjVjMWE5NDFjNDI0OTVmNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Katalog.Api.csproj#L3-L8",
+          "version": "repo-lines-v1:sha256:9bf7bae0ffaa95a26a1bc4865c15c5332c04c6402bf241ba913d571b35348890:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTdhM2YwMTc4YzVjNTk5ZjhmZDVlNjNiN2Q2MWVkYjA0MWNjNWNjZjI4ODFkZTkyMjQ3YTZjNDc4MmYxZGZkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmJjYjY2MDY4ZDZkMjk4MWJhYmNjOWQxY2Q1ZWI5NDY2ZTk1ZDIwZDRkZTc5YWY3NDA5ZDkyMTBkYzY0ZDA3NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjZmNWVjM2I1YzIzNDA2ODZiNjhlZjMwNzlhMTg4MDEwZjlkMjc0MWEzYmI4NWM2MDdjMGYwYWZjODc0OWVmMiJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs#L113-L120",
+          "version": "repo-lines-v1:sha256:1d94f03b36f4fabca2d3465788277313393c0e5427bdf37f237b11b1c75e76a4:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmNkZWI0ODBlMWYxOThjNDgxZTk2ZmRkYjU3Nzc4NzdhNTQzOGU0NDlhOWU0MzQ0Y2JhZTBjNTc0YWRlNTc5NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjJmNzhlM2FkNjkyY2VmMTdiMzFiODk5OGQ5MjVmMGExMmZmZDJkMmRmZGMzY2VmN2JkYTIyZWRiZGI3NzM1MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzVlZjg0OGMxNzEzYjQ3ZGI2YTJhOGM4OTM2ZmUxNjFkN2JkZjQzMmIyNzBiM2QzOTg5NTYxZGE0OTNmNzQwNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWJjNDI0M2NmMDViYmMwMTM1ZTNmNTA1ODJiZDkxODNmNjk5NjM0NjFkMWExOTMxMTdlMTI1NTIwNWJmNTEyOCJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs#L15-L20",
+          "version": "repo-lines-v1:sha256:a78d959c22c79192815b3873e9adef0d516b9ed27f317562c23712bd467e0d56:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzA4YWEwYzFkOTdlYjY5ZjdhY2I0MGZhMjY2ODM4YzlkZjBiNDk1MzI3YTg1N2QwOGU2NGNkMWJlYThmZTkyZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQyYTY2OWViZWZiZWVmNzY2NmJjZThjMzE3ZWY3ZTQ4ZjgxYTVjZDFjYTNlNmM0ZGVmNmQ0MmNmOGJkMDA5NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGE5Y2RlMDYxMDBjNjA0M2Q0YzIzNTgwNzIyMGQ4N2EyOWE3NGJmZDk2NGIxZDU0ZDFmZjY4MDllNTAxYTMxNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTkzM2Q4ZmVjZTU4M2NiYjdlZmNhNGI3Yzg0NDhiNWRmZGY0ZDk4ZTRjMmU3MTBkZWQ2NzcwYjYzYWJmZjVhNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_11fd053f11334c6b9b08ad3703fc5482",
+      "statement": "The no-mistakes gate is configured with agent pi and the OpenCodeReview gate enabled in delegation mode, and its control fields are read only from the trusted default branch, so a pushed branch cannot weaken the gate.",
+      "evidence": [
+        {
+          "resource": "repo://.no-mistakes.yaml#L1-L22",
+          "version": "repo-lines-v1:sha256:cce8d79469b3167864e25f514d8a9b7e0949f2dea2b0472de399733e29fea9d2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2YzQ2MDE1NDQxOWMzOTJhNmFkOTE1ZjQ1NWUxYzMwMjY3YjE1MTA3NWFiMWU4MWEwNDAxMmFjMTJlMGU0MjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4YTkwZmY5NTFlNDk1ZmE0NDViZDcxZjU3MzRmNzk1NGUxZTMwMDFiNjIzZWEyYzc1YmI3ZTA4ZTJkZDBmZjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA1YmJhNDRkNTZkYTNmMWU5ODA0OTdkMDllMzliNTUyZDM3NTMxZTQzMjFkZjNjYTA1NzkxMDlhZDgxMGNiMzUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9ca6ef711caa448e817842083cc3c759",
+      "statement": "The no-mistakes gate runs four commands - prepare (restore), lint (Release build), test (solution test), format (dotnet format --verify-no-changes) - where lint is the build itself because TreatWarningsAsErrors is global, and the first three must be mirrored as GitHub checks by ci.yml for the gate's CI step.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L18-L48",
+          "version": "repo-lines-v1:sha256:2c498b39ef935b6e81b5acb86de6ff5dc9aff12f957d666a001eebd54820908c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU5ZDgwMTU0ZWQ0MmZjNWM3NzliMTMzMTU3OGI1OGI4OWM4MDFlYWNlNzRmMjRjZDQ4ZWI0YTIzNTc5NDBhOTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU3ODQ4ZTFiZDA1MzBiMTIyMGYyMmNhZDZiMWViMjBjMWY1MmE2Yjg2NGIzNWFkNWZmNDIxOThhNzczMWI1MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjYWNlMDY0M2IzOTk0MmJjMWJlYWYyYTQ0MDJlNjcwOTI3NmI1ZWNiYTQ3ODZmYmI1ODI1MjY0NDkxMWU0NTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5MjlmMzcwNTZjZTNhNTcxMTU0MjFkYmRjYTM1Y2Y1MGMwNGJlMmQzYTQ4ZThhMDY3YjU4OGEyZmNhNWQ2MjYifQ"
+        },
+        {
+          "resource": "repo://.no-mistakes.yaml#L24-L34",
+          "version": "repo-lines-v1:sha256:23aae7af27da57a83fea7a12d9d286d59c7eaf0dce22d1719e557f013cf0441e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNmOTFjNWZkOWMwYTBmYTBlYTI3MDNmNTRiMzRmOGFjODU1YmIxOTBmMDc2NjE2ZWUyMTdmNWQzNzg1MDQxOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImViZTdmNWEwZTBlMjEzMDZiNjMzNDFlNGVkMjZlYmU1ZjQ3NjU1MTk0ZjIyZmZjYjIyNGYxOTYzOGQ2YjVjZDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc5NDQ3NWI5ZGQxYzRmZjE4ZjY5YjUzZGZiNDBlZTc4MmQwYWU1NmZhZTBlMzQyN2M1OTA5ZTkyMmUxMGY1MTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://Directory.Build.props#L1-L16",
+          "version": "repo-lines-v1:sha256:7868908ebabeb24c99c6f9a205dec1b82e57585af8c5740ee535b4cbe1e2c120:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzNmI5NjcxODU0NmZkOWE1YWQ5YTdjNmE0NTI1NzQyMjI3YTk3MzdjYzM4MTMzNGNkOTIyMjQxYWVlMjg0MDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA1NmQ1MTQ4MWRhMjdiYWEzZDNhZGUwOTQwNjU4NGI2Yjc4ODk2ODZmYjY4NWEzMmYxZjg2ZTM4YmMwMGVhNzQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyMjc0NGIwN2E2YTg1MDRkNDA5MDdiY2JhMTVjNjIyMzA3MWUxNWU4ZWQ3OTM3MmQ2MWI4NmQxNTdiMjYyOTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a1900ce93f54430da2fb0119c99ad6c1",
+      "statement": "The API binary carries a migration CLI mode in which --migrate or --rollback short-circuits Program.cs into DatabaseMigrationRunner before the web host is built and returns a process exit code; this is the manual/deploy/recovery path next to the local dotnet-ef tool pinned in dotnet-tools.json.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L5-L15",
+          "version": "repo-lines-v1:sha256:33c4aa615037a860f9d370cd3c98a0eaa587e476c7170f25a6b2eb58274712ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2NDQ3YzNjZDI0OGE4MTQwMWE1ZDJlOGQ4Yzg1ZDg5NTc3NjdjODA4ZDczOWIzMDhjZDlhMTgwOGQzZDhhYmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMmJkMDliOWY5Y2NhNGE2MzQ5NjRhMWRjMjVhMWFiMzQxMzI2YjM3MzllN2MxODA1ZjEzNjJmNDBhNmQzYzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJmMzBkMWRlYThhOGYwYjM3NzkzNDUzMDQzNWQ2Njc2MGMzMzliYmNiYjI5NWRiOTBkMzdkZDExZTg5YzZjNTQifQ"
+        },
+        {
+          "resource": "repo://dotnet-tools.json#L1-L13",
+          "version": "repo-lines-v1:sha256:e48342794ccf9dd33332c04e3c946488ab797c138f07d13b1a26c95b5664b3b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxMGIzNmFhNzRhNTliY2Y0YTg4MTg1ODM3ZjY1OGFmYWYzNjQ2ZWZmMmJiMTZjMzkyOGQwZTkzMzVlOTQ1ZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b702cdc54e084ee5b7e5ea7222a785eb",
+      "statement": "aspire run builds one distributed application: PostgreSQL with a catalog database carrying the reset-db dashboard action, then the API (forced to Development, waiting for the database, health-checked on /alive, fixed host port 5192), and only then the Vite frontend (runScriptName dev, API endpoint passed as API_HTTP, fixed host port 5173); aspire.config.json tells the CLI which AppHost project to run.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
+          "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L10-L28",
+          "version": "repo-lines-v1:sha256:ceefb599e7ad11a1dd50a3586f38200905eb34a77b4b44a48c6e2e0e2d0ef790:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYTgzODZiZTZmNDUzNTUzZWFkOTg1YzYxZDMxYzVjNGU2NjIyZWUwODhhOGQ4YjFjNTQyNzM1ODc2NzcxMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZGMzNDdmM2I5N2QyNzJjN2Y3NGU5OTYzNjkyOTM5YTgxNGFmZDMwMWNlZmNkM2Q5ZWMxNGI2NDc2YjVlNzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Infrastructure/PostgresResourceBuilderExtensions.cs#L15-L65",
+          "version": "repo-lines-v1:sha256:1cf013108be9a6fd5ca7e58acac8f6a800504c0c353e8d97abdf29bfba469d96:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0ZDA3YWQ3ZTA5ZDk3MjFiMDE2YmJhNTg2ZmNiNWQ4Y2RmNzlmNzA3NDI2ZmQ1OTdjY2U0MGYyZjE1MDUxOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcxNmMyNWQ2ZjNiZTUyMDI4ZWI2ODU4ZTg4NmJkODJhNzAzYjAwNzY5N2M4YWM4YWU1NjY0ZjkzNjVkYTI0ODYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://aspire.config.json#L1-L5",
+          "version": "repo-lines-v1:sha256:4e4499b453b83e1d08dbdba44dda24b701796722808f9b868af66e9ccf0baffe:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a4783ab5b98d4b4594baf84748b619e4",
+      "statement": "The frontend dev server proxies /api to the API_HTTP/API_HTTPS endpoint Aspire injects and falls back to http://localhost:5192, and the generate:client script derives a client from the committed contract into src/api/generated even though the shipped client in src/api/ remains handwritten.",
+      "evidence": [
+        {
+          "resource": "repo://web/package.json#L6-L13",
+          "version": "repo-lines-v1:sha256:a78ce3ddaa1210282c3ef2d23a7486174345e1941b4db608fc75c48e9e5c6768:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ4MzNkNTk0OWMwM2E0MGNhOTUyNDkxNjEwYTY2NTk2NDRiM2FhNDY2MzYyZjc5OTAyMGRiZjE5ODE1NDdkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDlkNWJkODk5YzM5ZDA0MDRjZWE1NTFkOTliYTE3MDU5ZjU3MjZjZmJiMWViNjNmYTY3ZThiMjQ3ODVlZjhjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
+        },
+        {
+          "resource": "repo://web/src/api/README.md#L1-L33",
+          "version": "repo-lines-v1:sha256:12e5c0a2e6b3c8fa1460571da5d8d09671c17f4630571e9692a353e5b323dc84:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlOGJmNGM1Y2RlMTk0ZDg0ODM0NDU3YTA3MjFkZjU1MzI5MDRiZDQ3MTA5NWY2MjQ2OWEyMjU1ODNkMzU3OTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2NTM5Mzk3YmY0YjE4YTk4ZTFkY2FjNDVlZDY1ZTlmYjM4NWM0YjJiZGExZjUxOTlkMzg0ODlhM2I3ZmM0OWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L15-L37",
+          "version": "repo-lines-v1:sha256:0de87e662a36d10dc5c481fd3516728cb44f858abe6134caaf5a7c9c79e6f443:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc3ZWIyMWU4Mjk2ZjVlOTIyYTYyMjIxMDMzZjRjNGNlZjAxNzE2ODExYzFiZTI5MDM1MzVkYTUwNmIwOGM0YzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1MjYzZWFjZjU0ZjQ5ODk1YmZjNDEzMTUxYzRiMWJiMmQ5NThjN2UyNzIzMjA5Zjk3ZDJlOWVhZWI1Mjk1YjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjNThiMGYyYjA5NDk0NGQyOGYxZWQyMWUxNzA1MWZjMjE5MjE2Y2MwY2EwY2IxMmU5NDMxZDQzNDQ5MzdiNmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_93357a1b2d494e188aaa5a8912246948",
+      "statement": "Repository guidance treats openwiki/ as an optional, just-in-time generated evidence index that a scheduled GitHub Actions workflow refreshes, and forbids hand-editing generated pages in favor of changing source code or docs and letting OpenWiki regenerate.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L41-L55",
+          "version": "repo-lines-v1:sha256:5a99db190588a58887dedd862087182bcc044b1c2e4fa49bd3cc06e8d28e4a33:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmMTgwZjljMTI2OTAzYmNjMzMxYWE5NTQ1NmU0OTQ0NGE3ZDRkMDExZThhMmE4M2Y1ZGM4NzAyMzkxODEyZDAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg4ZjRlOWI3ODM3YzQ4N2MxZDRhNzZhNjI4NWI0MTBlMzk3YjE0YmRmYmRhMzgwYmNjODRiY2M0MWE5MzVhOWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5Zjc4NzE0ODkzYWE3Nzk0MmNlYTFjNGEyZTAyMzFkYmI3ZmEyYTQxYTcwYzgxNDYwYTNjNjc1NjJkYTNhYWEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_006712257a8d40a6a5cdbb20ae8fcfa6",
+      "statement": "The pinned toolchain that all documented workflows assume is .NET SDK 10.0.100 with rollForward latestFeature, Aspire CLI 13.5.4, a local dotnet-ef 10.0.12 tool manifest, and Docker for the Testcontainers and AppHost smoke tests.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L7-L12",
+          "version": "repo-lines-v1:sha256:c7bc907c9d630b2e4cc37b7ba6818b451c1d2fa6c5bfea99c766b7ec1cd15ff9:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDRlNmU5OWUwNGM1MDY3YmM4MzViYjkzMzMxYzdkZThhNzVhODY4MzI4ZDhjYzVmMzJlNmNlOTZlMGI4ZmZjMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmIzNTcxZjllZDMxMzE0Y2QxYjMxNGFhMDc2Y2UyNmM1ZTQyOTU3N2ZkN2ZlNmIxNDAxMmRiMDhhNzhlMjA4NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDAxNzk4OTAyZThlZDY1Mjk4Zjc0YmFkMzA5NWVjMTgzYzg1MDk3OWJiMDIxNDcyZTI1MjgzMzY2MTZjMjIxYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWZhZGUzNTEwYzQxMWQ1NWZjNDQ2MWI4MjFhYTVmNWU4ODZlOWRlZjg0YWM0NDQ0MDhkZTY2NDcwMGRhYzY5NyJ9"
+        },
+        {
+          "resource": "repo://README.md#L40-L49",
+          "version": "repo-lines-v1:sha256:7596e127b28755b273e40fad425371feb57c53f63dc20210c4665e80ce6af195:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3YzA2YzU2MWQ1YzMyNzM0MzY4NTI2OGE0NmIzMzkxZjM5OThlZWU4OTBkMmJlNTFmMGQyMWNjNGE1M2FlNmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJkZjgyOTgyYmQxMGRmZjZjMmI2MmMwMzU4ODA3OTVjM2RlZmU0OGE3OWMyNjIyMjc3OGExZTU3YTk5YmFkZjAifQ"
+        },
+        {
+          "resource": "repo://web/README.md#L1-L60",
+          "version": "repo-lines-v1:sha256:6fb13b5e9c6d2ebca069c2cc34056e6900eb89f5bab250fb4a8e6039219afc9c:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBkYzEwNTg5ZjQ1YmZiN2I3NTFiNDk2MTgyZTBhZjMwMTAzYzM3OTM1YzIwODE1YjAzNzk3ZThhM2UxYzg0ZDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNiZDg2MjM1NDdiMjI0ZGEyNmFkNDI0MDViNjFiYjE0ZDQ5MDg1NDZjOTA3NDQxNWY4ZDI1MDgwMjhkZTE2NzIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhZjBlMmNlNDdiODljNDVlNzFjZTEzN2I2ZDk2ZTE3NmMzZjc2YzZlMTUyYmM5ZWI2MmQ1M2I0YzQ1OTE2MGYifQ"
         }
       ]
     },
@@ -95,6 +287,10 @@
   ],
   "verification": {
     "by": "openwiki/0.6.0",
+<<<<<<< HEAD
     "at": "2026-09-29T18:32:14.763Z"
+=======
+    "at": "2026-09-30T03:07:03.981Z"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   }
 }

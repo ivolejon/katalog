@@ -79,7 +79,19 @@ public sealed record AlbumResponse(
     string? ImageUrl,
     string? ExternalUrl,
     int TotalTracks,
-    IReadOnlyList<string> ArtistNames);
+    IReadOnlyList<string> ArtistNames,
+    IReadOnlyList<string> ArtistSpotifyIds);
+
+/// <summary>Paged releases for a label. The database is the source of truth; no Spotify calls are made per page.
+/// SnapshotBoundary is the maximum album id present for the label at the moment of the first page request;
+/// the client echoes it on later pages so a release discovered mid-paging cannot shift the window.</summary>
+public sealed record LabelReleasesResponse(
+    int Page,
+    int PageSize,
+    int TotalCount,
+    bool HasMore,
+    Guid? SnapshotBoundary,
+    IReadOnlyList<AlbumResponse> Releases);
 
 public sealed record CreateLabelRequest(string Name, IReadOnlyList<string> SpotifyIds);
 

@@ -1,3 +1,6 @@
 # Files
 
-- [Katalog - Architecture](README.md) - System overview of Katalog: how the Vue SPA, .NET minimal API, PostgreSQL catalog database, Aspire AppHost orchestration, and the Spotify client-credentials integration fit together, including label-search release discovery and the label_albums persistence model.
+- [API Surface and Persistence](api-and-persistence.md) - The Katalog HTTP contract - label, artist, and dual-mode paged-release endpoints - and the EF Core/PostgreSQL model behind it: entities, junction tables, how release pages are read, and the validation/status-code contract clients depend on.
+- [Frontend Data Path and Paged Release Loading](frontend-data-path.md) - How the Vue SPA reaches the Katalog API and turns it into the label detail release feed: the handwritten typed client boundary, the parallel first load, id-keyed page merging, the counters derived from loaded pages, the new-releases badge, and the stale-response guards.
+- [Katalog - Architecture](README.md) - How the Vue SPA, .NET 10 minimal API, PostgreSQL, Aspire AppHost, and the committed OpenAPI contract fit together, including the handwritten typed client and the paged-releases data path.
+- [Release Polling and Label-Release Linking](release-polling.md) - How Katalog discovers Spotify releases for a followed label: the ReleasesPollingService rhythm and migration gate, the ReleasePoller label-search plus full-album verification pass, the label_albums link maintenance and rename-time audit, and the poll cursor the read path depends on.

@@ -22,9 +22,12 @@ public sealed class GetLabels(KatalogContext context, GetLabelReleases getLabelR
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<LabelDetailResponse?> GetDetailAsync(Guid labelId, CancellationToken cancellationToken)
+    public async Task<LabelDetailResponse?> GetDetailAsync(Guid labelId, bool includeReleases,
+        CancellationToken cancellationToken)
     {
-        var releases = await getLabelReleases.ListAsync(labelId, cancellationToken) ?? [];
+        var releases = includeReleases
+            ? await getLabelReleases.ListAsync(labelId, cancellationToken) ?? []
+            : [];
 
         var detail = await context.Labels
             .Where(l => l.Id == labelId)

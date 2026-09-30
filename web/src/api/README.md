@@ -11,7 +11,8 @@ matching the contract's endpoint surface (arch report 3.6):
 | `GET /api/labels` | `api.listLabels()` |
 | `POST /api/labels` | `api.createLabel(input)` |
 | `DELETE /api/labels/{id}` | `api.deleteLabel(id)` |
-| `GET /api/labels/{id}` | `api.getLabel(id)` |
+| `GET /api/labels/{id}` | `api.getLabel(id, includeReleases?)` |
+| `GET /api/labels/{id}/releases` | `api.getLabelReleases(id, page, pageSize)` |
 | `GET /api/labels/search` | `api.searchLabels({ q })` |
 
 ## Switching to the generated client

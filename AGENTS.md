@@ -31,17 +31,6 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 - **AppHost/körning:** `Katalog.AppHost` tvingar api-resursen till Development (`WithEnvironment` i `Resources/Api/KatalogApi.cs`) - user-secrets + startup-migrering kräver det; utan den körs api i Production och Spotify-optionsvalideringen kraschar starten. Catalog-resursen har en "Reset Database"-dashboardaction (`reset-db` i `Resources/Infrastructure/PostgresResourceBuilderExtensions.cs`) som droppar/återskapar databasen; anropa även via `aspire resource catalog reset-db`. Skarp kant: api:ns första DB-anslutningar går via Aspires DCP-endpointproxy och kan transient-fela direkt efter att Postgres rapporterat healthy; startup-migreringsköraren retryar, så tolka inte `Failed executing DbCommand ... SELECT migration_id`-rader vid start som krasch.
 - **Tester:** `dotnet test Katalog.slnx` - unit + integration (Testcontainers.PostgreSql postgres:18.3 + WireMock) + AppHost-smoke. Kräver Docker. Integration testas mot WireMock, aldrig riktig Spotify.
 
-## OpenWiki
-
-This repository has documentation located in the /openwiki directory.
-
-Start here:
-- [OpenWiki quickstart](openwiki/quickstart.md)
-
-OpenWiki includes repository overview, architecture notes, workflows, domain concepts, operations, integrations, testing guidance, and source maps.
-
-When working in this repository, read the OpenWiki quickstart first, then follow its links to the relevant architecture, workflow, domain, operation, and testing notes.
-
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.
@@ -55,6 +44,10 @@ When updating this file, preserve this bar for all agents and keep entries conci
 
 This repository has a generated `openwiki/` evidence index. It is optional just-in-time context, not required startup reading.
 
+- Do not enumerate, preload, or search wikis at task start. Use retrieval when the user asks for it, when unfamiliar architecture or dependency behavior materially affects the task, or when source inspection leaves an important uncertainty. Stop once the question is grounded.
+- When those conditions apply and OpenWiki retrieval tools are available, use `openwiki_search` for just-in-time context and `openwiki_read` for the relevant complete sections. If search returns `workspace_required`, ask which listed workspace to use and retry with its ID.
+- Use `openwiki_list_workspaces` or `openwiki_list_wikis` when workspace membership itself needs to be discovered.
+- If the retrieval tools are unavailable, read `openwiki/quickstart.md` and follow its links to the relevant pages.
 - Treat source code and tests as authoritative. A brief's unknowns and review items are verification gaps, not automatic requirements.
 - Prefer the narrowest quiet validation that proves the changed behavior. Preserve complete failure output.
 

@@ -1,22 +1,40 @@
 {
   "schemaVersion": 1,
+<<<<<<< HEAD
   "pageVersion": "sha256:9a5aae68b80f61683f6fcdb6b740dbcca5374758fcdb8f853233f0616dac8075",
+=======
+  "pageVersion": "sha256:c4af4539b5c698c4378a7814d03ece334be996feb024f37181b00740a74ffec3",
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   "claims": [
     {
       "id": "claim_72442e6dedf24dcabd6e44a84ccb5b86",
-      "statement": "The repository currently contains a Vue frontend, .NET API, Aspire orchestration, PostgreSQL integration, and committed OpenAPI contract.",
+      "statement": "The repository currently contains a Vue 3 SPA in web/, a single .NET 10 minimal API (Katalog.Api) whose Program.cs maps the label, artist, and release endpoint groups, an Aspire AppHost that orchestrates PostgreSQL, the API, and the Vite app, and a frontend that reaches the backend only through relative /api paths proxied in dev.",
       "evidence": [
         {
+<<<<<<< HEAD
           "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
           "version": "repo-lines-v1:sha256:7d6a2c8a5a0aaf785589c4dd696c6511081c1c68b9cb1e2fec259d13fd268cbd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE3NzQ1Y2VkNTBhYzczMTM4ZDRkNGJjNDA0MmE2OTNiYzRjYjQ2YWE3MDAzN2M4NzI5NWIwMjUyYjVkMjE2NGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIxZmFiYjAzMjA4ODViNTI0YzAyYTZhMGU0YjVmNzNhOTFiMWY3MTY4MTIxNmMwN2M5OWI1MWVmNzg3MzBmZDEifQ"
+=======
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
+          "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         },
         {
           "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L17-L56",
           "version": "repo-lines-v1:sha256:8f0c85f7ffce84116d7c460bd517ebdb61e90e3a4243c20fed074b50b2129ce5:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM2MmYwZDNjZTMyNTJiYWRlODc3ZGNlNTllZWYzNWE2MjZjNjk1MWE4ODVkNmFhODc3YWQ0YmJiMjFiZmQ3MzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzOTdhMDFiOGM5YzdmNGE3MDQ0NzJmMGE5NTQxODgwZmQ1YjAzM2Y5ZDdmYWRhMGFmZDM5MTg0OTkxZmJmYzQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNkMTAwMzJkYmFlYzZjNzY2NDJmMzY4MWVmZGE3OTE5YmFlMjRiOWQyYTUwZjg5MTc5NGEwNWE5MjRlNGNlMTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUzMzc0MzcwMWIxZTY5N2RjOWY4MjJiNDc2ZGI5NTMyZTdmZjcxNWU5OTU2YjFkMTdiZWQwZmUyYmNhOGE2YzgifQ"
         },
         {
+<<<<<<< HEAD
           "resource": "repo://contracts/katalog-api/openapi.json#L1-L8",
           "version": "repo-lines-v1:sha256:c82086695608385eaee7106863ed3e29e84032d369d862a415790308f0b26398:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDY2MjliOWY5MGQ0NmM0MjM5Y2U5ZTdlZWI4M2JlZDMwOGM1MzFlZDFjMDM0NmY0MzJlMDA4MWE5MmU2YWQyNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjdjOTg4ZmNlNTNlNThiNGU5ZDc2MjBiYjZkOGNmZjY0YjJhZjM1Y2I0ZWVjNGJjMTVkNjBlNGRiNDcyNGU4YSJ9"
+=======
+          "resource": "repo://web/src/api/http.ts#L39-L47",
+          "version": "repo-lines-v1:sha256:e17cf92d2c03f07e89a375e99157d235bba45d7d52c7fc5013191709de1ede7a:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzlhYzQ1Yjg3ZTY2N2UxYWIwY2Q0ODJiN2JlOWFiYzgxM2VkZGZkYzVjYTk2YjFhNDM2Mzg3MmQ5MWU4OGI2OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIzNTI1ODljMzRkM2M2MDY4NTkzMWI2ZWNjNGQ1MDk5MWE3YzU2YzhmYmEyODk0MTE0NjU3NjkwMjcyY2FjMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjVlZmUxODk0ZTg4YmQzOTZkMGJkNDFlYzEwNjVjZTkwNTAzOGNjMWQ5MzI0ODdiZWQ4MDU3NDlkMjNhZTY2YyJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L7-L37",
+          "version": "repo-lines-v1:sha256:3c58b23ff356a37aef297836f8a3ccf4691be3ec7ddee2104aefb1543522a8be:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc3OTM3YTg2ZTI2ZDY1NmI0Y2UxMzBiN2U4MmYxOGQ5YzNlYzg2ZGQ3MGRhZjI2MGYyNzcxYjUyNDg3N2FlYWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjNThiMGYyYjA5NDk0NGQyOGYxZWQyMWUxNzA1MWZjMjE5MjE2Y2MwY2EwY2IxMmU5NDMxZDQzNDQ5MzdiNmIifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
@@ -29,10 +47,240 @@
           "version": "repo-lines-v1:sha256:7596e127b28755b273e40fad425371feb57c53f63dc20210c4665e80ce6af195:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYWU0ZTZjNDkxZGVmZDg1ODdkMGM1MTQ1YzlhNWY2ZTI3YzIwMjA4YTdmOTU1OGQ3NWMwMWFiMTZjMWM0NDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3YzA2YzU2MWQ1YzMyNzM0MzY4NTI2OGE0NmIzMzkxZjM5OThlZWU4OTBkMmJlNTFmMGQyMWNjNGE1M2FlNmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2NmUxYTdkYWY2ZmEzNDkyOWVjYTZiODkwOWRmNTBmNWQzYTBjYmQ0MzU2ZmExNWI1Y2I3MTY5MjFhNmNmOTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJkZjgyOTgyYmQxMGRmZjZjMmI2MmMwMzU4ODA3OTVjM2RlZmU0OGE3OWMyNjIyMjc3OGExZTU3YTk5YmFkZjAifQ"
         }
       ]
+    },
+    {
+      "id": "claim_3d0ab1b6b6254e46b77abea79d34e30d",
+      "statement": "The solution Katalog.slnx contains exactly four projects - the Aspire AppHost, the thin Katalog.ServiceDefaults shared library, the single Katalog.Api minimal-API project, and the Katalog.Api.Tests xUnit v3 project - while the Vue SPA in web/ and the committed OpenAPI document in contracts/ live outside the solution.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Katalog.AppHost.csproj#L1-L16",
+          "version": "repo-lines-v1:sha256:acd9fd20199186e4e7545d8d9da32c094d795b9113fc1d5d70f7cf2fb4050fb6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdjNmU0N2JjNTc2MjYwMjM2ZmZlMzUxMmRhM2M4YWY0MmNkMGQ3ZmM0MTg1MzU1ZDhjNWZjZWE1MmE2NDBmZjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjljYWVkMTZhZDM5ZjAxMDM2YTFmOTUyNjU2YjhiZjJlMjQ3YTIyNjZmNTVjNjhlZjUwMjkwNTk0YmU1NzgxMzkifQ"
+        },
+        {
+          "resource": "repo://Katalog.slnx#L1-L6",
+          "version": "repo-lines-v1:sha256:2e3a3843f7bf9bf9128d7087aedcd0c1692f77683530f65ee1f977a92eaa86a5:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWE1OWJmZGI0NzA2MDVlZjk1MjcyYTdmMTgyY2U1NWZmM2UyNGFmOGZiOGRkYmQ3MTk1MzE4YWFjNzg0MmI3NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjViNzc4ODI4YWFhZTZmOThjYmYxOTY0NTgyODZhYmZjNzg3MGE3ZDVjOGUzNzVlN2RmZGE5YTgyN2MyNjM2YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/Katalog.Api.Tests.csproj#L1-L30",
+          "version": "repo-lines-v1:sha256:cf8342d3723629afa0d16446168f948f1989cf24ff1fab6a27559cae83e19eeb:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdjYjhkNDAyMWNhZmVhOTFiZDJiODcwNzcwZmI0ODY3MmNjZGU1NzcwOWMwYzFkNDFmYjNmYmQzYWYyNmFlZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk0YTM0YWNiNDZiOGU2YTIzMDQxY2RlMGE0N2E1NWIwY2Y5NjQ5MGFiYzllYjU2NDE0NTNhYjFjNTM4ZmFiMzAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b4899ea0b1d646eda1f4297141c2ed8b",
+      "statement": "The SPA defines three lazy routes - landing /, the followed-label list /labels, and the label detail /labels/:id with props: true - plus a catch-all redirect to /, and the document title is set from each route's meta in an afterEach hook.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/router.ts#L1-L36",
+          "version": "repo-lines-v1:sha256:af60c51d9352cfa70cae0ab2e5454f3ab1b5a078a373224029f62a0e38f02d69:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQyZWQxNjI2ODJmMzExOTYwYzgwN2JhNTI5OWYwOWVhOWYzMzNkYWUyN2JmN2I1YjUxMTNlMDk5MzBjM2FiMzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmMjE3ZjYxMmY3MjgxOWQxZjIxNmZmNjczZGRkZWFjZWJhNDI2OTY4Y2NiZGYzYTA4Nzc1M2RmNTY1YzhlMWIifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelsView.vue#L14-L16",
+          "version": "repo-lines-v1:sha256:b1a482bd6d3c5cc0d893746926aa0ecc323b3d1e3930b39524c68b3810c627a6:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDUwNzQ3ODU3MTQzMjcyYTc0ODI2NWY0ZmM0NDQxM2EyNGFjZTRmMzJhMDI4NDY5NGM3ZTRlNDQ1NDc2ZjU1ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTY3Mzk4MmUzNzIzNDUyZDgyOTY2M2RlNzk5YjhkZGY2NTQxZTI4NTMyNTYyYTU3NjNhYjVkZWE5YjcwMDk2OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWI3NTA3NWNkYjQ5YWFhMzdiNGY3ZTQ4Nzk4MWRkMjM4YjViYTRhZjgwYmFmNDljN2U1MTEyMDEzYTFlNzA4NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_c28132da3e4a44bfaf65babb475bc312",
+      "statement": "The label detail header counts only what is loaded: displayedReleaseCount is loadedReleases.length and displayedArtistCount is the number of distinct artist names credited across the loaded releases, both computed properties that grow as pages are revealed - deliberately different from the backend's catalogue-wide LabelDetail artistCount and releaseCount.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/utils/paging.ts#L10-L27",
+          "version": "repo-lines-v1:sha256:d27ce98fa00a566bb35ca456e3598aea8a13f4d98ff6f0f0150e6e1288772321:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4ZWU3ZmZmYjJiYjE5MjFkYTJjZTgyOWY4NTNjMjdiMGU5YTczYWFmMjFjYzAwYmYxMDFmNzVkNjE2NjczMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE4OTdlMTNjZGQ4YjVkYTVlN2FmNGFiNWIyZTI0ZjlkYjVkYjMwZjQ5YmFlNTFmZjIxOTk3ODA0N2Q2OWE3YmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L101-L137",
+          "version": "repo-lines-v1:sha256:680c87f6558081dece18b70714646d71e00ab2407f196024abd6eb0e1415ac50:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNzkxMTM1MmIyZDgyM2FlMmM5MGI4MjNlMzA2MWFmZmYzZGQxODMwOGYzOGQ3MjQ5ZjQ2N2U1ODE0ZWZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI0OWJkYzc1YmExNmYyMzkyZTc3YTJlYWE1ZDcxNGM2NmMyZGZjNjJkNDg0MjcwNTJjZDE0ZWMyMTFkZDY5MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzZmRmMDg4YjNjMjAwOWY1NmQzNDg0NTk2MjZkZjMxNTU1NDExNzkwMGI3NjAyMWE3ZTM3OGY4YjMwOTkzY2IifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L35-L99",
+          "version": "repo-lines-v1:sha256:e10da450b5dbed6dedd46f0285894387b3bab0bbf6cb627ab0a39835773a755c:eyJzZWxlY3RlZExpbmVDb3VudCI6NjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5OWVlOTkwYmQ4NGZhNDNkOWM5MWZiYWI0MGM3YWY1N2YwZjkzZDAyMWJjNjJjNjIzZDhiNWE2YjA4M2U1OGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3YWQ3ZmNkYjI4NjE5MzVmZTcyYjljNGJhZGY4NmI2YTRlN2JkZGRhMTUyYThlYjUwM2MwYmNmNmNmYzVkNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3c426f6a5a964719828d6ecadcccf06d",
+      "statement": "LabelDetailView loads releases in pages of a local PAGE_SIZE of 5: the first load issues the detail call and page 1 together, loadMore requests currentPage plus one with the same size, and the button disappears once the server reports hasMore false; a failed load-more raises a toast and leaves hasMore and currentPage untouched so the page can be retried.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/api/labels.ts#L49-L56",
+          "version": "repo-lines-v1:sha256:4f98fb351efdebec081930dcbc310d67d00f085624c41dde1a16167bc2a64d8d:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTM1NDNmNWY0YjZjYjlhNTU2MWZiZWVhMDBlNGU2MzI3MDU0YjBmMjMwNzA0ZDE5NWFjMzZmNzA3ZGQ0MDZlMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2M3YjVmNzU1ZTVmZDNmNTA1NjUyMGIxZjg1YTA2MmU4NTk2NWE4NjU0MzAyMDNkZTEzNWY2ZjFjYjM5Y2MwOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzY0MDdmZjAyMTA0OWZkY2I4MjQzNDljMzQwYzZmZjNlZGEzZjM3MWY4ZTQ1OTQ2ODFkNWI0MjMyZjAyNThhYyJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L139-L166",
+          "version": "repo-lines-v1:sha256:9837815d89f046c91545558a9975294cf3fa482182a4c24bcd15a10a7a0c0466:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZmYwMmEwMDEwYWE0MjI2ZjFlYmQ1ZDVkODcwY2RkOTY5NzFjOWNmMzQ4YTEyYTc0ZmIxZmFkODA5NWE4NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNmNjZlZWMzNTkyOTFiM2U3YjQ4ZGY4NjBlNzVkMjM0ODRhNGM0Y2M2MTQwN2FkODZjYzYzNzJkNGQ2MTU3MTEifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L35-L36",
+          "version": "repo-lines-v1:sha256:3a89157721180bdde5848c9def9e0eae19d2139633fce3ca5271c7176ee1b115:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTk5ZWU5OTBiZDg0ZmE0M2Q5YzkxZmJhYjQwYzdhZjU3ZjBmOTNkMDIxYmM2MmM2MjNkOGI1YTZiMDgzZTU4YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjdhZDdmY2RiMjg2MTkzNWZlNzJiOWM0YmFkZjg2YjZhNGU3YmRkZGExNTJhOGViNTAzYzBiY2Y2Y2ZjNWQ2MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTE5OTM4M2JhM2NmY2EyZTNhMzkyM2RjMWZmYjM4MjdlMjhlMDY3ZDFmZGNkNmVhZWZmNGIzMTcwYjg0ZjU3YSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ee5d9416af1b454eb210cd2d09ba07d2",
+      "statement": "The label detail new-releases badge is a session baseline, not a server counter: initialTotalCount is captured from the first page, a later page whose totalCount is larger sets newReleasesCount to the difference, the badge renders only while the count is positive and loadedReleases.length is below totalCount, and clicking it resets the paging and reloads page 1 rather than merging only the new rows.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L168-L171",
+          "version": "repo-lines-v1:sha256:4b8e37a51b85ee4123bcfb32eac24c7cb2a42f4707c6ddd02e70a87a446639bb:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWJhZTg2YzYwZDllNGYwMDRjNzdiZjY1NDcxMGQ4NzQxMDRhMzkzZThhNmQ3Y2FjYWVkZmRhYjQyODZiZmJlZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWMzMTgxMzRiMzY2OWQ2NjI1MTg1M2IxMGI5NTI4Y2NlZDI2ZmNmNTU5YzhkYWU5OTYxODVkNWMwNTJhOWNkNyJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L266-L273",
+          "version": "repo-lines-v1:sha256:8bb963d6bd46510ae6f1ecfe1fd7934e8a80e731712b6438325fcb43cbd60dfe:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDVkMDA0OTg0M2E5NjNhYjEwZTgyZWM3MzI1NmJiYWE2MDhhNTNiNDMwODQxMzE5N2EyZTRmODA4MjBjNTA1NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmM5NmIyOWFhMmQwMjdjZDcwZjBmOTAxNGM0ZGM1ZTIxZjU5YTY0NjRiNDcxNjUxMGRlNjBiNzUwN2Y0NzcxYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTBkOTVlOTAzYjllNGUxMjI1NzVjZTdkOTJiMTgyZjc4ODJkM2VlZmRlOGFiZWMxYTQ1MjZlMzllNmVkMTVkMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTUwMzUyZjUxNDQzOTEyOTFmNjZhMzhhMDdiMjJhOGUzNDg4OTc2NTI3MGUxYzczZTljZGJkNjJkYTNiM2UzNCJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L85-L99",
+          "version": "repo-lines-v1:sha256:c1aaf2bc96e04e80da2371a54b27e71529cae561de1d079cbb999b1fd73230b1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwZjBjNjM0OTgzZjA2N2FjMDMzNTU0MzY5NzgzZWJlY2Q3OWVkMzMwYmM4YzExMGFiN2M1ODFjYmFlNGViODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZTBhZjMwZDNhNmUzNjRiNTY5Njg4NzlkMDU4NjAxMTViYzdlZWUxN2YyNDAzYTExMzJlZGY3YThkNzNkMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9acc4938352840bdae129896eac578aa",
+      "statement": "GET /api/labels/{labelId}/releases is dual-mode: with neither page nor pageSize it returns the full release list for older clients, with either present it returns a LabelReleasesResponse envelope whose totalCount is the label_albums link count and whose hasMore is page times pageSize below totalCount, and a non-positive page or pageSize yields 400 while an unknown label yields 404 in both modes.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs#L9-L49",
+          "version": "repo-lines-v1:sha256:5f44bbcf8758c21069ba50febcf017c8ef77c857a87368d1058c5fb995c8f2d5:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2ZjQxM2Y3ZDlhMzkxZDlkMDc1OTc3ODk1ZGRkYWQxYjcwMTY1NmMxZjM4MzlhOWU5YmVmNmY5MDRhODRlNzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkZTg5NWQ3NzFlOTljMjRhNzM1ODQ0MzA0YjI1YWUwMWRlMjVjYzQ1ZGJjYjA4YzlmMjA2YzY1MjlkOTcyMWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/GetLabelReleases.cs#L32-L60",
+          "version": "repo-lines-v1:sha256:38d27dbc509a4e40e51de11a90da7edb72ebae05f8d333f06abb9e2d47cedb04:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExNWQ0YjBlMGMyN2IzOTQwYWI0NzEzOGFkNzBjY2M4Y2E1MGZiYTc1OTE2YThlYTQzNWMzYTliY2RiOGY1MjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmYjAwY2E3ZjA5NjYzMzRmZjUyODM2OTQ5OTUyZWMyYmRmNjc4Mzg0OGRjNmU0MzUzNGQ2ZDA4ODBjMWI5OTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMyNmJlZmM3MjlhNDc1NzZmY2E3ODQ2OWExMzMzMmEyODgzOTAyNGM0ZTI5YzcwODhhMzhmZTlmMWZhNjZmN2MifQ"
+        },
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json#L362-L420",
+          "version": "repo-lines-v1:sha256:48f0814faf914ca979bf4578ff0c7703d321b71549cbbd6b0888c5abde86cef6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmOGY5MTFlZTdjYzhmOGY2ZGNlYjQxZGRlZmY2ZTUyZTIzOWQ2NWIzZmE3M2MwNjE4MGZlNzJmMTU5OTdkYTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0NmVkNmFjZjVmNjkxZGFlZGJmMTc2ZDMyZTAyZjhiNTIyNjgxZmYxN2M5ZDY3MDk4MzY1YTMxNzUyNmY1NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlmZTkzMGEyMjliOWM0Mzk3ZWI2YjRmOTMyOGE4YTNkMjE0ZTRhNGY3M2ZhZDZmNDcwYjdjNjc4YzU4ZTQzMWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7f6db6e949564028828ca9155c2cd122",
+      "statement": "The SPA only ever calls relative /api paths, and in dev web/vite.config.ts proxies them to API_HTTP or API_HTTPS when Aspire injects those variables into the Vite resource, falling back to http://localhost:5192 - which is why the API is pinned to that same host port.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L21-L26",
+          "version": "repo-lines-v1:sha256:9e19fa8a9955a2266291fa57aee00b3a02f19ed4b127db2bcaf015213b45033c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzYmZjMjRkZGMwODVhMzgzZTYyM2M2ZTYwN2M1Y2Y5Y2NlYmE5YThkOTE4ZmIyZmIwYzY5ZWExZDY4MmUzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTRmN2I1N2JjYmE4NzE3NjIwNmM3NTBkMDRjOWQwOTkwOTNhY2JmM2JhMDFhNjE5MWMzMjA4OTQ5ZThiNDc2OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZlOTI5YmJiM2QxMDNiZWU4ZjdhYmEyY2UyMmMyYjgzYzg0NjhiZjdlNzVmMDcwZmYzMWViMTA0MDJjNDhlOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGY0MTAwMmE1ZDI0M2FkZjAzYWVkZTUwZjgwN2E1MzJhMmY0ZDY3Zjk4Yjc4OTY1MGY4MzBlZGRjMTU3ZmYzMiJ9"
+        },
+        {
+          "resource": "repo://web/src/api/http.ts#L39-L47",
+          "version": "repo-lines-v1:sha256:e17cf92d2c03f07e89a375e99157d235bba45d7d52c7fc5013191709de1ede7a:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzlhYzQ1Yjg3ZTY2N2UxYWIwY2Q0ODJiN2JlOWFiYzgxM2VkZGZkYzVjYTk2YjFhNDM2Mzg3MmQ5MWU4OGI2OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIzNTI1ODljMzRkM2M2MDY4NTkzMWI2ZWNjNGQ1MDk5MWE3YzU2YzhmYmEyODk0MTE0NjU3NjkwMjcyY2FjMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjVlZmUxODk0ZTg4YmQzOTZkMGJkNDFlYzEwNjVjZTkwNTAzOGNjMWQ5MzI0ODdiZWQ4MDU3NDlkMjNhZTY2YyJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L7-L37",
+          "version": "repo-lines-v1:sha256:3c58b23ff356a37aef297836f8a3ccf4691be3ec7ddee2104aefb1543522a8be:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc3OTM3YTg2ZTI2ZDY1NmI0Y2UxMzBiN2U4MmYxOGQ5YzNlYzg2ZGQ3MGRhZjI2MGYyNzcxYjUyNDg3N2FlYWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjNThiMGYyYjA5NDk0NGQyOGYxZWQyMWUxNzA1MWZjMjE5MjE2Y2MwY2EwY2IxMmU5NDMxZDQzNDQ5MzdiNmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e6a17b935d574070af0f8dd9a11faa1a",
+      "statement": "The AppHost forces the api resource to the Development environment through ASPNETCORE_ENVIRONMENT and DOTNET_ENVIRONMENT because Spotify user-secrets are only read in Development and SpotifyOptions are validated on start; running the API outside Development without the Spotify__ environment variables therefore fails host startup.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L25-L25",
+          "version": "repo-lines-v1:sha256:1c3ea041e40b97d455358268ddc6cec52fa409c790300e9ef038c1ae9af7808c:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWMzZWEwNDFlNDBiOTdkNDU1MzU4MjY4ZGRjNmNlYzUyZmE0MDljNzkwMzAwZTllZjAzOGMxYWU5YWY3ODA4YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWMzZWEwNDFlNDBiOTdkNDU1MzU4MjY4ZGRjNmNlYzUyZmE0MDljNzkwMzAwZTllZjAzOGMxYWU5YWY3ODA4YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmQ0NjkzZGQ3YjMwZTVmM2NjNTgzNTBjMmM4NWFlY2VkNzczYTI4NTc5ZmNhMDBmOWQ5YTAyMzg5Y2YzZTFkZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2Q2ZDJmNmQ3YTU0MDJhMDJkMDAxYzA4MmVmNWQ4ZGVhM2I3MzMzOTUzMGIyODc1MGVjY2RkMGVmOTlmOGM4OSJ9"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L10-L28",
+          "version": "repo-lines-v1:sha256:ceefb599e7ad11a1dd50a3586f38200905eb34a77b4b44a48c6e2e0e2d0ef790:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYTgzODZiZTZmNDUzNTUzZWFkOTg1YzYxZDMxYzVjNGU2NjIyZWUwODhhOGQ4YjFjNTQyNzM1ODc2NzcxMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZGMzNDdmM2I5N2QyNzJjN2Y3NGU5OTYzNjkyOTM5YTgxNGFmZDMwMWNlZmNkM2Q5ZWMxNGI2NDc2YjVlNzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs#L11-L36",
+          "version": "repo-lines-v1:sha256:7c7ee7fe45b5494e36dc1762de7ed6b306b01c6efb4e1d9c8a7e95a17d41b245:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyMmM3OTBkZWEyM2FiY2M0ZTQyY2U4OWVhYTAwN2U4YTMzMThhMzc1OWY0ZDM5ZjIwNGY5Zjg5OTA4MjJkMTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEyOGJlMjZkM2E2ZjRiZmQzNmRiN2NkZWUzZTc1NWIxZjYyNjc1YjU4N2EyNzgxNDViNDZhZTA5YzM5Yzc0YzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6b86ceb5211a431dbf44c0c2df47a3e6",
+      "statement": "Three resources own fixed ports so URLs are identical on every aspire run: the dashboard at https://localhost:15000 via the committed AppHost launch profile applicationUrl, the api on 5192 and the web on 5173 via explicit WithHttpEndpoint port settings, and the launch profile is deliberately un-ignored in .gitignore because it is the contract the Aspire CLI uses to pin the dashboard port.",
+      "evidence": [
+        {
+          "resource": "repo://.gitignore#L13-L19",
+          "version": "repo-lines-v1:sha256:8232e88d6e5a499de79187305a5535b0806d75e3044f0e45b30a0a30fcf8cdcc:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzJiMzEwOTI1MjAzM2NkOTA2MjFiYTUxZjBiOWQ4Nzc4YzdlZTViNDEyY2QyYmVlNTUxNzQ1NGM2NTM3YTU4OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzk5ZDE0ZjFkM2U0OGI3YjY0ZDc3ZWNhYzNlMjQyZmExZmQxMDFiNWFlZWU5ZDg1MGIzZTlmN2E1OTZlYjk0NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTBlOGQ4ZDBlNzE0NDFmMTNlNWZiMjUxYmZiYTViNjEwNDYyZjUwZDRiZTBlNWJjN2I1YmE0NmFiZDY1MDQwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjE0ZGQzNzllZDg0NzVjOTE2MWEwNWI5YzZjYjViM2JlNDA5NjFlOGU4YjgyNDE3NmI3NDk3YmY0NDAzNGE3OCJ9"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
+          "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Properties/launchSettings.json#L1-L16",
+          "version": "repo-lines-v1:sha256:fbadd8e344662bb248989a265859c89e3e27991e9bbe468b58142098aa0fcd30:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1963909f100e4f389db4661ddc76f330",
+      "statement": "The catalog database resource carries a reset-db dashboard action that drops and recreates the database through an admin connection to the postgres maintenance database, is enabled only while the resource is healthy, and asks for confirmation because all data is lost.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L9-L10",
+          "version": "repo-lines-v1:sha256:5575703b1dfb5719fb47d855aefade52bc0b78697713ee5ab33757c8043dc0b3:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWJhMTM2MDU4MzFhN2FlN2Q5MmQ2MmZmMDg4MGZhMDY2MWRhYjI0MDU0YTdhMjgxZTgyZmJjMDc4NWU0ZDc4NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOWJmZjFmMDc5ZDM2MzU2ZDIxMmJkNTI2ZTcxNjc3NDYyNmJjNzdhYTNlZWQ1ZmE1NmQzYjg1MjQ5MGI4NDIxZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZThlYjE1NTkyZGQyNWE3NmYzYzUwZWNmZDZlNGZlYjBhMDYwMGZhNDVhM2IwNjdjNWRjNTRlM2JhM2NjZDNjZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2QwMzVjYTNmMTc2ZGVlMzMyYWI1OGI5OWNiYTAzYjkzZWVkYmMyOTA0MmFkNjMxNjJkMDJmNWJlNDk4MzU0NyJ9"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Infrastructure/PostgresResourceBuilderExtensions.cs#L15-L60",
+          "version": "repo-lines-v1:sha256:dac4d75bbec47e440cfcab31a59614d1753a4aebb1d300b37188a24426f13f7e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0ZDA3YWQ3ZTA5ZDk3MjFiMDE2YmJhNTg2ZmNiNWQ4Y2RmNzlmNzA3NDI2ZmQ1OTdjY2U0MGYyZjE1MDUxOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNhNTE3NDljYzU5NzllZWExOTk3NzEwODNjYzlmMjE0OWE2MWEzNWJiYmY1MGY0MTY3Y2NkNjc2NzBlOWY4ZWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcxNmMyNWQ2ZjNiZTUyMDI4ZWI2ODU4ZTg4NmJkODJhNzAzYjAwNzY5N2M4YWM4YWU1NjY0ZjkzNjVkYTI0ODYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI3NDhlYjQ5OWI5OGU5N2U2ZDMwMzZkMzM2ZjI2MDhhMDBjYWE4MGRiM2UzMzhiZmE0YjRhZDU1YzQxOWJkOTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c60c8485d414462f812cd43ba08021f6",
+      "statement": "The npm script set in web/ is dev, build (vue-tsc -b then vite build), preview, typecheck, test (vitest run), and generate:client which runs @hey-api/openapi-ts against the committed contract and writes to src/api/generated - the prepared seam for replacing the handwritten client.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Katalog.AppHost.csproj#L1-L6",
+          "version": "repo-lines-v1:sha256:08372e2f036fe2be7474822704b8c844d35f612bb78b3be79238273ce8eb80ea:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2M2ZTQ3YmM1NzYyNjAyMzZmZmUzNTEyZGEzYzhhZjQyY2QwZDdmYzQxODUzNTVkOGM1ZmNlYTUyYTY0MGZmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdhZTUyMDU5MWQ1MmM4ZTgyMTkzNWY0MDUyYmRmNjQ5NWE1NzMzNDc3OTI2ZTRmNTRjNWUzMWJlODI0MmJhMCJ9"
+        },
+        {
+          "resource": "repo://aspire.config.json#L1-L5",
+          "version": "repo-lines-v1:sha256:4e4499b453b83e1d08dbdba44dda24b701796722808f9b868af66e9ccf0baffe:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://web/package.json#L6-L13",
+          "version": "repo-lines-v1:sha256:a78ce3ddaa1210282c3ef2d23a7486174345e1941b4db608fc75c48e9e5c6768:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ4MzNkNTk0OWMwM2E0MGNhOTUyNDkxNjEwYTY2NTk2NDRiM2FhNDY2MzYyZjc5OTAyMGRiZjE5ODE1NDdkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDlkNWJkODk5YzM5ZDA0MDRjZWE1NTFkOTliYTE3MDU5ZjU3MjZjZmJiMWViNjNmYTY3ZThiMjQ3ODVlZjhjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_feb91828a07d4644b969475ad6570775",
+      "statement": "The committed contract contracts/katalog-api/openapi.json is an OpenAPI 3.1.1 document titled \"Katalog.Api | v1\" version 1.0.0, regenerated as a side effect of a local dotnet build because Katalog.Api.csproj points OpenApiDocumentsDirectory at contracts/katalog-api and Directory.Build.props enables generation by default outside CI and Staging/Production.",
+      "evidence": [
+        {
+          "resource": "repo://Directory.Build.props#L18-L22",
+          "version": "repo-lines-v1:sha256:e69c4ae9a92894e122db90ab109dfb64388ead404d70d0c67ef12f0f44d626d2:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1MTE1NzM5ZDAyODU0MWNmZDM5OWIwNTlhNDlhMzRhYTdhODg1YWU4MmE4YmFlMDdiYTU5MzU3YTQ0NTczMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzU3ZTZjZTg5ODNlOGYxYzg5NmVkYjg1NzVhZDNiY2ZhZGI1ODFjY2Y1NTIzNmRjYjYxNDNjY2I1ZDQ1YmJmNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTRhMzRhY2I0NmI4ZTZhMjMwNDFjZGUwYTQ3YTU1YjBjZjk2NDkwYWJjOWViNTY0MTQ1M2FiMWM1MzhmYWIzMCJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Katalog.Api.csproj#L1-L8",
+          "version": "repo-lines-v1:sha256:dd82139612f61bb7850dafa4cebf3b741411710a51e614ad41859604385ac88e:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTY4MDMxM2ZhMmE2NjU1YWU0YTVmNDA2Y2U3Njc2ZDA3MmEwZjJmOWNkNjBkYzcyZGY2ZjY5NTBmZDMzZGYwOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjZmNWVjM2I1YzIzNDA2ODZiNjhlZjMwNzlhMTg4MDEwZjlkMjc0MWEzYmI4NWM2MDdjMGYwYWZjODc0OWVmMiJ9"
+        },
+        {
+          "resource": "repo://contracts/katalog-api/openapi.json#L2-L6",
+          "version": "repo-lines-v1:sha256:d922401d8b41d77e76ffe14bf2acf2708233f2fe8e436cbc6111c76c47e19c11:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTViZWUzZDU0MDVkYzhmZDEzNzA5NDBlMDQ0OGVlYTBmZWEyOTJhYTQzMjRjOGI1NDUyN2VlNTAyOThjZWNhMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjEsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjg5NGQ5NDJlYmQ5ZDlkYWJlOTcxOWI4MTIzY2I5Yzc0NzY0NjcyZjI2YjRhZTI0YjVhMjFjMDMwNmVmNjU1YyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_aa28643066f94c06bffce55332c9782f",
+      "statement": "The frontend API client in web/src/api is handwritten and marked as such by API_CLIENT_ORIGIN = 'handwritten', mirroring the committed contract rather than being generated from it; the switch procedure requires keeping the /api base path and the ApiError shape so views and stores do not have to change.",
+      "evidence": [
+        {
+          "resource": "repo://web/README.md#L42-L54",
+          "version": "repo-lines-v1:sha256:970946c3ed97ff96ebe9945033b07ffb01a3f87f8c8c9837185b51eb8a5f398e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0Y2I2ZjAxNzIwZjljNzdmYWZhOWExMjZjNmMxZmNjM2U2Yzg4ZjA3OTI1Y2U2N2MzMjM2ZGQ1Njk3OTRjNGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQwMTE4NzU0YjhlNzQxZDk4OTJlODUzYjk5ODkyZTJmNDZjNTkxNGIxMmM4ZDA2YjhhMjZkMTFmMjc4ZDk5NzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNjMTJlYWUyMTQwZjllMzAwNzU2ZjA0MmZjODE4NDM3NjY1N2MxM2ZiNWZjNzNjNTNmZjU1MzBiZWFhYWY0ZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUyYmU5YTk2YzA0ZmZjZjkwMGM3M2Y0NDg0N2IzMThiNjc3ODM5YTlkNzE3NmM4MDNiZGNhNDhiOTZhYTI5ZjAifQ"
+        },
+        {
+          "resource": "repo://web/src/api/index.ts#L1-L6",
+          "version": "repo-lines-v1:sha256:54a02cb047b347d7aad719283af3d7dc4df0691cde7e9337c7b77f35101ea8f8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTUwNzVhM2Q3MTBkNDFmN2ViYjlkZWJhMjJjODhmZGYxNDA5ZTk1NDM2NGU1NzJiNGM0NTY5MjkyOTNjNzFkMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWRlZGEwNTFjY2FmZWYwN2YyNDI3YmYzNGVjMmZjNWE5YTk0MDg5MmVlNTM3YTNkODJiMmRiMDFlNDE3NzAyOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://web/src/api/labels.ts#L20-L66",
+          "version": "repo-lines-v1:sha256:a3f7535066094f3e35bfb7c7de4102ca94ee8430e422fa44fc8c3a383009c903:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcxYjQ5YzRmNjU5MTA1ZDg5NGM3ODVlMWM2ODA3YTNmZjJjNmJlNmUzNjFhZWUzNGY0ZTY0OGQ5NGQ5Yzc2MTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA4ZDk4ODQzYjhkYmQ5OWFmOGFiYjFjZjNmM2E0MjMyYmFjZjExYzgwZGZlZjZhZWI0ZTRmZWZhYjEzMjY0MDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.6.0",
+<<<<<<< HEAD
     "at": "2026-09-29T18:32:14.763Z"
+=======
+    "at": "2026-09-30T03:07:03.981Z"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   }
 }

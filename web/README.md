@@ -23,6 +23,7 @@ in the MVP (arch report 3.3).
 npm install
 npm run dev        # http://localhost:5173
 npm run typecheck  # vue-tsc
+npm test           # vitest run (frontend unit tests, e.g. release paging helpers)
 npm run build      # typecheck + production build
 ```
 

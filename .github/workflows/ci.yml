@@ -47,6 +47,28 @@ jobs:
       - name: Test
         run: dotnet test Katalog.slnx --no-restore -c Release
 
+  # Frontend unit tests (vitest) plus the type check the build already runs.
+  web-test:
+    name: Web test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
   # Committed contracts must match what a fresh build generates (arch report 2.8/3.9).
   contract-drift:
     name: Contract drift

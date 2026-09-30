@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a59e3eb1527073d3931f4fb43b1dc84395cd990e4cb525655f5009e72925660f",
+  "claims": [
+    {
+      "id": "claim_3aec467254e24021996cd24d475b80b5",
+      "statement": "`web/src/api/` is a handwritten typed client marked as such by `API_CLIENT_ORIGIN = 'handwritten'`, whose `request<T>` primitive calls the relative `/api` base, rethrows non-2xx responses as an `ApiError` carrying `status` and `detail`, and resolves `204` without parsing a body; the Vite dev proxy forwards `/api` to `API_HTTP`/`API_HTTPS` or falls back to `http://localhost:5192`.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/api/http.ts#L11-L63",
+          "version": "repo-lines-v1:sha256:408e17bf13bd0a7c8a4814ad7717a1e82341e0eb003b2645d8f4ae29ae26156d:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjNjY2YjMxZDg5YzBmMDJjMWRlZDRiYjUzOTRiZGUyODQxMGQ3ZWYxMmRhMzE2NmRkMjQ1OGY4ODM0OTFmMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMxNTZhMDI5ZGJkM2Q3OGU2NzRiMjE5MDU2NzQ5NjQ2ODY4MGZlNjI5NWI1NjI1ODE5NjlkYjU3MGZiZWM0ZmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2ZTBlZWJiMDliMWYzNmE3MTJlMThlNjNkNmQxNjUzMDM3YzdmOTJiMDJhMTRiMWI4Yzk4MTdhNjkzMTA3Y2MifQ"
+        },
+        {
+          "resource": "repo://web/src/api/index.ts#L1-L6",
+          "version": "repo-lines-v1:sha256:54a02cb047b347d7aad719283af3d7dc4df0691cde7e9337c7b77f35101ea8f8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTUwNzVhM2Q3MTBkNDFmN2ViYjlkZWJhMjJjODhmZGYxNDA5ZTk1NDM2NGU1NzJiNGM0NTY5MjkyOTNjNzFkMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWRlZGEwNTFjY2FmZWYwN2YyNDI3YmYzNGVjMmZjNWE5YTk0MDg5MmVlNTM3YTNkODJiMmRiMDFlNDE3NzAyOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L15-L37",
+          "version": "repo-lines-v1:sha256:0de87e662a36d10dc5c481fd3516728cb44f858abe6134caaf5a7c9c79e6f443:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc3ZWIyMWU4Mjk2ZjVlOTIyYTYyMjIxMDMzZjRjNGNlZjAxNzE2ODExYzFiZTI5MDM1MzVkYTUwNmIwOGM0YzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1MjYzZWFjZjU0ZjQ5ODk1YmZjNDEzMTUxYzRiMWJiMmQ5NThjN2UyNzIzMjA5Zjk3ZDJlOWVhZWI1Mjk1YjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjNThiMGYyYjA5NDk0NGQyOGYxZWQyMWUxNzA1MWZjMjE5MjE2Y2MwY2EwY2IxMmU5NDMxZDQzNDQ5MzdiNmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5f23b3bfc31b410b93df6a9eb00cc2f6",
+      "statement": "`api.getLabel(id, includeReleases)` only appends `?includeReleases=false`, and `api.getLabelReleases(id, page, pageSize)` always sends both `page` and `pageSize`, which is what selects the backend's paged response envelope.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs#L26-L49",
+          "version": "repo-lines-v1:sha256:78db387259afd6811c081ad90e3c5e704ae6459e3deb60307ee2137c4860ad1b:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhlMDY3NzQ0YTkxMWZmZTVmYmI2YWUyMjUyZGFhYWNkYjMwYWY5OTU5ZmU4ZjI1MWQ5ZTIzYjFiZTk5ODhkYjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI2NDIwOTk0YjU2MmYwMmZjODVlNmQ0YzY2ODJkZmQ0MTM3Njc4YjMwNzU4ZTU5MjkxMWU3NTU1M2UyYWMyMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://web/src/api/labels.ts#L36-L56",
+          "version": "repo-lines-v1:sha256:d79c11c3fc64c0c0900664f5ef05810db5b87a13be87732b39e54cf5be6e5c69:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNlYTNjZDlkNmFkODdmNjk4NWM4YjUwZWE2YmY5ZWE0MmIxYmE0YjZlZjRmYWRlYWZmNDFjMWU4NTU4ZTI0NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2NDA3ZmYwMjEwNDlmZGNiODI0MzQ5YzM0MGM2ZmYzZWRhM2YzNzFmOGU0NTk0NjgxZDViNDIzMmYwMjU4YWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6906930f1fa646d88658841d468e572c",
+      "statement": "The SPA's DTO types in `web/src/api/types.ts` are hand-maintained mirrors of the contract rather than generated ones, so they both omit backend fields the SPA ignores (`slug`, `updatedAt`, `labelSpotify`) and shape the paged feed as `LabelReleasesPage` / `AlbumSummary`; switching to the generated client via `npm run generate:client` is scoped to keeping the `/api` base path and the `ApiError` shape stable.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Contracts/Contracts.cs#L12-L22",
+          "version": "repo-lines-v1:sha256:b2150a60f3dfc2bd09126f066167a09d73604f02299745839658ebbde0dba30c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY0ODQ2NTAzMWNhNjc4Y2MyYWZkNmMyYWIzNjViZTQ1YWMxMzY3OTVkYzk5ZTQwZDMxMjhlYmJjZGIzNGE3ODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiNTYxMjNiY2Q2ZmE3MjVhOTI1MzM1ZWY5ZjI1YTdiZDZjYTdhOTMxNzMzOGIxNGM5ZTUyOGYzZGFjNjdlNGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImViOWQwNjgxOWFlNDE4OWFmODljM2RkMTU5NWY2ZDUyMmU1YjA1NmZkZGNlMjNiYTFhNmI1NzQ3ZGE4OGUyOGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk5YmNiYzNhN2UzZDk0NTM4MTFjNmZhNTkxNDcxNDA5Njk4ZmQzZDU0NjFlNmM4ODYwYjRiNWNmZTJlZDE5ZjAifQ"
+        },
+        {
+          "resource": "repo://web/src/api/README.md#L18-L33",
+          "version": "repo-lines-v1:sha256:9a64c15c6b44db4101a9b1e9ff48ced36881bdfad09cd9268569649315bb2803:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1MDNkMjhlMTYwM2JhYjdiNzlkZjBiZjVmOTMxYWI1YjNiNDU2ZmNmNTg3Nzk5ZTg0ODZkNmJkMjI5MmJjOTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2NTM5Mzk3YmY0YjE4YTk4ZTFkY2FjNDVlZDY1ZTlmYjM4NWM0YjJiZGExZjUxOTlkMzg0ODlhM2I3ZmM0OWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFmY2I4MzM4ZjI4MWE2YzJkNmExZmUxMmE2YzZiMjc2N2E3YzRjMzBlODQxMTUxNDA1OGE5MjgyM2IxOTJmYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/src/api/types.ts#L1-L104",
+          "version": "repo-lines-v1:sha256:b7364fc022696c89ea27b92d8e4b931d555b8d0ad86c62913cfaff7220ff62ba:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA0LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJlYWYyMmNmMDczMjU5MmMyNDcxNDFjYmU2MWVmYTExMDEyNjEyZjVhMzEyMmI5YWY5YmJhZjUyZjU3MjRkMTk0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0MTJjYTM0NWNjZjc1YmY5YzA4MDZiY2U2OTViZThkZTgwOGI3OTk4NDI1MWE3YTU0ZDIwMmNmNjEwMWRkNDUxIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_d692aafefb2d41cfa6111f60e4381a67",
+      "statement": "`/labels/:id` is a lazy route with `props: true`, so `LabelDetailView` re-runs `load()` through `watch(() => props.id, load, { immediate: true })` when the id changes rather than reusing a cached view.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/router.ts#L18-L24",
+          "version": "repo-lines-v1:sha256:bb059989cffbc905a54906289f8c9be850b94647e0d95e35b06198c436f125d6:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjljYTg5MWJmZjdhYzFmN2NlYWFlNDBlZjA1MTA2NmJlOWVmZTQ3YjRlNDI4MWU4NmMzMTliZTJjNTVlYmNlNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDhmMDZkZWY2ZDUyOWMwYTA0M2UyZmVjMzA3NGM0M2FiZGM5NTYyOThmNTg2MDg2YmFjOGYxMWVmNDZiNmE1MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzg1ZjE1M2VkZjBiOGUxMWIwNmM1MWIyYzE3MDk5Yzk4OGE2YzZlMDUzZGZjM2JjMzcwNWEyMjUwNmQzY2ZhZSJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L173-L173",
+          "version": "repo-lines-v1:sha256:2ffde3e33e1068c6055d8139bda6b81cdd5c72f450dd8f94837d98adfe84a338:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZmZGUzZTMzZTEwNjhjNjA1NWQ4MTM5YmRhNmI4MWNkZDVjNzJmNDUwZGQ4Zjk0ODM3ZDk4YWRmZTg0YTMzOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZmZGUzZTMzZTEwNjhjNjA1NWQ4MTM5YmRhNmI4MWNkZDVjNzJmNDUwZGQ4Zjk0ODM3ZDk4YWRmZTg0YTMzOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzU3NmU3NzMxMzliNjJjYjM2ZGY4YWZlN2RlNmY2MTgzOTNlZDRlNTcxNzQ3MDkxYmQ4Y2E1NzkwM2ZiNWE1YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdjNDQ4MzRmMTdhMTlhMGEyYWE1NWY1ZjVhZjc3ZDM2ZGUwZDg1ZTBmMDY5NDU1ZmY4MWJhOTVjOTczNDdhMyJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L28-L33",
+          "version": "repo-lines-v1:sha256:3b2548a6652999be1ca920d0ac881bafeb1f2a5e408c83a78b0666a3d5a81ec1:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWNhNmNjNjlkOGE2NDRiZjQwMWIxMTE2NzZhNDQ1Yjk3MmE0ZGExOWM2YTU5MWQ0YjQzMDk4ZWVkZjAwNDdkMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNmJlYWQ5MzU2ZjNlYjRmOWM4ODJlYzEyYTU2M2RmOWFhZWE4Y2FkZjg3MDVlMjZiY2NiMGQyNDIwNzY0MTI2NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjA2YTRlODM2NzA0YWYxNDZkZDhmYzY3MTUwOThkZWVhOTEzMTllMjhkZGUxOWQyZmFiZWYzOTQzOTEwZTk5NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjUzNGM3N2U4MGYyMjNkYWMxNzljM2QxMzVlMThlNGUyNjc0MmY2MTk2NTM4NDNiZTIzM2JkNTE0OGFmOTcxOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3d6ea0ba77e243cb940b3dfdf563231f",
+      "statement": "All paging state for the label detail feed is component-local `ref`s in `LabelDetailView.vue`; the Pinia labels store holds only followed-label summaries and caches no release data, and because `store.fetchLabels()` is only triggered by `LabelsView`, a direct load of a label detail can start with an empty store and therefore no \"Following\" badge.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/stores/labels.ts#L37-L61",
+          "version": "repo-lines-v1:sha256:ff30d09f14e6a868a8e1992e82116cc406b4eab90eaa6b75f28c96b10c8579fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlZmIzMDc5ZTQzYzE1NGRjYzM3MGQwYmYyZjI2ZTk5ZTRhZTZkZjA4Mjg4NjU5YmI5MzNkODFjMjlhYTA5YzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0ZjgxYTFjMWE1N2EzNjdmZDcwMzBkZGE3ZGIzNzMxYTMwMGE1ZjkwMDJlNmZkZTQ5MjJjNDg1NzllMTY4ZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlMjY3YzNlZDEzOTczY2RhZGI5ZjEyNTQxZjhlZTkyZmRkMGQwYjhlNDNiZjY1NGEyNjEzNzNmODI4NDVhZGIifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L37-L52",
+          "version": "repo-lines-v1:sha256:864a8d874774b2ab405094d86a340d94e1cd339f4e0943b0ac742a3b242d702e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzMGYwNjViZmM4OTJhZGVmNDBiZDg4MWQ2YWNkNzBmODhlOTQzY2IxYzYyZTNkMDE1N2JhYTk5Njk0OWMzNjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiNTk0ZmRjZDBlMGExODZjZjA3ZTFjNmIxNGQzMTFjMTk3ZTAyYjAyZTQ3OTA2OTQ1OTAzMGQyMjM4MjZjODkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1MzRjNzdlODBmMjIzZGFjMTc5YzNkMTM1ZTE4ZTRlMjY3NDJmNjE5NjUzODQzYmUyMzNiZDUxNDhhZjk3MTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkxNDA4YzdiY2QxZGZmYTZlNjNlNmIxZTNmZTc1N2EyZDc1MzFhZGY3OWU5YjU5NjZiMzc2NTNjNTczYjY3NzQifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L69-L74",
+          "version": "repo-lines-v1:sha256:5fcea4f989f4623f2ff3543fa63adea7a0756b665c5f7005a2f0646abb7bc1b5:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWRmOGFhYWIwZTM1NjU0YjFiZWI0OWIyYjI5MGIzMzJhZTgwYjNkODhmNjUxODZlNmU4YWI2ODkzN2ZjODRmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTgzNGFmNzYzNjMxODEzYzJhY2QzMDZkNTVjYTRkYzdmZTgwNTdiMDAzMDQ2NTgyZGMxZTJjOGVjZTU1YjM4ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmQxOWY0Mjg3YzUzZjI2M2EzOTAyNTdmMmFiODY4MTZlODZlOGYxNGU1YjBiMWMyOWJmM2Y4ODdhYmQ2YjQwMyJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelsView.vue#L14-L16",
+          "version": "repo-lines-v1:sha256:b1a482bd6d3c5cc0d893746926aa0ecc323b3d1e3930b39524c68b3810c627a6:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDUwNzQ3ODU3MTQzMjcyYTc0ODI2NWY0ZmM0NDQxM2EyNGFjZTRmMzJhMDI4NDY5NGM3ZTRlNDQ1NDc2ZjU1ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTY3Mzk4MmUzNzIzNDUyZDgyOTY2M2RlNzk5YjhkZGY2NTQxZTI4NTMyNTYyYTU3NjNhYjVkZWE5YjcwMDk2OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWI3NTA3NWNkYjQ5YWFhMzdiNGY3ZTQ4Nzk4MWRkMjM4YjViYTRhZjgwYmFmNDljN2U1MTEyMDEzYTFlNzA4NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_cf775ea4794544e6ac6462fdc4d37818",
+      "statement": "The initial label detail load fires `api.getLabel(id, false)` and `api.getLabelReleases(id, 1, PAGE_SIZE)` concurrently in one `Promise.all` with a page size of 5, so the detail request stays a single query and the releases arrive through the paged endpoint instead.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L101-L122",
+          "version": "repo-lines-v1:sha256:04659af44e24d4e61b6045e7f1dce2f73a5140ce899494a88d42d7731868c87d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNzkxMTM1MmIyZDgyM2FlMmM5MGI4MjNlMzA2MWFmZmYzZGQxODMwOGYzOGQ3MjQ5ZjQ2N2U1ODE0ZWZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlNGJlOGY1NTUxNzdmM2IxZDYwMGE1MmJjY2EwZTM5YjJiZTcyNDllYWQxNTRmMzdmMmVmNTc3MjgyODYxNDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI0OWJkYzc1YmExNmYyMzkyZTc3YTJlYWE1ZDcxNGM2NmMyZGZjNjJkNDg0MjcwNTJjZDE0ZWMyMTFkZDY5MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkN2MxZDU3ZDZkYzQ5MDM1ZDVkODBhOGVhNzEyYWFhMDMyZDk3MzhkZjM4ZmMyMGVhNjNlMjI2NWZhNTE5MGYifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L35-L35",
+          "version": "repo-lines-v1:sha256:199ee990bd84fa43d9c91fbab40c7af57f0f93d021bc62c623d8b5a6b083e58c:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTk5ZWU5OTBiZDg0ZmE0M2Q5YzkxZmJhYjQwYzdhZjU3ZjBmOTNkMDIxYmM2MmM2MjNkOGI1YTZiMDgzZTU4YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTk5ZWU5OTBiZDg0ZmE0M2Q5YzkxZmJhYjQwYzdhZjU3ZjBmOTNkMDIxYmM2MmM2MjNkOGI1YTZiMDgzZTU4YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjdhZDdmY2RiMjg2MTkzNWZlNzJiOWM0YmFkZjg2YjZhNGU3YmRkZGExNTJhOGViNTAzYzBiY2Y2Y2ZjNWQ2MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTg2MzFhMDJkZGFjODkzNzQ2NzFjODFlMjEzMzBiNDU0NTQ1MzRhNmFmZmZiZGMxZWRkZDg5ZjhhNzNmMmI1ZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_36eb19e993be496eb435d6cd879a2e69",
+      "statement": "The label detail page has four mutually exclusive render states driven by the load outcome: a skeleton while loading, an `EmptyState` for a `404`, an `ErrorState` whose retry event re-invokes `load()` for any other failure, and the header plus Releases/Artists tabs on success, where the Artists tab is fed from the unpaged `detail.artists` list.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L123-L137",
+          "version": "repo-lines-v1:sha256:1d89cf9d47c8953334d0cc07426bb2bbbb03d74c5b42aebf76d8f52696e94845:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwYzkzNGY1Y2Y1OGMwZmI3NjgwNDhlNTk1MGRmNWI2ZGUyNWY5OTNlNzkzYTNkMWFhOWM3MzZmMzQ1ZmRjNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlNzliNzI3ZTEzODJiNDZjZDM0YWVlNTRiYTdlZjcwMjYyYTMxOTcyNzU5ZDQ3YzllOTAxNzA2YmRjMWMyZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzZmRmMDg4YjNjMjAwOWY1NmQzNDg0NTk2MjZkZjMxNTU1NDExNzkwMGI3NjAyMWE3ZTM3OGY4YjMwOTkzY2IifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L197-L240",
+          "version": "repo-lines-v1:sha256:82dffc147b5c10c89e05d2396611e356467ef21a7692bf8fc541e046f4563d1e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkxMTRhMDdiNmQwNWQ3NmFiZmEwM2VkZTE5MjZjMWUyZTc0NzI3MzEyNzlkODU4OGU4YzYzYzU2ODliNTAwNzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjMmRjY2U4NWZhYWEzNzg3MGFkMDA2YWVkYTM2NmE1MDgwODJjMWQ3MzczMGVjZjBmZGQ2OTc3YTdkYjQ2MDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ5NWEzNmZhMGE5NmI3ZDdjZjNlMDE1ZDc0YzE3MDZjODAwY2JlM2Q2MGVkMzNmOWZkOGJjNjI3OGMyMTY3OTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg3NjRkZDFmYzY4NTU1ODdkODg3ODg5ZjYwM2RmYTUyYWQ5ZDY2N2NiMTMyZjI2OTI2YzMzNGQwMzg5NDljMDYifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L320-L341",
+          "version": "repo-lines-v1:sha256:574961797d031ab4365e00a01e7c3b87ab425cf65fe885bd52923dd68e50217d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEzMDQzN2YzZmI1YTBhYThmNjY5MzcyZjJkYjIzZDM1NGFmNWY3ZDI5ZWUyODlhMDNmOTllMDc4ZmVlMmFiMjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzZmQ3NDU1YmRiODFkNzkwNWFiOTI1NTJjZjJhYWJkZDgwYTQzNGI3OWE0YjY4NDljOTVkN2I2ZTY4NjliM2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRkYzRiMDE3YTNlYWQ1YTk1MTE2ZjUwNGJhYzQ1MzQ5NDdhOTYzYjQ2YWU1Y2Y3NmFlODY2OTQ1N2JkOTMxZWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0OTIwMWQxZmJmZDU4NGNhMTZjZTQzNjlmZDFkNzM1YmZjNDM4ODc2MTFkNmQzM2ZjYmIzMzVlMDNmMjY3ZTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_211cb18c37c746fab834d38073bb17de",
+      "statement": "The load outcome is classified by duck-typing a `status` property on the thrown error (`err instanceof Error && 'status' in err`) rather than testing `instanceof ApiError`, so the `ApiError` shape promised by `http.ts` - not the class identity - is the contract a view actually depends on; the 404 branch also covers a malformed non-GUID id because the backend constrains the route segment.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/ReleasesEndpoints.cs#L16-L21",
+          "version": "repo-lines-v1:sha256:3d2c820206a9b19ff8e521c09ad72da2bc8ac9f052b0fdc066f4536185cd21ca:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWY3NGU1YTk4MTAxZDE0NmIxODkzM2M4NzRiODYzZjM0ZjFjYzZiZGJjNWUyYzhlODFhZGM5MTgyZGQ2MjFmYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmJiMGVmOWZjY2NhNzI5NGQzYmU5M2ViN2VkODYxNWQ4MjA3OGFlMWRiNjY0ZjE5N2Y0NGNkNDk5ZjhmNzJkYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmYxYWRjYWJlNWFiMDZlYmFiMzQ2ZjczODEyY2ZjMjgxZWQ4MGFjNzM4Yjk1ZTA1MDhlNTdiMDhhZWEzZWZkMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGY4MWZlOTBlMzc2ODI5M2MwMTI4MmIyYWM4N2I1NjBlZTZiOWNiOGQyYjRiMzM0ZWE3M2IyMzQ3ODAxOTA4MiJ9"
+        },
+        {
+          "resource": "repo://web/src/api/http.ts#L11-L21",
+          "version": "repo-lines-v1:sha256:30382c0f45731b34e1de7b0bbda2b76e2de1cf8153a99c75ee1b0068ae140bda:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjNjY2YjMxZDg5YzBmMDJjMWRlZDRiYjUzOTRiZGUyODQxMGQ3ZWYxMmRhMzE2NmRkMjQ1OGY4ODM0OTFmMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMxNTZhMDI5ZGJkM2Q3OGU2NzRiMjE5MDU2NzQ5NjQ2ODY4MGZlNjI5NWI1NjI1ODE5NjlkYjU3MGZiZWM0ZmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjViYjliNzcyZGY0ZDEyYzU1NWJjZGY5NmFkNDAzMzNkYjUxNDI3OTJlNjE5ZGNiNDhhM2FkMWMzYTFkZTAzYzkifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L123-L132",
+          "version": "repo-lines-v1:sha256:c1b878789b0fd35b04dce38c80033d65083a223803aa5f37039b040d3eb70b9a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwYzkzNGY1Y2Y1OGMwZmI3NjgwNDhlNTk1MGRmNWI2ZGUyNWY5OTNlNzkzYTNkMWFhOWM3MzZmMzQ1ZmRjNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2YjlhYmYwYmEyZTFiOTFjN2Q4N2EyODM2NDE3MTU1NzU2NjIyYjBlZjljYzEzNmFlYTY4NWU3NGIzYjE4MjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlNzliNzI3ZTEzODJiNDZjZDM0YWVlNTRiYTdlZjcwMjYyYTMxOTcyNzU5ZDQ3YzllOTAxNzA2YmRjMWMyZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNlODU0ZTJhNzgxYWYzNDY1ZjFiN2JmYTI5Nzk3ZDIwZjA4Y2EyN2I1NjM5NWVjNGE0MzAxZjkwZmNiY2ViOGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2e1e9ac71fb14a419c36f3bb0118668d",
+      "statement": "`loadMore()` is guarded on `loadingMore || !hasMore`, requests `currentPage + 1` at the same page size, and a failed page fetch does not clear `hasMore` or advance `currentPage` - it raises a `vue-sonner` error toast so the same page can simply be retried.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L139-L166",
+          "version": "repo-lines-v1:sha256:9837815d89f046c91545558a9975294cf3fa482182a4c24bcd15a10a7a0c0466:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZmYwMmEwMDEwYWE0MjI2ZjFlYmQ1ZDVkODcwY2RkOTY5NzFjOWNmMzQ4YTEyYTc0ZmIxZmFkODA5NWE4NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNmNjZlZWMzNTkyOTFiM2U3YjQ4ZGY4NjBlNzVkMjM0ODRhNGM0Y2M2MTQwN2FkODZjYzYzNzJkNGQ2MTU3MTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1149529aa1cb4e9e86b9739d965b8969",
+      "statement": "Each merged page overwrites `currentPage`, `totalCount` and `hasMore` from the response envelope, so the view trusts the server's `hasMore` (`page * pageSize < totalCount`) instead of counting locally.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/GetLabelReleases.cs#L32-L51",
+          "version": "repo-lines-v1:sha256:67eaaa856debca08745c51c2814c0b19b8952866639ef338b8995c2a83d7ae52:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExNWQ0YjBlMGMyN2IzOTQwYWI0NzEzOGFkNzBjY2M4Y2E1MGZiYTc1OTE2YThlYTQzNWMzYTliY2RiOGY1MjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmYjAwY2E3ZjA5NjYzMzRmZjUyODM2OTQ5OTUyZWMyYmRmNjc4Mzg0OGRjNmU0MzUzNGQ2ZDA4ODBjMWI5OTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFjYmU4MzIwMDI0Y2JkZjVhZDk2NTA5YzRjYTgzMTFlZWY0ZjEzYjI2OGM4NzhmZjM0MzE3M2NkMTEzNzY1ZDcifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L85-L99",
+          "version": "repo-lines-v1:sha256:c1aaf2bc96e04e80da2371a54b27e71529cae561de1d079cbb999b1fd73230b1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwZjBjNjM0OTgzZjA2N2FjMDMzNTU0MzY5NzgzZWJlY2Q3OWVkMzMwYmM4YzExMGFiN2M1ODFjYmFlNGViODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZTBhZjMwZDNhNmUzNjRiNTY5Njg4NzlkMDU4NjAxMTViYzdlZWUxN2YyNDAzYTExMzJlZGY3YThkNzNkMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1728a023dfc74333a9d20fe28d784cd3",
+      "statement": "`mergeReleasePages` appends only releases whose album `id` is not already loaded and keeps the already loaded copy on a collision, absorbing the page overlap the backend creates when the background poller inserts new albums at the top of the newest-first list between two page fetches.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/GetLabelReleases.cs#L53-L60",
+          "version": "repo-lines-v1:sha256:222231ac8dcef70a96f457808c0e89d2743430f5eaac523093d2c8438d7215ed:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjU0NGM2YWVlZjJkMTBmOTQ4NmY3NDVjYjJjODhhOGRjNWUxZTlkYjI4ZTRmZThhNTZlNzQ0ZWRkOWM1MzRhYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTE2MGI2ZTMwZDgwOTdlNjY2N2FlM2YzMTQxMzY1OTUzOTgzMWQ5YThiYjQ5NmNiNjBmZjQ4Yzg2M2MxMzExYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzI2YmVmYzcyOWE0NzU3NmZjYTc4NDY5YTEzMzMyYTI4ODM5MDI0YzRlMjljNzA4OGEzOGZlOWYxZmE2NmY3YyJ9"
+        },
+        {
+          "resource": "repo://web/src/utils/paging.ts#L1-L16",
+          "version": "repo-lines-v1:sha256:b82fcf4e373cc994b9e7754b68b7f3759cfbc25b7801a7a521172a3290b9f7f3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjMmJjZWQ5MDA5NWQwMjk2MTcwMjg5Yjc1ZTI4YjdkNmJkNWNhMDBhNjNlYzVmN2RhZTUzODQ1NmNkOTE5NGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM5NjY5YzE3YThkNjZjZGU2NzhhOTlkNjg5OTU5MzkxMmQ4MTExOTQ1ZjU5MGQ0NDFiOGVjNDk2OTY2ZDc0NWYifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L85-L99",
+          "version": "repo-lines-v1:sha256:c1aaf2bc96e04e80da2371a54b27e71529cae561de1d079cbb999b1fd73230b1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwZjBjNjM0OTgzZjA2N2FjMDMzNTU0MzY5NzgzZWJlY2Q3OWVkMzMwYmM4YzExMGFiN2M1ODFjYmFlNGViODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZTBhZjMwZDNhNmUzNjRiNTY5Njg4NzlkMDU4NjAxMTViYzdlZWUxN2YyNDAzYTExMzJlZGY3YThkNzNkMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7f7a37f1c93848a48dab7d065fb754c4",
+      "statement": "Rendering order is produced client-side by a `sortedReleases` computed that re-sorts merged pages with `releaseSortKey`, which normalises `year`/`month` precision to the first day of the period and maps a missing date to `0000-01-01`; `AlbumCard` renders the same precision through `formatReleaseDate`.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/components/albums/AlbumCard.vue#L62-L67",
+          "version": "repo-lines-v1:sha256:7b6fb1f29b8d031309bfc52dc83153a30882e3e78569fb0a510a806c86cb7f70:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmI2ZTFlYjhlNmIxZDhmMzc0NjNjMWU5NDRlNGU3NjZjY2U0ZjIxZDk4NmEzMzQ1NjdlZDRiNTQ1MDIxYTE4OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmUyYTdiY2UwNzgzYTFiMmM5OTE1MmFjYTUzYWYwN2VjYWQ1NTU5NTY0ZjFjMzYxOTEzYmU0ZDIxMGNhYjg5OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjkxYWQwMjMyZjA1ZTZlOWUzNWZjMjFhMDFiMDY1NjBlODQzNGQzMmQzNGI5MWNmMTQ2ZTdmYTcyZTJhNWRjYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGI1ODE0Mjk2NjkwOGM1OTU5M2E1ZjYzNWZiYTI2ZTE2ZTdlZmRjM2U0ZTE3MmY2MTlmOWUzZDA4YTgyNWNlYiJ9"
+        },
+        {
+          "resource": "repo://web/src/utils/dates.ts#L40-L78",
+          "version": "repo-lines-v1:sha256:d3da354eb80b49ac73da857c39c65132691b6171af3e922f806a1ae6ad1b7ec5:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJmNWY5NjcxMjY3Zjk2NzJhZWU4Y2M4MzQ2YWZmNTVhMjQ2N2E5ZjRiOGM1NDNmMjY4NjUzNjk3M2MyMmFjODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUxOTk4MjM1YWEyYTg0N2I3MDBiYTdmYTRmYzBhNjcyODA0MDBjMGMxMjEwZDFmNjQ5MzNiOTA0MmY2YjM2MGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg4NGYxODc4YmExMWE1YjdjNDAzNmU0MzYwYmYwNmE4ZTdjMGI4NDkyMTQxOWE1ZjE3M2M0MjRmNjlhM2M4Y2IifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L54-L60",
+          "version": "repo-lines-v1:sha256:a4f6a208485fdc2b8cce61df004221aa272b08bffb8ee5db3bbb6614c397dfe5:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjI1NjU5YmUxZTVjNGZjMmY2ZDc0OTg2Y2FiOTNiNmY0NDllZWVhOWNiMjRlMGMwNTVhNmNiOGY1NmQ0YTlkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODRmODExNWU5NGNiMWNkNTA5ZjZhYjI5YmFkMWQyZmM2M2NhYmM2NzQ2NTE1NmMyMzA2YWY2YmM0YzI1YWNjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjlhOTgyMDc0ZDIzMDAxZTA0ODI1NmVjMzZjM2FmMzYxNjExZGM0NmIwZmJkOGZlY2JkNjg3NTIxMDRkNzJjMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_60c8a5411f4248248252781f844a5e41",
+      "statement": "The header's release count is `loadedReleases.length` and its artist count is `countUniqueArtists(loadedReleases)`, the number of distinct credited artist *names* across loaded releases - not artist ids and not the label's linked artists - so both grow as pages are revealed and both differ by design from the accurate `artistCount`/`releaseCount` the detail response carries but this view never renders.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/api/types.ts#L85-L95",
+          "version": "repo-lines-v1:sha256:061b0ff63edb8636adb32bd5cd944629e49e865ffe980163619ce3819857a046:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzZmViZTA5MmRkOTA0YTI3NDlmOGJkODJmNWM3OWE0OTk0ZWI0NTFhNDAwZGY5NDVhNDlkZDNkYTE2ZjA0OTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY1YjM3NTY4NzZkNDMwYzgxMTcwOGU0MWQzYmZlY2E3MWFlMjU3NjBhMjJjNTllNWE0YWNkNmU3YjQ5MWU2NTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwNTFhYjY1YzU5ZWRiODk1ZWNjOWFiZjM5NjM3NDUxNmQ1YjQ3ZWYxMWRkY2NlOTdlZjA0MmIzYTM1YWFmYjMifQ"
+        },
+        {
+          "resource": "repo://web/src/utils/paging.ts#L18-L27",
+          "version": "repo-lines-v1:sha256:9ae3e8f606e970d29ea57a92dbbc4db97d406096672ff48ff23d80c904c3283f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA3YWYzYzk2ODM4ODZjMWY4ZjUxZjY4NDI0NDA1ZTdmNWFjNTAyNDcxNzViNzNmODhhODUwZGQwOTI4ZWU5MjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MTVmMTVkMGM2NzRkMTJhMmU2NmFiMzdmN2I1MDdkMjE5NTQ5N2ZhZTljNGQ2Y2UzNzczYWUxZTIyNmJjNTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L62-L63",
+          "version": "repo-lines-v1:sha256:ac0811a63e5e8e9d89460b45711cb5ccb3a5f3611506b8d8f34a7979314d3284:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDg4MjkzNzJhMDNlYzA3YzZiZTg0MTM2OGNhNjY2ZGMyZjAxODRiZTRmOWFkMWI0YThkNjlmN2FjOGRlMGE5MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGUwZWIzYWNjNWU4NzY2NTBhNDY5MTlmMmNlNDM2OTc0OTU0YTUzYjc1ZjgzNDE1YWI5ZWIyNTc5YzQ4OWU4ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDk4NTAxMGNmYTUxY2I0MzllNTFhOGM3ZDUyMWZlYzM3NDY3NzA4NWNiMjllY2U5YzMzZmEwMmZjYzljMWVjOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjk1ODg3MThiODYzMjQ2MDQxOThmNGNiMTA0OWM0MzRiYzMxMjRlYTBmNDllZTFlYjQwNTU4YzJlYzZlMDM4ZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_05456c63099e47daa3e6b9574476c6c5",
+      "statement": "The new-releases badge counts `page.totalCount` growth against the `initialTotalCount` baseline captured from the first page, is shown only while `newReleasesCount > 0 && loadedReleases.length < totalCount` (suppressed once everything is loaded), and is cleared by clicking it, which calls `resetPaging()` and reloads from page one with a fresh baseline instead of merging just the new rows.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L168-L171",
+          "version": "repo-lines-v1:sha256:4b8e37a51b85ee4123bcfb32eac24c7cb2a42f4707c6ddd02e70a87a446639bb:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWJhZTg2YzYwZDllNGYwMDRjNzdiZjY1NDcxMGQ4NzQxMDRhMzkzZThhNmQ3Y2FjYWVkZmRhYjQyODZiZmJlZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWMzMTgxMzRiMzY2OWQ2NjI1MTg1M2IxMGI5NTI4Y2NlZDI2ZmNmNTU5YzhkYWU5OTYxODVkNWMwNTJhOWNkNyJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L266-L273",
+          "version": "repo-lines-v1:sha256:8bb963d6bd46510ae6f1ecfe1fd7934e8a80e731712b6438325fcb43cbd60dfe:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDVkMDA0OTg0M2E5NjNhYjEwZTgyZWM3MzI1NmJiYWE2MDhhNTNiNDMwODQxMzE5N2EyZTRmODA4MjBjNTA1NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmM5NmIyOWFhMmQwMjdjZDcwZjBmOTAxNGM0ZGM1ZTIxZjU5YTY0NjRiNDcxNjUxMGRlNjBiNzUwN2Y0NzcxYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTBkOTVlOTAzYjllNGUxMjI1NzVjZTdkOTJiMTgyZjc4ODJkM2VlZmRlOGFiZWMxYTQ1MjZlMzllNmVkMTVkMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTUwMzUyZjUxNDQzOTEyOTFmNjZhMzhhMDdiMjJhOGUzNDg4OTc2NTI3MGUxYzczZTljZGJkNjJkYTNiM2UzNCJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L49-L49",
+          "version": "repo-lines-v1:sha256:284fb4180185c4d7f27fb1179766a5d52f4aae45a6391a7394a90f023bb45e55:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjg0ZmI0MTgwMTg1YzRkN2YyN2ZiMTE3OTc2NmE1ZDUyZjRhYWU0NWE2MzkxYTczOTRhOTBmMDIzYmI0NWU1NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjg0ZmI0MTgwMTg1YzRkN2YyN2ZiMTE3OTc2NmE1ZDUyZjRhYWU0NWE2MzkxYTczOTRhOTBmMDIzYmI0NWU1NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzY5YTFlYzA2MzUzOWU1MGQ4M2Y3OTM0ZjNjYmZmYzdlNDRjNGJiMWIyOTk4NzRmNTQ4MTM3ODdlMzVmNDRkMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNhMzk4ZjI0MmI3MThlMjVkMGNkMzdmNWJhMDVlODgwODQxZDdlNTQ0MDUwNGNhMzg4YTg0OGM4MmJlODQ1NCJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L65-L67",
+          "version": "repo-lines-v1:sha256:cd7621b2483d54b38d9acce74a41c037e2e17e3af0fac35ac5dbc1c94d9d1f62:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM1NzA2YzhkOGMzNzc3ZDBhNzlmOTJkMjkzNjFlNjRkNGFlZGNkZjMwNDFmNGY5YTNlZmI3ZGFlN2VhN2YyMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmFmYmEwNTI3YzM5NTNjNGI2ZTBlNWI1NzM5YmE4MzYxMmY4MDUzYmNkYzk0NjY3MzAxOTNjZDFkNTkwYjQwOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmU4OGU4MjI0OTQ2YmU3ZmU5NWQyM2ZhYjAxNWVlODk4ZWNiYTM4M2Q1NTM2NjQ1OWE1NzQzM2Y3MGYyYjM0MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDMwYWE0OTY0Y2JlOTQ2ZWU2ZGE0ZDk5ZDM4MGU0OTlkOTIzZWM5ZmUyNzYzZDEyZjBjMzI1YzlkZWIxODAzNiJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L85-L99",
+          "version": "repo-lines-v1:sha256:c1aaf2bc96e04e80da2371a54b27e71529cae561de1d079cbb999b1fd73230b1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwZjBjNjM0OTgzZjA2N2FjMDMzNTU0MzY5NzgzZWJlY2Q3OWVkMzMwYmM4YzExMGFiN2M1ODFjYmFlNGViODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZTBhZjMwZDNhNmUzNjRiNTY5Njg4NzlkMDU4NjAxMTViYzdlZWUxN2YyNDAzYTExMzJlZGY3YThkNzNkMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5545313d10744c3386747d46a8ef6988",
+      "statement": "`load()` and `loadMore()` each keep their own monotonic sequence counter and discard any response whose token is no longer current, making fast navigation between label details safe on the load path in the same defensive style as the Pinia store's `fetchId`/`revision` guards.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/stores/labels.ts#L37-L61",
+          "version": "repo-lines-v1:sha256:ff30d09f14e6a868a8e1992e82116cc406b4eab90eaa6b75f28c96b10c8579fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlZmIzMDc5ZTQzYzE1NGRjYzM3MGQwYmYyZjI2ZTk5ZTRhZTZkZjA4Mjg4NjU5YmI5MzNkODFjMjlhYTA5YzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0ZjgxYTFjMWE1N2EzNjdmZDcwMzBkZGE3ZGIzNzMxYTMwMGE1ZjkwMDJlNmZkZTQ5MjJjNDg1NzllMTY4ZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlMjY3YzNlZDEzOTczY2RhZGI5ZjEyNTQxZjhlZTkyZmRkMGQwYjhlNDNiZjY1NGEyNjEzNzNmODI4NDVhZGIifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L101-L137",
+          "version": "repo-lines-v1:sha256:680c87f6558081dece18b70714646d71e00ab2407f196024abd6eb0e1415ac50:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNzkxMTM1MmIyZDgyM2FlMmM5MGI4MjNlMzA2MWFmZmYzZGQxODMwOGYzOGQ3MjQ5ZjQ2N2U1ODE0ZWZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI0OWJkYzc1YmExNmYyMzkyZTc3YTJlYWE1ZDcxNGM2NmMyZGZjNjJkNDg0MjcwNTJjZDE0ZWMyMTFkZDY5MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzZmRmMDg4YjNjMjAwOWY1NmQzNDg0NTk2MjZkZjMxNTU1NDExNzkwMGI3NjAyMWE3ZTM3OGY4YjMwOTkzY2IifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L139-L166",
+          "version": "repo-lines-v1:sha256:9837815d89f046c91545558a9975294cf3fa482182a4c24bcd15a10a7a0c0466:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZmYwMmEwMDEwYWE0MjI2ZjFlYmQ1ZDVkODcwY2RkOTY5NzFjOWNmMzQ4YTEyYTc0ZmIxZmFkODA5NWE4NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNmNjZlZWMzNTkyOTFiM2U3YjQ4ZGY4NjBlNzVkMjM0ODRhNGM0Y2M2MTQwN2FkODZjYzYzNzJkNGQ2MTU3MTEifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L51-L52",
+          "version": "repo-lines-v1:sha256:4e1e463f7235cb0cf4ebb8b52113df9ee913dec957fda82faed5d1932369d706:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTQyYzY2NjVkZmY1ZWM3NzkwNDkyZjM3YzJkZmQ3NjY2YTZkMTZlNmZiMjZjMDgwZDlmOWIwMGE0ZTA3ZGYxOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGI1OTRmZGNkMGUwYTE4NmNmMDdlMWM2YjE0ZDMxMWMxOTdlMDJiMDJlNDc5MDY5NDU5MDMwZDIyMzgyNmM4OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDVkMzE5ZTBhOGM0N2YwNGNiZDNkZmM3OGIxNzZiYjM0MmVhOWJjYTcwNjhjNWViZmZjMDRkMzdkODY3ZWQ5ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTE0MDhjN2JjZDFkZmZhNmU2M2U2YjFlM2ZlNzU3YTJkNzUzMWFkZjc5ZTliNTk2NmIzNzY1M2M1NzNiNjc3NCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8b978c879f3042d79d7be3300453696c",
+      "statement": "The two guards in `LabelDetailView` are not linked: `load()` resets paging and clears `loadingMore` but never bumps `loadMoreRequest`, so an in-flight page-N+1 response for the previous label still passes its own guard after a navigation and is merged into the freshly reset list together with the previous label's `currentPage` and `hasMore`; bumping `loadMoreRequest` during reset would close it without touching the pure helpers.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L101-L109",
+          "version": "repo-lines-v1:sha256:f5f29c4748703608162b1e3c941aa0e87a95855f52c71577db133544cccb0293:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWM3OTExMzUyYjJkODIzYWUyYzkwYjgyM2UzMDYxYWZmZjNkZDE4MzA4ZjM4ZDcyNDlmNDY3ZTU4MTRlZmI2MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODk4ZGQ2YWM1MDE1NzdjYjU0MWYyYmI3YjZlODY0YTRiYmQ5N2FkOGU5OTNhOTA0NjVkMTA2NzRmMjE3MzkyOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjQ5YmRjNzViYTE2ZjIzOTJlNzdhMmVhYTVkNzE0YzY2YzJkZmM2MmQ0ODQyNzA1MmNkMTRlYzIxMWRkNjkyOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzZkYmYzNmVjMDU5ZTdiNmIxZWFjNmNiNTIxODUwYmZlZmNjNjcyMzAwMjQ0NGFkMTRhNzY2MDhmNzc2MTQ1OCJ9"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L139-L155",
+          "version": "repo-lines-v1:sha256:721629be0688d97e784da8edfd64fecb256b1df751c12b183e25615af789d883:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZmYwMmEwMDEwYWE0MjI2ZjFlYmQ1ZDVkODcwY2RkOTY5NzFjOWNmMzQ4YTEyYTc0ZmIxZmFkODA5NWE4NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNmZGQ4YWQzY2E2YjIzNWRmNjJjOTUyYjEyYzYyM2ExOTU3ZWY2NmM5NzJlMGFkYjkwNWE4OGY3ZGU5YTlkZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ4OGQ2OWZlYTc4NWMwNjVmYmIyY2Q4YWQyODE1YTI4NGJkZTFkNTllMDJhNjc5ZTVmYTY5NmVlMzcyOTk2YjkifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L76-L83",
+          "version": "repo-lines-v1:sha256:b5484d79f2d437f08c10a7e585c21d3749eba4c3c49b6815fa820aa1a71a89e9:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2RkYTJiMWZkMjE0NmMxODZmMDEwYTFkZjg0ZjA0ZDM1MThhOWYxZjBiZmY1YzE3ZmNiNDUyZGNmMjI0ZDFhOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzNhZWMwZDE5MDJmMDFiMzM4ZGE0NDA2NWYzMjQzYWQ2MTY0NGFiZDQ3NDcyMzQ5YTQwZWMxYzYzNjA3MDEwNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGU0NmYxNzFkMzQxNjRiY2JlNzMzODUwZGE5ZmI3NWRjNWFiYTBmMjU5Y2Y0ZmQ1ZDRhYjk3MDEwODg5YWVhMyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f58fb15fd6414dc48da6e9b31cc86014",
+      "statement": "Paging logic is deliberately split so the behaviour is testable: the view delegates merging and artist counting to the pure `web/src/utils/paging.ts` helpers, whose only consumers are `LabelDetailView` and `web/src/utils/paging.test.ts`.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/utils/paging.test.ts#L1-L4",
+          "version": "repo-lines-v1:sha256:7a30d0fe5b33c77db59dd7b4b3d3bf8a6b79d05fe21cbd3f53d55578e5bb5dd4:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjYwMzc3Mzg2YjM2NWM5MjQ3MjJjNTQzNGFkNDRlOTVjMzRiZDkwYTNlOThmOWQzMDk2N2JiYzY4NGRjZjVkNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTI2OGIwOTkwY2U5Mjk5YjI2YjA0ZGM5YmVhM2Q5MjM1MzhiOTJkMTBmZjllYjkxZThhYjMwOWI4ZTJmOWZlZiJ9"
+        },
+        {
+          "resource": "repo://web/src/utils/paging.ts#L1-L27",
+          "version": "repo-lines-v1:sha256:f55d5b9b31d171f5ab1803017caa99c6f43d7e88f836fd31383b0c264bb1b6b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjMmJjZWQ5MDA5NWQwMjk2MTcwMjg5Yjc1ZTI4YjdkNmJkNWNhMDBhNjNlYzVmN2RhZTUzODQ1NmNkOTE5NGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L19-L19",
+          "version": "repo-lines-v1:sha256:e36c1acb628883ce86f213bf801cfc26db9aa83cf096164d28477675184d858f:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM2YzFhY2I2Mjg4ODNjZTg2ZjIxM2JmODAxY2ZjMjZkYjlhYTgzY2YwOTYxNjRkMjg0Nzc2NzUxODRkODU4ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM2YzFhY2I2Mjg4ODNjZTg2ZjIxM2JmODAxY2ZjMjZkYjlhYTgzY2YwOTYxNjRkMjg0Nzc2NzUxODRkODU4ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzU3MDc4NWFiNGVlODJlZTkzMDE5NzAyMTY4YTA4YmYxZDhhMDIwN2JlNGQzMWUwNTgwYTU0ZWYxNjVkNzNkMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDU2NWUwZDRkMzk0NTI4OGRhZWM1MmU1NTJjMmI3NjE5YjY4YThmYjNjOTRkOWVjMWE1NzQwMmM3MmY4OWI1YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1345be7f36b648278c1bb7baac72b1e9",
+      "statement": "`web/src/utils/paging.test.ts` is the only frontend unit test file; it covers `mergeReleasePages` (disjoint append, overlap de-duplication, and the already loaded copy winning a collision) and `countUniqueArtists` (name de-duplication, zero for an empty list, one for a single-artist label), with no component test for the counters, the badge baseline, or the guards.",
+      "evidence": [
+        {
+          "resource": "repo://web/package.json#L11-L11",
+          "version": "repo-lines-v1:sha256:241fc249efa71b0e7a97f7f4eb8b89494a59cb3f87d71be6aad63aa3ba5e3d3c:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQxZmMyNDllZmE3MWIwZTdhOTdmN2Y0ZWI4Yjg5NDk0YTU5Y2IzZjg3ZDcxYmU2YWFkNjNhYTNiYTVlM2QzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQxZmMyNDllZmE3MWIwZTdhOTdmN2Y0ZWI4Yjg5NDk0YTU5Y2IzZjg3ZDcxYmU2YWFkNjNhYTNiYTVlM2QzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjIwMTJiNDc2NzAxZWE3ZWNhMThmYWFjMDZhNTBjY2JjYzA2ZDJiNDg1MDIxOWM4MjAwMDhjOTI0ZWJlMDFiZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWI5ZDczYzBhNGUxOWFiYjQ4Nzg1MmVlYzVhNjFmMzVmMDY2MjVhOGQwOGRlZGQ0MDZmZGJiMzU2NjI2YmM4MyJ9"
+        },
+        {
+          "resource": "repo://web/src/utils/paging.test.ts#L25-L89",
+          "version": "repo-lines-v1:sha256:199491f05a8ccde37ca5c51a526a468f9fd9e9856978ad427e15ab484724f4ad:eyJzZWxlY3RlZExpbmVDb3VudCI6NjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxYTQwYmFlMjgwODY0MDIwMDM2MjViMWNjODAwNTE1NDJkYmVhZDYzNjUwNTc0YjNjZmZjODQyNjc2OTdhNDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3fe05636e07d431f9b088671b1f154bc",
+      "statement": "The web CI workflow runs `npm ci`, `npm run typecheck` and `npm run build` for pull requests against `main` and does not run `npm test`, so the vitest paging unit tests are not enforced in CI today.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/web.yml#L1-L29",
+          "version": "repo-lines-v1:sha256:4a914e1ea6b834c8eba5c7ae686510a8a700c345a858748e1eadadb5433787aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkOWY0ZDljYzI3YjE1ZDNjNTgwMWEzZGMyMzJiODQyMjYwMzZjYWNkNDAyNWU0YTdiNjE1Y2U3OGU3ZWM0NGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MWFhNTAyMzdjNTIwNjlkYzY3OTBlNDcwZWM4YWUzMWNmMWM3YTljM2UxYjVhM2EzNmZlMGE0Y2Q0OGZmYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/package.json#L7-L13",
+          "version": "repo-lines-v1:sha256:f116d59cfc48afa69f699ac849830c60cde1d87770e98c3d920690e3a881a031:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2JhNDM0ODUzMDIyZTBkZWRlMDhjYzRkYTVmNjZlNzNlZTJlNjg2NjM3ZmY0MzJlZGYyZjAyOGNmOWNkNDkyMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjQ3MWNmM2Q4MWNkMDM1YWVjMmZjZWJlYjliMGI2YzVjNWYxZWM1NDlhZGE5NDU1Njk5MDFiZjhjZmMyMGMyNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTgyMDIzZTI0YzA2YzQzY2VlOTJhYTJmYTFmODFlOTc3ZGZjYTY4YWZjODZhNGQ5ODc1MTA5ZWI4NWYyNmFjZSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.6.0",
+    "at": "2026-09-30T03:07:03.981Z"
+  }
+}

@@ -1,18 +1,27 @@
 {
   "schemaVersion": 1,
+<<<<<<< HEAD
   "pageVersion": "sha256:c562ba057caaf95014b7ccd8cb5e6515ecad5858a5b51ded00eb60500b0f85b1",
+=======
+  "pageVersion": "sha256:b639947c088f05d596dd1b423118eed59a29dd3112574ce5aa250e9c89574584",
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   "claims": [
     {
       "id": "claim_bf0a0d167199451295237ad76e2ceaef",
       "statement": "Aspire starts the API only after the PostgreSQL catalog database is ready (WaitFor(catalogDb)) and exposes the API liveness check at /alive via WithHttpHealthCheck; the AppHost also forces the API into the Development environment so user-secrets load and startup migrations stay enabled, and pins the API to fixed host port 5192.",
       "evidence": [
         {
+<<<<<<< HEAD
           "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L10-L28",
           "version": "repo-lines-v1:sha256:ceefb599e7ad11a1dd50a3586f38200905eb34a77b4b44a48c6e2e0e2d0ef790:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYTgzODZiZTZmNDUzNTUzZWFkOTg1YzYxZDMxYzVjNGU2NjIyZWUwODhhOGQ4YjFjNTQyNzM1ODc2NzcxMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZGMzNDdmM2I5N2QyNzJjN2Y3NGU5OTYzNjkyOTM5YTgxNGFmZDMwMWNlZmNkM2Q5ZWMxNGI2NDc2YjVlNzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
         },
         {
           "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L97-L118",
           "version": "repo-lines-v1:sha256:bf31309f686f6cdc59bee00ecad883bdd639e279a2edf49ea773e5fc46f574a0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY3MDBiMWRkZTI2NWI5MDJkNmYwMDI2M2Q2NjZkNWUyMzcxNjRhMTJkZDUyY2RkNWEzNDM0OGIxMWViYTM5MDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0ODY5OTVlNmY2YjBjMzYxMDllMmRmZDVkNGZkOTk3N2YxNTc2MmM4N2ZhYzYyZmI2YjJmZWE5MGNmMzg1OGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZjZDY0OGJiMWJlNGFjOWM1ZTEwMWZjYTliYmI2MWNhNTYzYTg0ZmU1OTI4ZmQ2YzA2MjM4OGI5NDA4ODU5MGMifQ"
+=======
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L10-L19",
+          "version": "repo-lines-v1:sha256:ef4624e68a22d98312f711d8a80ba79fd6560c122ed568c186b7e1dcf49047df:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYTgzODZiZTZmNDUzNTUzZWFkOTg1YzYxZDMxYzVjNGU2NjIyZWUwODhhOGQ4YjFjNTQyNzM1ODc2NzcxMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0MzVmZTJhMTc1ZTFkM2M4OTg4NWYxMWM0MzM5N2YyNTMzNmFhMjllMWUyMWNjYTU4ZGVmZGEzN2NkZGU2ZWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZGMzNDdmM2I5N2QyNzJjN2Y3NGU5OTYzNjkyOTM5YTgxNGFmZDMwMWNlZmNkM2Q5ZWMxNGI2NDc2YjVlNzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
@@ -25,6 +34,7 @@
           "version": "repo-lines-v1:sha256:1709660991843b118125ad77d7cd10120cec39929855dbcc26663265b58861d6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMmFhZTkzYTQ0ZDhiMGZhMGU3NzY0NjU2NWZiNzM1YTQxZGI0N2I5M2U5MzkxM2Q2NDg0Y2M5M2ViN2UwZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4MDkzY2U5NWM5ZDYwMmJiYWE3NTZlMTUzZWM2ZWRhZWQxMDg3YzMwMjU0OGExNzc0OTIxMDY4YzU3YWEzYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZmNmU2MmEwMjkxZmE5NWI2N2VmZWJjNzBhMTYxMDlhZTVkODMzYThiYjQ4MGI5Mzg0NWM3ZmUwMTFkMmZlYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
+<<<<<<< HEAD
           "resource": "repo://Katalog.AppHost/Program.cs#L6-L28",
           "version": "repo-lines-v1:sha256:ea67ebea431cdc6f01167bab193de80c7977eddd06976572286d9cea2b9f76e6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0MzkzOTM0Yjc2MzE4ZjkzMmM2NWFlNGZlMWVkNWUxNWYwOWNkMjcwMWUxZDU0ZTQ4YjcwMDNkNGMxY2E0N2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
@@ -35,10 +45,15 @@
         {
           "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L23-L25",
           "version": "repo-lines-v1:sha256:e441a0083ec70ad22dae141bd5f7d9e51a869b3b1ea665b00312f6ee4e690a3a:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWEwYjE2MDE0Zjk5MDY0MmUyNDU1YmUxNjQ4NzNiM2JhNmE1Yjc4OGZiZmM0ZjA3OWY2MzE3NGI3ODlhZmNmZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWNlZjVhNGRlMDM5ZmQxZTRjMGRmYWMzNjNmY2I1ZmIyN2U5Y2I1NzQ4YTgyODA5YTA0YzVhMDg4MTQzNWY3ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGM1NDRlMDRhODBlOTA4ZmI5Y2Y1NTNiYmU3ZDY3YWYzOWM3NjExNmQxNzIzNDI0MzU1YmZkZGFhZjcyMWI5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTY0ZWYxMjdlMDAwYWE0MTE2M2RiNGU4NWU4Yzg5ZTExNTFhMmNjNGIxOWEyZWIwNWYwZDQzYjE4NjhiMDQ5NyJ9"
+=======
+          "resource": "repo://Katalog.AppHost/Program.cs#L6-L18",
+          "version": "repo-lines-v1:sha256:cc571fdf1dd2c30fb2f2ddd790148529834d3abda5a9422f44b231b34f8024a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5MmQ1ZjAzNTg1NzJhMDZjOWJlMTQ5MzVhODYzYjhmYjNmNjIxZTk5OTNjZDIwNGI5MTkzMjllZGYyOWQ1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2NmODkwZWFjYzgxYTVlYjM5NDEyMDBmMDNlN2FhYjMwOWQxOWViZDUwZmFjMTYwZDQ5ZDgyMDE5OTgyNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
     {
+<<<<<<< HEAD
       "id": "claim_05734cb9296e41bea3afeff15d109aba",
       "statement": "Release discovery quota shape: each poll pass runs a paginated label search (v1/search with the label:\"<name>\" filter, limit clamped to Spotify's max 10, following next URLs) per followed label, then issues one GET /albums/{id} per search candidate to verify the album's real label on the full album object - the captain's explicit quota choice - while the polling rhythm stays bounded at 6-24 h (default 12 h) by PollingOptions validation.",
       "evidence": [
@@ -57,16 +72,179 @@
         {
           "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/PollingOptions.cs#L6-L16",
           "version": "repo-lines-v1:sha256:868429ba4439ec3c2f03ab3302d90feff1e804d7121a0250f0f19e6c6270abe2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhNmVlY2FiMDY5OTcyM2RlOTA3MjhhYWVkOWM3ZTczYTZjYTdiZGM3NWE5MDNlNDU4ZmRhYzdlYmRlNmFkODMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZWFlNmQ1YmNmYjE2M2JkZGU1ZGViNWI1ZDI1NWMwMjU5OTA4NDhiNGE5YTAyZTliMjI5Y2JjOTQwNmJhYjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+=======
+      "id": "claim_1284bc7d146d477caebc4c01a2d301e9",
+      "statement": "The AppHost forces the api resource to the Development environment via ASPNETCORE_ENVIRONMENT/DOTNET_ENVIRONMENT so the Spotify user-secrets load and the startup migration runner stays enabled; running the api in Production without injecting Spotify credentials from another source makes the validated options fail the host at startup.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L16-L21",
+          "version": "repo-lines-v1:sha256:ca56c2a8946a20e2112bfcdf6ee5684af8cddd879fa61cdacd4ef344440f16a8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTQ1ODU1Nzk2NGQzN2RkYWE0YTZkMjU3NzU5NjhmMDIyYjI4MjFhYWY1Y2MwZjQyMzYwN2NjMTQ4YmM3MDE1NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTI1NGJkM2E2ZjJiOTZkZjkyOTJjZDY2NGQ3NTJmOWJiNDNjYzFhMTcwYTE1NWYyN2ZiNzU5OTgyNTg5YmJiZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTIwNDQ4MGFhNWRkZTdkYmM1Y2I1MWI3ZGRlZWU1Yzk5ODg1OGRhYmE1YzAwZjAzZjk3MGJiNmExNDhmNDU1MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDlhNDhmNGM1NTI4OTFhNzY0NTE1MTY0N2ZkYjM3OGNlNmNhYzNjZWU5NGVjZjAxMzk0YzE2ZjU0NTAxZjMzZSJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs#L14-L27",
+          "version": "repo-lines-v1:sha256:4957d8c1d33081c68608385e90699d65e9ca6718abdfd895361ef9ea1834efd5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMDAxYmI3ZjEwZmEyNmM4NzZkN2NlYjE2OThmNWQ0NmMzYTA5NDU1OTk2M2U3NmQ3NGI0N2IyZjM3ODFjMDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjMzY3MTVhZmIxODMxMDFkMDYyOGNmYjg4OGQxNWQ5YTc5YThkNTg0MWUwYzgyYWNhMzBhNGZlZmM3N2Q2ODUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2MjhmZjc0NjY4OTZkM2U2NGNlMTU3ZTA5ODllZTQwN2E5MmJiZmQ3YzY0NGFlYWFhNzZkMTI4OTU5YTU4M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAxMGRjNzA4NjkzZjdlZTFhMGZjMmUwMzkwMTU3NDk3OGUwZWZlMWQ0NzRhNWIyZWI2NTAzOTFmYTcwZmQ4MDkifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
     {
+<<<<<<< HEAD
       "id": "claim_62559ee193d64d6c8fb382a9f3036499",
       "statement": "The Spotify catalog client uses a custom Polly resilience pipeline (TotalTimeout 300 s, 3 retries with exponential backoff honoring Retry-After on 429, 30 s circuit breaker, 15 s attempt timeout) instead of the standard resilience handler, whose default 30 s total timeout would guillotine long Spotify Retry-After waits.",
       "evidence": [
         {
           "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifySetup.cs#L45-L76",
           "version": "repo-lines-v1:sha256:aaea71afdafe474d4c1e309bf3b69e30ee75dd773062540215739855311c01f9:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxMGQ1NTVhN2M5NWU2Yzc0NDk5MmJlMzI0ODMzY2Q5YjM5NWJjZDIxZmUyNjdmMTc4MTg5YTIzZGYwZjY2NWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5YzEzNTkwNjY1NjMyM2QxYzVlYTQxNjU0ZWU2NmFmYjU4NWFjZGNmYWVhY2ExMjFkNWUzMGJmMTkzZWVkZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNjOTMyMmNiNGEyZmRmMjRjYzBiYjAzMmEwYzkzZjAwYjkxYTg4Yjg0MGNmNDIzOTlkMzMwMjAwMzc5MmRiNWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM3MzMwN2Q3NjZlM2Q0MGY5MjRlMTYwZjM4MTI3NjA0Y2U3ZGRjYzZlMTAyNTE3MGFhYjA1M2MzOTE2NGRjYjUifQ"
+=======
+      "id": "claim_50940a04f1c347a5b07d7bfc7e6b77ce",
+      "statement": "Spotify credentials are supplied either as dotnet user-secrets under the Spotify:ClientId and Spotify:ClientSecret keys on the API project (enabled by a UserSecretsId in Katalog.Api.csproj) or as Spotify__* environment variables, and are never committed: the checked-in appsettings.json ships empty ClientId/ClientSecret values.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L28-L28",
+          "version": "repo-lines-v1:sha256:491010e52e2927f31e9b134142fd145972ee4d52e7d920bb7166e1ed30a86b0d:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDkxMDEwZTUyZTI5MjdmMzFlOWIxMzQxNDJmZDE0NTk3MmVlNGQ1MmU3ZDkyMGJiNzE2NmUxZWQzMGE4NmIwZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDkxMDEwZTUyZTI5MjdmMzFlOWIxMzQxNDJmZDE0NTk3MmVlNGQ1MmU3ZDkyMGJiNzE2NmUxZWQzMGE4NmIwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTZiMTgyNDU2OTQxNTM0MjkwNDFlNjgxNzg4MTg3MDllZjVjMDNkOGNhNzRlNGUzOWZlMGEwYjBiN2E5MjQzZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDRmZGVkZGI3MDk4NTQwYmRlNTJkNzU0NjRjNWExYjNkZDYzODMyMDIwY2UyMDE5YTRiZmM4ZWEyMmQzYTg0NiJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Katalog.Api.csproj#L3-L8",
+          "version": "repo-lines-v1:sha256:9bf7bae0ffaa95a26a1bc4865c15c5332c04c6402bf241ba913d571b35348890:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTdhM2YwMTc4YzVjNTk5ZjhmZDVlNjNiN2Q2MWVkYjA0MWNjNWNjZjI4ODFkZTkyMjQ3YTZjNDc4MmYxZGZkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU2ZDUxNDgxZGEyN2JhYTNkM2FkZTA5NDA2NTg0YjZiNzg4OTY4NmZiNjg1YTMyZjFmODZlMzhiYzAwZWE3NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmJjYjY2MDY4ZDZkMjk4MWJhYmNjOWQxY2Q1ZWI5NDY2ZTk1ZDIwZDRkZTc5YWY3NDA5ZDkyMTBkYzY0ZDA3NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjZmNWVjM2I1YzIzNDA2ODZiNjhlZjMwNzlhMTg4MDEwZjlkMjc0MWEzYmI4NWM2MDdjMGYwYWZjODc0OWVmMiJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/appsettings.json#L5-L11",
+          "version": "repo-lines-v1:sha256:877876776099e6881dded7f280a1baf5499adc26cd02c0861298b359a4d758c2:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWRmYjdjMDJlMGYxN2Y4NzU4ZTRlMjhlYTI1Y2RiOGNhNGIwNDc5MzBkNGM4NmY4NjllMjk3MDA3MDNhOWFjNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmMxZDZjOTNlMjY1NDY2YWIxZDMxOTYxYTJjYmM3N2I1ODE5OWM2NTk2NjlhZWY0N2M2N2U0NTZlMGEyZGUyOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGRlNDk5OTBjYjg4ODVkZWZlNTY0MDRhYmJkODAzZTYzODJiOWYwZDBiNzhhY2VlZjNhZTgyYmFiMTFjZTg5NCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_50d87580c81c4174930fb577a2220f4e",
+      "statement": "Spotify options are validated on start (non-blank ClientId/ClientSecret, well-formed absolute base URLs) except during build-time OpenAPI generation, where the registration is skipped and placeholder settings are loaded from appsettings.OpenApiGeneration.json so dotnet build needs no live Postgres or Spotify.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OpenApiGenerationSetup.cs#L9-L25",
+          "version": "repo-lines-v1:sha256:a5023122821357213fccd39ce1cd17a92cce4e85b38a5dd30feaf6bbb28aa225:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRlMmM0MTQ1MzYwZGNlZTE2ZmZhOWEwOGQwY2Q4NjBjNTc2ZjRkNDU5MDQ1Y2M0NmFjODgwNWJhNmMyNWUwOTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs#L14-L33",
+          "version": "repo-lines-v1:sha256:7179d3e8e51c265082f726e64ccd4726de602af340f3604d159c17e3a5194556:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMDAxYmI3ZjEwZmEyNmM4NzZkN2NlYjE2OThmNWQ0NmMzYTA5NDU1OTk2M2U3NmQ3NGI0N2IyZjM3ODFjMDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2MjhmZjc0NjY4OTZkM2U2NGNlMTU3ZTA5ODllZTQwN2E5MmJiZmQ3YzY0NGFlYWFhNzZkMTI4OTU5YTU4M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM3MzMwN2Q3NjZlM2Q0MGY5MjRlMTYwZjM4MTI3NjA0Y2U3ZGRjYzZlMTAyNTE3MGFhYjA1M2MzOTE2NGRjYjUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/appsettings.OpenApiGeneration.json#L1-L20",
+          "version": "repo-lines-v1:sha256:2223424ef88f575717ec81b87601b32a923f66975819030dd361a3dfe67fd7f0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxMGIzNmFhNzRhNTliY2Y0YTg4MTg1ODM3ZjY1OGFmYWYzNjQ2ZWZmMmJiMTZjMzkyOGQwZTkzMzVlOTQ1ZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8f5df4dfff164a9ba6c326e218256fc6",
+      "statement": "Three resources own a fixed port so the URLs are identical on every aspire run: the dashboard at https://localhost:15000 pinned by the committed Katalog.AppHost/Properties/launchSettings.json applicationUrl (the launch profile the Aspire CLI 13.5.x uses; the file is explicitly un-ignored in .gitignore), the api at host port 5192 via WithHttpEndpoint in Resources/Api/KatalogApi.cs (the port the Vite proxy fallback references), and the web at host port 5173 via WithHttpEndpoint in Program.cs (matching Vite's default).",
+      "evidence": [
+        {
+          "resource": "repo://.gitignore#L13-L19",
+          "version": "repo-lines-v1:sha256:8232e88d6e5a499de79187305a5535b0806d75e3044f0e45b30a0a30fcf8cdcc:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzJiMzEwOTI1MjAzM2NkOTA2MjFiYTUxZjBiOWQ4Nzc4YzdlZTViNDEyY2QyYmVlNTUxNzQ1NGM2NTM3YTU4OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzk5ZDE0ZjFkM2U0OGI3YjY0ZDc3ZWNhYzNlMjQyZmExZmQxMDFiNWFlZWU5ZDg1MGIzZTlmN2E1OTZlYjk0NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTBlOGQ4ZDBlNzE0NDFmMTNlNWZiMjUxYmZiYTViNjEwNDYyZjUwZDRiZTBlNWJjN2I1YmE0NmFiZDY1MDQwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjE0ZGQzNzllZDg0NzVjOTE2MWEwNWI5YzZjYjViM2JlNDA5NjFlOGU4YjgyNDE3NmI3NDk3YmY0NDAzNGE3OCJ9"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L14-L26",
+          "version": "repo-lines-v1:sha256:0dca14c973ba484cb0abe00533e46880a2e1cdd26a1f0e34ce9a6ac20f31f70b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRhZGY3OTUzNTZlNTNmYTU0OGE2YmI0Y2UzNGQyZWE5ZWUwNjRjNDlmODJlNGE0OTdjN2VkY2MwNDI1Y2M2YTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0ZjdiNTdiY2JhODcxNzYyMDZjNzUwZDA0YzlkMDk5MDkzYWNiZjNiYTAxYTYxOTFjMzIwODk0OWU4YjQ3NjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkMDM1Y2EzZjE3NmRlZTMzMmFiNThiOTljYmEwM2I5M2VlZGJjMjkwNDJhZDYzMTYyZDAyZjViZTQ5ODM1NDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNDEwMDJhNWQyNDNhZGYwM2FlZGU1MGY4MDdhNTMyYTJmNGQ2N2Y5OGI3ODk2NTBmODMwZWRkYzE1N2ZmMzIifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Properties/launchSettings.json#L4-L15",
+          "version": "repo-lines-v1:sha256:a5d99639b36495d89af0a31be5c21262a9a9bb7540380b024fdd847d7299ff19:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2YzVjZGRlYmNiYjljOTc3Y2IyMTMyMjRiMTk3MGMzOTU5YzFiNDFkZDU5ODVmNDFhNDRkYzg2OTFjMmYzOGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdmYTAwNGZjMzBkNGU3YzlhYjg3OTEzNTI0ODY2ZDdlMDU4MmEzOTUyZGI0ZmQ2MzJlNzY3YzZkYTYxNzQ2YzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNzM5YTA2YzFjYmIxMjQ0ZTMzNjNkMzhiY2Y5ZmE1MGNlODRmZWQzOTljMjE5M2EzYzdmMDhkNTk5MThiMmEifQ"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Api/KatalogApi.cs#L23-L27",
+          "version": "repo-lines-v1:sha256:036615dfeee5bb5e6a80179fdd08da153e9de7ef5f49e6a5c1b7aefcc685ab05:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWEwYjE2MDE0Zjk5MDY0MmUyNDU1YmUxNjQ4NzNiM2JhNmE1Yjc4OGZiZmM0ZjA3OWY2MzE3NGI3ODlhZmNmZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQzNWZlMmExNzVlMWQzYzg5ODg1ZjExYzQzMzk3ZjI1MzM2YWEyOWUxZTIxY2NhNThkZWZkYTM3Y2RkZTZlZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGM1NDRlMDRhODBlOTA4ZmI5Y2Y1NTNiYmU3ZDY3YWYzOWM3NjExNmQxNzIzNDI0MzU1YmZkZGFhZjcyMWI5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzc5NGQwMmE4MTIxOTQ0ZDE3NmQyNjVlOWJiOWNjNTlmNmFiODkwYmNhZGY4YWVmZGViZGJiYjRmMmVhODQ0NCJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L15-L17",
+          "version": "repo-lines-v1:sha256:3ddad756ac416b7507e8f0998cbfbee1c317ec0a6d7100edb61f274baa66e290:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzdlYjIxZTgyOTZmNWU5MjJhNjIyMjEwMzNmNGM0Y2VmMDE3MTY4MTFjMWJlMjkwMzUzNWRhNTA2YjA4YzRjNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzUyNjNlYWNmNTRmNDk4OTViZmM0MTMxNTFjNGIxYmIyZDk1OGM3ZTI3MjMyMDlmOTdkMmU5ZWFlYjUyOTViNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjE0Y2IzM2FiNTRhMzkzMTIzYTc1OTAzNTc0YmQ1MGIwZTk1YzQ1MDM4YmU2N2YwZTBiNjdjMDZjNTJkOWEyNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_335d98dc5ff34814b4bf07379949e8d3",
+      "statement": "The api and web host ports (5192, 5173) and the committed launch profile's dashboard URL (https://localhost:15000) are pinned by the AppHost tests StablePortTests.AppHostModel_PinsApiAndWebHostPorts and StablePortTests.CommittedLaunchProfile_PinsDashboardPort, so a port regression fails the solution test run.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/tests/Katalog.Api.Tests/AppHost/StablePortTests.cs#L14-L51",
+          "version": "repo-lines-v1:sha256:3d1724aee9dbdd23ebabee2dfe57c103a262b9a42700e812ec1e44f24662d321:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmMzczMGU5MTk2MjIwYTZiZjNiYjgwMDk4YWIxNzY0ZmI3MDIwZjI3ZTEyYWY2ODY0YTgzNDUxZjI4NGU5YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2NjA0M2M2N2YwNzY3ZWVjNDg5ZTJmMDZkZmYzNzZkMDNkMTdhYTVjMjBmZDIzZTA5Y2VjZGYyOTQyNzNiZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQxMGIzNmFhNzRhNTliY2Y0YTg4MTg1ODM3ZjY1OGFmYWYzNjQ2ZWZmMmJiMTZjMzkyOGQwZTkzMzVlOTQ1ZDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_72e9a9b466834ee0b95ef9b795bbaf3a",
+      "statement": "The API maps /alive to the health check tagged \"live\" and maps it unconditionally (it is what the AppHost health check hits even outside Development), while /health requires all health checks and is mapped only in the Development environment.",
+      "evidence": [
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L87-L95",
+          "version": "repo-lines-v1:sha256:fb94a4b1f5845fa13aede070e53c62b9ae523cb3898e9963696cf43e418c9491:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWNhMjA2M2JjYTliZTAwNzZhNmNkYzlkOTI1ODRjNWJkZWQ4N2EwMzhlMjhlZWMxYmMwMzg0ZDE5NTgzNmUzNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzQ4Njk5NWU2ZjZiMGMzNjEwOWUyZGZkNWQ0ZmQ5OTc3ZjE1NzYyYzg3ZmFjNjJmYjZiMmZlYTkwY2YzODU4YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTc2NWI5N2E0Y2MxMmNhNzA2NWI3NjEyNzNkOTZiMWI3MDYzYTM0ZGM4MjM2MzMyYzIwNTA5ZmQ1ZDhkZTAxYyJ9"
+        },
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L97-L121",
+          "version": "repo-lines-v1:sha256:c3b1cfbabf2ad05e078f6ca4039df5243cc579c13d0d51b5bb366a899d0192a5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY3MDBiMWRkZTI2NWI5MDJkNmYwMDI2M2Q2NjZkNWUyMzcxNjRhMTJkZDUyY2RkNWEzNDM0OGIxMWViYTM5MDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0ODY5OTVlNmY2YjBjMzYxMDllMmRmZDVkNGZkOTk3N2YxNTc2MmM4N2ZhYzYyZmI2YjJmZWE5MGNmMzg1OGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a43ea98d45be40b2a057920a654ada4f",
+      "statement": "The catalog Postgres database resource exposes a \"Reset Database\" dashboard action (command name reset-db) that opens an admin connection to the postgres maintenance database, runs DROP DATABASE \"<db>\" WITH (FORCE) followed by CREATE DATABASE \"<db>\", prompts for confirmation, and is enabled only while the resource is healthy; it is also callable from the CLI as aspire resource catalog reset-db and destroys all data.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L9-L10",
+          "version": "repo-lines-v1:sha256:5575703b1dfb5719fb47d855aefade52bc0b78697713ee5ab33757c8043dc0b3:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWJhMTM2MDU4MzFhN2FlN2Q5MmQ2MmZmMDg4MGZhMDY2MWRhYjI0MDU0YTdhMjgxZTgyZmJjMDc4NWU0ZDc4NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOWJmZjFmMDc5ZDM2MzU2ZDIxMmJkNTI2ZTcxNjc3NDYyNmJjNzdhYTNlZWQ1ZmE1NmQzYjg1MjQ5MGI4NDIxZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZThlYjE1NTkyZGQyNWE3NmYzYzUwZWNmZDZlNGZlYjBhMDYwMGZhNDVhM2IwNjdjNWRjNTRlM2JhM2NjZDNjZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2QwMzVjYTNmMTc2ZGVlMzMyYWI1OGI5OWNiYTAzYjkzZWVkYmMyOTA0MmFkNjMxNjJkMDJmNWJlNDk4MzU0NyJ9"
+        },
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Infrastructure/PostgresResourceBuilderExtensions.cs#L15-L65",
+          "version": "repo-lines-v1:sha256:1cf013108be9a6fd5ca7e58acac8f6a800504c0c353e8d97abdf29bfba469d96:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0ZDA3YWQ3ZTA5ZDk3MjFiMDE2YmJhNTg2ZmNiNWQ4Y2RmNzlmNzA3NDI2ZmQ1OTdjY2U0MGYyZjE1MDUxOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcxNmMyNWQ2ZjNiZTUyMDI4ZWI2ODU4ZTg4NmJkODJhNzAzYjAwNzY5N2M4YWM4YWU1NjY0ZjkzNjVkYTI0ODYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cce8c557e44144a19a3f5058dc510ec5",
+      "statement": "The startup migration runner applies pending migrations before the app serves requests, is skipped during build-time OpenAPI generation and in Staging/Production, and retries transient database failures with bounded backoff (max 5 attempts, 1-4 s delays, cancellation never retried) because the first connections go through the Aspire DCP endpoint proxy, so Failed executing DbCommand ... SELECT migration_id lines right after Postgres reports healthy are retry noise rather than a crash.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L43-L50",
+          "version": "repo-lines-v1:sha256:7932a1250b611ed05a5e22d1367f88ec079189a408be9b263d98798baed636ef:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDE5MjlhMTc5NmMxYmFhYzgxZTc0ZGUyZGI2ODI1M2M1YWI2MmFiNDJmMWFlNTA4ZGRkY2UyYThjZTkyMWY4MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTg5Mjg1MzkwZTA1OTBjZTc1YmIxMjZjNTI0OWQ5ZGQ3OTE3NGNhZTUzOGRmODE2ZTlhNjhjNGQwMTEzMGZlYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzZhOWQ4ZTZhOGViNWJkMWQzZmY4MWI0YmFlYTc3MTBkYzgzNWM3YzJmYzQxZjUzYWQ0ZDY1Zjc3YTRmNmFjMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTBhZWE1ZjRjMTQ0ZGI4ODFiOTMyODM5ZjQ1NmNiNjhmNmE2NzU4MWQ0NTNlZTQ2NGEyYTk0M2ZkYzUyNjc5YSJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs#L105-L148",
+          "version": "repo-lines-v1:sha256:b8ed846372e37b84a7ce5be37dbb93f4a554378b3a14f580e7559b65f9cb9a8a:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk5OWJkZWZlZWFjYTYzNDBlMDI5MGRjODZlODg5Yzg5ZDVlMTg5YWE1YmE0NGI1ODViM2I3MDczNGY0YTYyZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a6e3fd4147df4aa3ae66fcc0d6b5a9d5",
+      "statement": "DatabaseMigrationRunner also implements a CLI mode: the same binary run with --migrate or --rollback <Migration> (with content root set to the executable directory) applies or reverts migrations outside the dev host and returns a process exit code, 0 for success and 1 for failure.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Program.cs#L5-L15",
+          "version": "repo-lines-v1:sha256:33c4aa615037a860f9d370cd3c98a0eaa587e476c7170f25a6b2eb58274712ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2NDQ3YzNjZDI0OGE4MTQwMWE1ZDJlOGQ4Yzg1ZDg5NTc3NjdjODA4ZDczOWIzMDhjZDlhMTgwOGQzZDhhYmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMmJkMDliOWY5Y2NhNGE2MzQ5NjRhMWRjMjVhMWFiMzQxMzI2YjM3MzllN2MxODA1ZjEzNjJmNDBhNmQzYzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJmMzBkMWRlYThhOGYwYjM3NzkzNDUzMDQzNWQ2Njc2MGMzMzliYmNiYjI5NWRiOTBkMzdkZDExZTg5YzZjNTQifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs#L24-L103",
+          "version": "repo-lines-v1:sha256:0512d9904aa4f6ca7be81e63209959285fb8349ef85ed95c098a6589d45ef604:eyJzZWxlY3RlZExpbmVDb3VudCI6ODAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhM2EzZDEyMTYzODllYjRiNTQ1OGY1ZjEyNGEwMzI1OWYyMTE4MWEwNWJjMmI1MGUxNGY3MjQzMjk3NjkzN2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliOTEzNThkZTNmZjA4YTQ0ODY0ODIxZTQxNDExMzcyOWRlNjdhOWJjOGFjNzMxZmIyMThjZGVjMjFjY2VkMTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMDNkMDZmMzE0OWI3NTUwZjY5Y2IzNDk2ZjM3MzljZGI4NTExOTYwOTUzM2M5MDY1NjFlMWMyZmMxZmI5NTAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_15afcdc1b8a847aebd30817ee327e99b",
+      "statement": "The release poller waits for unapplied EF Core migrations inside its ExecuteAsync (re-checking every 15 s) before entering its loop, so a slow migration idles the background worker instead of blocking host startup, and a failing poll cycle is caught and logged so the next interval retries while an unexpected exception still escapes to StopHost.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/MigrationAwareBackgroundService.cs#L15-L66",
+          "version": "repo-lines-v1:sha256:1d8a85d37c6246335bfb3c9241edc0785822d39599d7e8656f1a116cd87ed70a:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZlMTAyMzg5MTVkMTIyYWFjMGY4MjcxZjY4ZDYwY2Y3MjVmMGY1ZWQ1MGUwYTZjMzRiZTUwZDUwZjA3ODAwMTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY4NjZjZmZjMDgwMWJhODVjZTM0MDJkMzZmMjNjMTM0MjZkZTI3NjRiNDg5NGYzYWY2MmI3YWZiYTQwNWQwYWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasesPollingService.cs#L29-L47",
+          "version": "repo-lines-v1:sha256:6cd9565aa2739a5b5db487285f52a7164ce822045bd488dee9747486b9eec2e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRhZTZjMDc2OGYxZTUxMmVmMWRhMmRjYzU4M2E5MDIyYzc2MzVmZmUxMTdjNWIwNGQ2MDczYmRjYTFlNTc3NDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk5OWJkZWZlZWFjYTYzNDBlMDI5MGRjODZlODg5Yzg5ZDVlMTg5YWE1YmE0NGI1ODViM2I3MDczNGY0YTYyZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c6bddad9fefa4333b25ebde06a8e2cbc",
+      "statement": "The Spotify catalog HttpClient uses a custom resilience pipeline (TotalTimeout 300s, Retry 3 attempts with exponential backoff from 2s plus jitter and ShouldRetryAfterHeader, CircuitBreaker 30s break with minimum throughput 5, AttemptTimeout 15s) that honors Spotify's Retry-After on 429s; the standard Aspire resilience handler is deliberately omitted because its default total timeout would guillotine those retries, and the token-exchange client carries no resilience pipeline because refreshes are cached and serialized.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/SpotifySetup.cs#L23-L79",
+          "version": "repo-lines-v1:sha256:09306fb315a6ca2470f476aec68bc71daefff9c1b9a66e1a7949137e778d888b:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJiMDQzOTNiNzcwZmRiNGY4YWViZWNjYmVhNTRhMmVmNzgwNmUzOGRmY2QxYTA2ZjkyMGVlZTFlZDNmYjgxNmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlNDY1MTczNTgxN2EzNzYzODUxODk4ZTJiNmZkZGEyYzAzOTcxNTZkN2FjMWQwZmVjMTEwZDIwOTYyMzc0M2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE5NmY2ODhlYzM2ZjgzYWYzMzgyYzQyODE5YzNiOGM0OWU2YjViNmM4MzI4YTdjMzU2Y2UxOTg0YTk3YTBmNGIifQ"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         },
         {
           "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L31-L38",
@@ -75,16 +253,34 @@
       ]
     },
     {
+<<<<<<< HEAD
       "id": "claim_826ab4a98f3f45078df330fd9a6ecb18",
       "statement": "The catalog Postgres resource exposes a Reset Database dashboard command (reset-db, also via aspire resource catalog reset-db) that connects to the postgres maintenance database, drops the database WITH (FORCE) and recreates it, is enabled only while the resource is healthy, and requires confirmation because all data is lost.",
       "evidence": [
         {
           "resource": "repo://Katalog.AppHost/Resources/Infrastructure/PostgresResourceBuilderExtensions.cs#L15-L65",
           "version": "repo-lines-v1:sha256:1cf013108be9a6fd5ca7e58acac8f6a800504c0c353e8d97abdf29bfba469d96:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0ZDA3YWQ3ZTA5ZDk3MjFiMDE2YmJhNTg2ZmNiNWQ4Y2RmNzlmNzA3NDI2ZmQ1OTdjY2U0MGYyZjE1MDUxOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcxNmMyNWQ2ZjNiZTUyMDI4ZWI2ODU4ZTg4NmJkODJhNzAzYjAwNzY5N2M4YWM4YWU1NjY0ZjkzNjVkYTI0ODYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+=======
+      "id": "claim_90dcc76a657743928c83bf8b04737bdf",
+      "statement": "The release-polling interval is a validated configuration (Polling:Interval, default 12 hours, ValidateOnStart) constrained to the 6-24 hour band that fits Spotify's dev-mode quota.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/OptionsSetup.cs#L29-L32",
+          "version": "repo-lines-v1:sha256:9ab66134a923c02e484ceb702acf006ce26880e629594b75c07fb155bd11d523:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmFlNDkxMjkyMGMxMGQxN2JjZDVjNzkzYmYzYzgyMmQ4OTdmNGU5YTM0Mjg0YzMwOWY1YTM1ZmJjNjM1ZjU5NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2MzNjcxNWFmYjE4MzEwMWQwNjI4Y2ZiODg4ZDE1ZDlhNzlhOGQ1ODQxZTBjODJhY2EzMGE0ZmVmYzc3ZDY4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDIxZGEwNzM0OTk1NjUwMGNlNjQ4ODVkZTM1Y2JiZTQ1MWZmNTA2OGRkODQ5ZDRkMmUzZDg0MWJjMDhhZWI0ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGFjZTA0OTBjNzdhMGJjYzVkNjVmYjcxYTVhZTI2YTAxZWVkMjVkMGQwOGYzNDNhZmE2MzFjMTQyMjE3MjE1MyJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/PollingOptions.cs#L6-L17",
+          "version": "repo-lines-v1:sha256:a2e1cd329e68a2ff9aad7dbe24802f87d65d94a935692dacbd88c90b7bd2cc67:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhNmVlY2FiMDY5OTcyM2RlOTA3MjhhYWVkOWM3ZTczYTZjYTdiZGM3NWE5MDNlNDU4ZmRhYzdlYmRlNmFkODMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRhZWFlNmQ1YmNmYjE2M2JkZGU1ZGViNWI1ZDI1NWMwMjU5OTA4NDhiNGE5YTAyZTliMjI5Y2JjOTQwNmJhYjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/appsettings.json#L12-L14",
+          "version": "repo-lines-v1:sha256:8de49990cb8885defe56404abbd803e6382b9f0d0b78aceef3ae82bab11ce894:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWExOWJkMzczZTZkODI1ZGIyYzkxOWM3ZjgyNTI3NDgwZjg4MzhmN2I4MWJiNmNjNWExMDk5YzdmMDA5MGVjMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjQ2MDE5ODc0ZmU5NDEzZWRmMWZlNGM3OTJiMjU3YTgyM2Y0YjI4NTlkNDkzZDFlOGM2NGIxMTU1ZjM4YmY0MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWVmYTMwMjUyZDgwMzUyNzRlMjhlYjI3OTcwNDg0YjVjN2UxZWJjNzRhZDBlNmJmZGZmODUxMWM5MmU2MTM0OSJ9"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     },
     {
+<<<<<<< HEAD
       "id": "claim_2edf4b80cecf4d14820f5ee4fdd9b806",
       "statement": "The startup migration runner applies pending EF Core migrations only outside Staging/Production and OpenAPI-generation mode, retrying transient failures up to 5 times with 1-4 s bounded backoff (cancellation never retried) because the first connections through the Aspire DCP endpoint proxy can briefly fail right after Postgres reports healthy; the same binary also supports --migrate and --rollback <MigrationName> as standalone CLI operations.",
       "evidence": [
@@ -95,12 +291,52 @@
         {
           "resource": "repo://apps/katalog-api/src/Katalog.Api/Setup/DatabaseMigrationRunner.cs#L60-L103",
           "version": "repo-lines-v1:sha256:7acce2dffccb0aa285d595969f69f4daac8bb272e4f0ff08edd051dfc15479fa:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYTM3NjI1MjYzNGJkMmZmZjFhNGIyZjJiYTMxMmZhMDA5ODI3ODY3MjBhYTk0ZTgxZTQ2Njc0MGFhNjRmMWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg2MWNjZDk3NzZlYjhkYjFmN2U5NTA1MWQzZjEyOTg1YjZkMjY2NTA3MTJmZDQyMDkwZTU0NTU2OGFmN2FkNGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMDNkMDZmMzE0OWI3NTUwZjY5Y2IzNDk2ZjM3MzljZGI4NTExOTYwOTUzM2M5MDY1NjFlMWMyZmMxZmI5NTAifQ"
+=======
+      "id": "claim_fd1ea9509af94b9d9eb61f743c68ad76",
+      "statement": "The service defaults exclude /health and /alive requests from OpenTelemetry tracing and only add an OTLP exporter when OTEL_EXPORTER_OTLP_ENDPOINT is set, while a BackgroundServiceExceptionBehavior.StopHost setting turns an exception escaping a hosted service into a visible host restart.",
+      "evidence": [
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L43-L44",
+          "version": "repo-lines-v1:sha256:81553ab036aca40c9f2d4981b53f06bf53e006b111555b367ea3c6b5c95413cc:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTZhMWI5MjdkYjQ4ZGUyNmZjNWYxNGNjODZkNDI2MGU2MjRiMDExN2RmNWE4MzhiMjVmYjYzZWQ4MDhlOTQ1MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTUwMWFmZjQ3ZjI2MGNkZDY2NGJjNTQ4NmQxMDRlZjVjMmJlMWRkZTUyNTViNjVjZmIwYTllNjYwZjc2NzRkYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDVkMDllZTVhNjA3MGIyY2M5MjhkOWExMjMwZTc5MGE5YjA0ZTAyYzAyYTY1ZTcxYTliMjcyOWE0ZmM3YzIxYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTRlNzEzZjFhMGIyNzZmMDIxYjE1NTYwZjIzMjM0ZjkyZjcwYmQ5OTQ5MzZjMmQ4N2RkZjMzMDM2NzBmMjliMyJ9"
+        },
+        {
+          "resource": "repo://apps/shared/Katalog.ServiceDefaults/KatalogServiceDefaultsExtensions.cs#L65-L82",
+          "version": "repo-lines-v1:sha256:4e662d561b5e8cee20f9ab0b07a2d4a9ec7f279c2af63a1b8b7a087321309f8f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljYjdiNWRmZGRmNzE2YjVhOWJmNDU0OTlhNTI5MjQ5YTY0NWJmM2E3ZTQ1YTJjMmQ5NzJhMzM2NTA5Zjc0NjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ0MmQ1OWE3NDdmZGUxYmY0NWU2YjJiNTBlYWZiNzFjNGQ3YWNjM2U1NWVkYmMyYTYzZDZhMGY0NWNiMzJkYjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE0ZTcxM2YxYTBiMjc2ZjAyMWIxNTU2MGYyMzIzNGY5MmY3MGJkOTk0OTM2YzJkODdkZGYzMzAzNjcwZjI5YjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5f212753388d4e9ea28266c09b915cea",
+      "statement": "The Vite dev server proxies the SPA's relative /api calls to API_HTTP (or API_HTTPS) when Aspire injects them as a web resource, and otherwise falls back to http://localhost:5192, disabling TLS verification only for the Aspire self-signed dev certificate when API_HTTPS is set.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Program.cs#L21-L26",
+          "version": "repo-lines-v1:sha256:9e19fa8a9955a2266291fa57aee00b3a02f19ed4b127db2bcaf015213b45033c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzYmZjMjRkZGMwODVhMzgzZTYyM2M2ZTYwN2M1Y2Y5Y2NlYmE5YThkOTE4ZmIyZmIwYzY5ZWExZDY4MmUzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTRmN2I1N2JjYmE4NzE3NjIwNmM3NTBkMDRjOWQwOTkwOTNhY2JmM2JhMDFhNjE5MWMzMjA4OTQ5ZThiNDc2OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2ZlOTI5YmJiM2QxMDNiZWU4ZjdhYmEyY2UyMmMyYjgzYzg0NjhiZjdlNzVmMDcwZmYzMWViMTA0MDJjNDhlOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGY0MTAwMmE1ZDI0M2FkZjAzYWVkZTUwZjgwN2E1MzJhMmY0ZDY3Zjk4Yjc4OTY1MGY4MzBlZGRjMTU3ZmYzMiJ9"
+        },
+        {
+          "resource": "repo://web/vite.config.ts#L15-L37",
+          "version": "repo-lines-v1:sha256:0de87e662a36d10dc5c481fd3516728cb44f858abe6134caaf5a7c9c79e6f443:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc3ZWIyMWU4Mjk2ZjVlOTIyYTYyMjIxMDMzZjRjNGNlZjAxNzE2ODExYzFiZTI5MDM1MzVkYTUwNmIwOGM0YzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM1MjYzZWFjZjU0ZjQ5ODk1YmZjNDEzMTUxYzRiMWJiMmQ5NThjN2UyNzIzMjA5Zjk3ZDJlOWVhZWI1Mjk1YjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjNThiMGYyYjA5NDk0NGQyOGYxZWQyMWUxNzA1MWZjMjE5MjE2Y2MwY2EwY2IxMmU5NDMxZDQzNDQ5MzdiNmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d6ad45449cf548acae94110a11ceea4b",
+      "statement": "The PostgreSQL server resource runs with ContainerLifetime.Session and no data volume, so the dev database is short-lived and its schema is recreated from EF migrations at each startup rather than persisting across container image upgrades.",
+      "evidence": [
+        {
+          "resource": "repo://Katalog.AppHost/Resources/Infrastructure/Postgres.cs#L12-L17",
+          "version": "repo-lines-v1:sha256:9b74e2476456caceb688612f839ca306c9a81959c1ec45b61d626429d4008d2c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODcyMWEzN2I0ZDQ0NjVkMjE3MjViYmExNTIzMjg5ZmIwY2FmODA1YmIwNDIyZGNjNzYzYzQ3MTNmMWM2OTQxYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjljZjRlODI4NGM0ZTVjYjk1OTEwMTY2MGQwMDVkMWU0YzQ5YzVkZjI2NDU4N2FkZWQ3ZWY4ZDc4NmU5OTJiMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.6.0",
+<<<<<<< HEAD
     "at": "2026-09-29T18:32:14.763Z"
+=======
+    "at": "2026-09-30T03:07:03.981Z"
+>>>>>>> 91156fd (docs(openwiki): partial wiki refresh for paged releases (space-bunny-free))
   }
 }

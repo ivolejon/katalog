@@ -69,6 +69,8 @@ export interface AlbumSummary {
   totalTracks: number
   /** Artist names credited on the release, ordered alphabetically. */
   artistNames: string[]
+  /** Spotify ids of the artists credited on the release. */
+  artistSpotifyIds: string[]
 }
 
 /** Artist linked to a label, detail form (GET /api/labels/{id}). */
@@ -88,7 +90,18 @@ export interface LabelDetail {
   spotifyIds: string[]
   name: string
   artistCount: number
+  releaseCount: number
   createdAt: string
   artists: LabelArtist[]
+  releases: AlbumSummary[]
+}
+
+/** A page of releases for a label (GET /api/labels/{id}/releases). */
+export interface LabelReleasesPage {
+  page: number
+  pageSize: number
+  totalCount: number
+  hasMore: boolean
+  snapshotBoundary: string | null
   releases: AlbumSummary[]
 }
