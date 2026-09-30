@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:f2409844df00d0962247f2ab365eb55089c51c1492bd3eae61e8dbd9ed0ce211",
+  "pageVersion": "sha256:bb4c1dca6d667ba503cb438502de11942667cee49e4ca32c8ad5f2d30fb70405",
   "claims": [
     {
       "id": "claim_03e9a4193a4542d9915fecbe01f6f743",
@@ -141,10 +141,100 @@
           "version": "repo-lines-v1:sha256:efd03c302ed8b9cedf7133a1778594c67380c3e0e71235891036ad5161d2c4be:eyJzZWxlY3RlZExpbmVDb3VudCI6NjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkMTg0OGZlNzNjMTUyODEyMjcyYTZlNzdmNWQxODMxNzQyZjQ1YmRhNzFkMWZiZmE1MmFhMmQ2ZWVjZTA2ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
+    },
+    {
+      "id": "claim_30f9646435014924aa5097841c7ffc62",
+      "statement": "Label and label-artist links are app-owned entities: because Spotify's `label` field appears only on the full album object (GET /albums/{id}) and not on simplified search/discography items, a followed label is a `labels` row with a derived unique slug, one or more artist anchors linked through `label_artists` (a label must keep at least one artist), and releases discovered separately by the poller; the album's real `label` field is used only as the source of truth for release membership, never as the label's identity.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L9-L25",
+          "version": "repo-lines-v1:sha256:d1894b7f7c79253c5b50ea2096ffff74bcf32d157ca9a0ce195763bc0b0cbbdd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjViMGRhYmVjMzZkNDAxNmEzMDY4ZDlhODcwMGQxNmViNmE3OThmNzUwYTc0MjhjOGExZjcyNWNkNDAyOTg1NjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg2NjEzMjNkMGE5YTJkNDhhZWQ4NTE3ZTQ0YThhMjg3MDUxMDMxMWYxNjhhYzEwYjY3MmY5ZjgwZTEyN2YwM2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY1YmNkZTNiYTA5YmU2NWZhNjM4MTEzZDYyMGE3ZGUzYWNjN2NmMGYxNTk0YWJkYTc2MTY3YzZlMTEyODFjNTUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Artists/RemoveArtistFromLabel.cs#L13-L34",
+          "version": "repo-lines-v1:sha256:dd2d032dbcab64fa5a5e6a0fa350f02a34a138201c04913cfb9a34fedafcc41f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImViYWY4YTRmZjg1NTU5NzIzMzU2ZThjODY5OGI4NjNhZGNiOWQ1NzM2MGQ1ZmM5YmJmZGNhN2JjMWZlYWJhM2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFjNzg2NDc3OTA4NWE3MGZiMjcxNjAyNGYzMWQyNGEyNGZkN2RhZTFmOWFiNTY0MjMxYWFlZmIxYzE0N2E1YzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/CreateLabel.cs#L28-L93",
+          "version": "repo-lines-v1:sha256:2069a1b9219a6b92bc7ca867cb98d1fcccb5dc02e77c5ce7d72cd3d99cb0b83f:eyJzZWxlY3RlZExpbmVDb3VudCI6NjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhhMDcwZWUxZDY2NGIzMjhkYmQxMWQ5MjcxZWE1OWQ2ZDRlN2FmZjY2MzE0NDY0MjIzOGQ2NTI3MDRkYjRhNzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhhZWI1NWE5Zjc5NGRiZGViY2NjNzEwZTEwYTAzYTIxMGIyY2I2YzQyMTZiNmZiNGFhNDAwMDlmNWM4MzRkODUifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Infrastructure/Spotify/SpotifyModels.cs#L48-L68",
+          "version": "repo-lines-v1:sha256:3bbaa7fa88fff5bdbbabbc63ac7432c4571664006b63006ed2d9e1a31050bb43:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljMTk3YjE5MDQ4M2YxYjcwZDQxNDEwNmFlNjEyYzk5ODdlMjczMjY3MDE1MGJjYTBjMmM5NzRmNzkzYzBhMGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZhMTUwMGE2N2NmOTU5N2E3Mjk0OTRmNTNhZDJiNzRmMjM5NmY1MmYwOWVmNjdkMzI2NTE2NzM3M2Q1MDdkNWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJjZDYxYzhlNGRiNGU3ZWU4NzYzNWNmZDVhODY5NzVkNzExOTMwZTViM2JiMThjNjgyMTlhNDVhN2UyMzIxOTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9c3d841ef6f64d3a922e1b413917a817",
+      "statement": "A discovery candidate that cannot be verified (the full-album GET fails or the album reports no label) is skipped and never upserted, leaving any existing link untouched; the verified-mismatch path is the only deletion of a label_albums row during polling, so a transient search miss never removes a legitimately discovered release and links created before exact verification existed self-heal on the next pass.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs#L207-L240",
+          "version": "repo-lines-v1:sha256:7eac025c829395593849911ecc045de0f46597e6526c5eef763ca6549f2ce053:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk1MDdkOTAyNGRkZGQyMzg3Y2UzNTFhNjg2MDU1MGM0MzdjMzQxNmRkMjBiNjE0OWJiMDFhNWU0NzZlZTBkZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjEyY2NlZGZjNDZlOGEzZDQ3N2FhOGIwNDQxMjBiNzM4M2QyZDBmODFlN2E2NzNiM2M5ZDVmMTQwOWZmM2YzY2MifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Releases/Polling/ReleasePoller.cs#L242-L266",
+          "version": "repo-lines-v1:sha256:03232210596645285b36e9db9428176b4e18960aa9f96059503dc1ff6588cde2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYjZkYzkwYjJmNzkyOTYzZGNkYWRmZWZiNDA4NDg1NDkzYzAzYzNlMWE4MGYxNDliYzYzODAzY2RkMDQ2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE0NTJhNTRiYWFiNWZiZjU4YTQ4NjNiYTkyMTUzMTM4MTEzYmFiOTU2ZjYyMmE2ZWUzZWM2MGMxYzI4MzY1NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVhMGQzMTYxN2QzNmM2ZjAwMTYyZDYwNzQwYWNhMGFlYzViZmQzZDRjODU3MTRmYzllYzM2MmJiN2IyMzU2ZjYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1c900ceb2e2b4593b7fa3389e69b7a04",
+      "statement": "The label detail response exposes artistCount (linked label_artists) and releaseCount (label_albums links) computed in the same labels projection, so both stay accurate when includeReleases=false omits the release list, while the label summary list carries artistCount but no release count.",
+      "evidence": [
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Api/Endpoints/LabelsEndpoints.cs#L107-L112",
+          "version": "repo-lines-v1:sha256:85c5fca44cbc2690219c32fb7d6b5278c61fa48fa803964a3e04d2bfd900bc40:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTQ0MDc3N2Q3OThlODYxOTI2YzU3NDRlODczY2MwZjhiMTQ4ZWM1Y2U5NDIzZWU3ODQwZjYzNjk1Y2M0NDZkYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjg0Y2U3MzQzOGYzNDlhYzYzM2YwNDFkYjJkOWE0MTM1ZmZjYTI3ZjA4ODUwZGVhZjg0OGEyNzJhMGQyMDc4ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjU0ZDAyYTAzYzJhOTFjOGQ2Nzg4ODc3NTI2YjRkYjg0MDRmNWZjNTA3N2Y5YmVjZjI0MTI1MjBhNjQ0YmMwNyJ9"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Contracts/Contracts.cs#L3-L22",
+          "version": "repo-lines-v1:sha256:09f6b51bdd4f3dc2ad0037916216713dbee35e81d1358748f5ed841c2ec669a2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDI1MDQ5ZGQ2ZWUwNTA5M2IwZDNhNmY0MTgwMTQyMTliMzJlMWE4ZDliZjE3MmFjY2JjNjEzMmVlMzI4NjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiNTYxMjNiY2Q2ZmE3MjVhOTI1MzM1ZWY5ZjI1YTdiZDZjYTdhOTMxNzMzOGIxNGM5ZTUyOGYzZGFjNjdlNGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFmMjgyZTk0M2YyNzI2ZGFlMGVmNGZlNjA1Nzc3MWE2ZGExZDdhNjRjYmU0NDY4ZjUyNmU3MDA2OTU4ODg1YjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk5YmNiYzNhN2UzZDk0NTM4MTFjNmZhNTkxNDcxNDA5Njk4ZmQzZDU0NjFlNmM4ODYwYjRiNWNmZTJlZDE5ZjAifQ"
+        },
+        {
+          "resource": "repo://apps/katalog-api/src/Katalog.Api/Features/Labels/GetLabels.cs#L10-L61",
+          "version": "repo-lines-v1:sha256:228173167557b127bcb609dd70a8a2525083d68257ebff32bf00744d38aad52f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk0N2MwOWUyNzYwZWM3NTY3NDc1NGU5MDJhYWU2YmRjYzIwMzQ0YjQxZTUxMTA2ODUxOGUxMGY3Yjg1OWFmYjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZjMDZjMjc3YjdhYTcwYjhkZDk2OTYwOGY1NWMxMjEwNDA2ZGI1YTcyNmMwMjU0NDhiNzk5NWFjZThjN2E1NTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5ec22db8a5874b1d9f746e1d4f19b928",
+      "statement": "The label detail header deliberately does not render the detail response's artistCount/releaseCount: displayedReleaseCount is the number of loaded release cards and displayedArtistCount is the number of distinct artist names credited across the loaded releases, both computed from the merged page list, so they grow as the user reveals more pages and are intentionally different from the server counters.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/utils/paging.ts#L10-L27",
+          "version": "repo-lines-v1:sha256:d27ce98fa00a566bb35ca456e3598aea8a13f4d98ff6f0f0150e6e1288772321:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4ZWU3ZmZmYjJiYjE5MjFkYTJjZTgyOWY4NTNjMjdiMGU5YTczYWFmMjFjYzAwYmYxMDFmNzVkNjE2NjczMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE4OTdlMTNjZGQ4YjVkYTVlN2FmNGFiNWIyZTI0ZjlkYjVkYjMwZjQ5YmFlNTFmZjIxOTk3ODA0N2Q2OWE3YmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L250-L274",
+          "version": "repo-lines-v1:sha256:9b08baa4dce9f31d859b5f1ef7989e72f04e081627157812a20a2238ebfb2280:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyOTI4MTA2MzAyNTU0YTEyYzI4NDkwZDA5NjhiZDliYjM0MWU2ZWU1MjNjYzQyMTMwMTNjOGMyNDBmZDQwMDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ5OTAwNTlmNDhjYTU2ZjZiNTBmZGM2OWExNWM3YjdlNjMzY2MxZTEzNjA4ZGFhNTBlZDkyM2JlYjBmNjM2ZmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE0MTM4YTg0YzA1NzY5MTQ4MDM3YTNmNzUyN2VlZWViNWI0MjM3MmVlMGU3NTUzOWRjYWY3YzhiNGYxZTkzODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMjNjMzY2NGM4ODQ0OWRhNTk0YTIyZjBmODEyNTI2NWQ5MjYwZWQwOTUyOThjYWQ5ZTE2MDZhZWJlY2JkZmMifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L35-L99",
+          "version": "repo-lines-v1:sha256:e10da450b5dbed6dedd46f0285894387b3bab0bbf6cb627ab0a39835773a755c:eyJzZWxlY3RlZExpbmVDb3VudCI6NjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5OWVlOTkwYmQ4NGZhNDNkOWM5MWZiYWI0MGM3YWY1N2YwZjkzZDAyMWJjNjJjNjIzZDhiNWE2YjA4M2U1OGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3YWQ3ZmNkYjI4NjE5MzVmZTcyYjljNGJhZGY4NmI2YTRlN2JkZGRhMTUyYThlYjUwM2MwYmNmNmNmYzVkNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4Mjg0NTM0ZTliZGRkMzhmMGNlZjM4YzNmYmMyMGIzNjJlMWJlYzliY2NkY2FlYmI3NTY2MWVjNjBlOGE0OTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a98f1a8d6cce476caf345503e77e2f6f",
+      "statement": "LabelDetailView loads the detail (includeReleases=false) and the first page of 5 releases in one parallel round trip, reveals further pages with a 'Ladda mer' button that disappears once the server reports hasMore=false, merges pages by album id, and surfaces a 'N new since you started' badge whenever a later page's totalCount exceeds the first page's baseline, re-baselining the feed when the badge is clicked.",
+      "evidence": [
+        {
+          "resource": "repo://web/src/api/labels.ts#L40-L56",
+          "version": "repo-lines-v1:sha256:837b6091620a527a059f7048326d71532f44a620956945e9053128b93a648452:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzMmIyNDM4Y2NkMjEwYzU0OGYzMTg2MzUxZDBkNjA4NDBhZjllNDZlMjY4MjA1ODNkZDg4Y2RmMGYwMmE0ODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5MmY5NjY1ZWI1ZDA2ZjI3NWFhYTNhOTdmMjc0MTk1OTRhNTZlODI3NzQxMzFmYjM4NTk3MmE5YzhjZGM0YTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2NDA3ZmYwMjEwNDlmZGNiODI0MzQ5YzM0MGM2ZmYzZWRhM2YzNzFmOGU0NTk0NjgxZDViNDIzMmYwMjU4YWMifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L101-L172",
+          "version": "repo-lines-v1:sha256:eaf7ffa88837e70b0fe7f1c376e322bdcd9ef85950f2278af440093b17981f2e:eyJzZWxlY3RlZExpbmVDb3VudCI6NzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNzkxMTM1MmIyZDgyM2FlMmM5MGI4MjNlMzA2MWFmZmYzZGQxODMwOGYzOGQ3MjQ5ZjQ2N2U1ODE0ZWZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI0OWJkYzc1YmExNmYyMzkyZTc3YTJlYWE1ZDcxNGM2NmMyZGZjNjJkNDg0MjcwNTJjZDE0ZWMyMTFkZDY5MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBmMTNmN2E1Yjc5ZjYzOTdhNTdkMTU3ODBmNGYxZDIxYTkyMmYxOGI4ODY0ZWUwY2ZjNGRmYWQ5YTk3OWMyNWIifQ"
+        },
+        {
+          "resource": "repo://web/src/views/LabelDetailView.vue#L297-L318",
+          "version": "repo-lines-v1:sha256:0fdbe01352abe57d4fdef5ad483b1cf8caa205de01dd791703099ecbdd8dced7:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0OGZmZDY1N2U4MTlhM2FkNzcyMmJiMTg3ZDZiMjU1NjIxZTA2YzY2ZjYyNWZiYTM2ZjQyZTJjMDA3OTdlZWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzZmQ3NDU1YmRiODFkNzkwNWFiOTI1NTJjZjJhYWJkZDgwYTQzNGI3OWE0YjY4NDljOTVkN2I2ZTY4NjliM2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEzNDlmOTNmMzdjYmE2OGNkYjdiNDAyYmIzOTk2ZWZlZDliMDM5YzA2ZjFkMmExNDY0Nzk1NWE1ZWI1ZTM5MDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU3OTJhZDg4OTQ1MmQ1MTRlODU3YTk3MmU3YmM5MzEyODk5ZjZlM2EwYjc4YjE3OTIyNzkyZjNmMmRlMWMxMWEifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.6.0",
-    "at": "2026-09-29T18:57:22.615Z"
+    "at": "2026-09-30T03:07:03.981Z"
   }
 }

@@ -1,4 +1,3 @@
 # Files
 
-- [Katalog - Workflows](README.md) - Development commands, CI pipelines, the no-mistakes gate, OpenWiki maintenance, and branch/delivery conventions for the Katalog repository.
-- [Katalog - Release Discovery and Label Verification](release-discovery.md) - End-to-end workflow of followed-label release discovery: fuzzy label-filtered Spotify search, per-album real-label verification (label field plus copyright parsing), idempotent upsert, self-healing unlinks, the rename-time link audit, and scheduling/failure handling.
+- [Katalog - Workflows](README.md) - Developer and delivery workflows for Katalog: the .NET and npm command sets, the Aspire run flow, the CI jobs (build/test, web test, contract drift), the no-mistakes gate and its commands, and OpenWiki maintenance.
