@@ -292,7 +292,7 @@ async function unfollow() {
       <Tabs default-value="releases">
         <TabsList class="w-fit!">
           <TabsTrigger value="releases">Releases</TabsTrigger>
-          <TabsTrigger value="artists">Artists</TabsTrigger>
+          <TabsTrigger value="artists">Label artists</TabsTrigger>
         </TabsList>
 
         <!-- Releases -->

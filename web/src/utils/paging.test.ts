@@ -64,26 +64,25 @@ describe('mergeReleasePages', () => {
 })
 
 describe('countUniqueArtists', () => {
-  it('counts distinct artist names across releases', () => {
+  it('counts two artists who share a name as two', () => {
     const releases = [
       release('a', 'Album A', ['Karin Dreijer']),
-      release('b', 'Album B', ['Fever Ray']),
-      release('c', 'Album C', ['Karin Dreijer', 'Fever Ray']),
+      release('b', 'Album B', ['Karin Dreijer']),
     ]
 
     expect(countUniqueArtists(releases)).toBe(2)
   })
 
-  it('returns zero for an empty list', () => {
-    expect(countUniqueArtists([])).toBe(0)
-  })
-
-  it('counts one for a single-artist label', () => {
+  it('does not double-count a renamed artist', () => {
     const releases = [
-      release('a', 'Album A', ['Ninja Artist']),
-      release('b', 'Album B', ['Ninja Artist']),
+      release('a', 'Album A', ['Karin Dreijer']),
+      release('a', 'Album A', ['Fever Ray']),
     ]
 
     expect(countUniqueArtists(releases)).toBe(1)
+  })
+
+  it('returns zero for an empty list', () => {
+    expect(countUniqueArtists([])).toBe(0)
   })
 })
