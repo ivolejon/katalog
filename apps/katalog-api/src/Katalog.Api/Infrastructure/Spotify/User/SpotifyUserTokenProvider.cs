@@ -20,7 +20,7 @@ public sealed class SpotifyUserTokenProvider(
     /// <summary>Renew this long before the token actually expires.</summary>
     private static readonly TimeSpan ExpirySkew = TimeSpan.FromSeconds(60);
 
-    private readonly SemaphoreSlim _refreshLock = new(1, 1);
+    private static readonly SemaphoreSlim _refreshLock = new(1, 1);
 
     /// <summary>Valid access token for this browser's Spotify sign-in, renewed when stale.</summary>
     /// <exception cref="SpotifyNotConnectedException">Spotify is not connected for this session.</exception>
@@ -57,7 +57,7 @@ public sealed class SpotifyUserTokenProvider(
         await _refreshLock.WaitAsync(cancellationToken);
         try
         {
-            // Another caller in this request may have renewed already; re-read to avoid a
+            // Another caller may have renewed already; re-read to avoid a
             // pointless exchange (and a needless rotation of the refresh token). A forced
             // renewal skips this: it exists precisely because the stored token was rejected.
             var current = await sessionStore.GetAsync(cancellationToken) ?? session;

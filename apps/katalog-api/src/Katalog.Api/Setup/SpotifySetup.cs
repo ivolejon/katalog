@@ -129,8 +129,8 @@ public static class SpotifySetup
             pipeline.AddTimeout(new TimeoutStrategyOptions { Timeout = TimeSpan.FromSeconds(10) });
         });
 
-        // Scoped, not the transient typed-client default: the client must be built in the
-        // request scope so the token handler sees the same scoped session and EF context.
+        // Scoped, not the transient typed-client default: one client per request, the scope
+        // the token handler resolves its provider from so both share the session and EF context.
         services.AddScoped<ISpotifyPlaybackClient>(sp =>
             new SpotifyPlaybackClient(sp.GetRequiredService<IHttpClientFactory>()
                 .CreateClient(SpotifyClientNames.UserPlayback)));
